@@ -1,0 +1,454 @@
+
+> dev
+> vite dev --host 127.0.0.1
+
+[33mThe plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the [1mresolve.tsconfigPaths[22m option. You can remove the plugin and set [1mresolve.tsconfigPaths: true[22m in your Vite config instead.[39m
+Port 8080 is in use, trying another one...
+
+  [32m[1mVITE[22m v8.2.0[39m  [2mready in [0m[1m4350[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m8081[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m٥:٠٣:٥٧ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m connected.
+[2m٥:٠٤:١١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <QueryClientProvider client={{}} data-tsd-source="/src/route...">
+      <OutletImpl data-tsd-source="/src/route...">
+        <Suspense fallback={null}>
+          <MatchImpl matchId="/auth/auth">
+            <MatchView router={{...}} matchId="/auth/auth" resetKey={1785420250506} matchState={{routeId:"/...", ...}}>
+              <SafeFragment>
+                <SafeFragment fallback={null}>
+                  <SafeFragment getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <SafeFragment fallback={function fallback}>
+                      <MatchInnerImpl matchId="/auth/auth">
+                        <Lazy>
+                          <AuthPage>
++                           <main
++                             className="flex min-h-screen items-center justify-center bg-secondary px-4 py-10"
++                             data-tsd-source="/src/routes/auth.tsx:68:5"
++                           >
+-                           <Suspense>
+                ...
+      ...
+
+[39m > throwOnHydrationMismatch node_modules/react-dom/cjs/react-dom-client.development.js:5238:10
+ > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:12027:16
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+ > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+ > workLoopConcurrentByScheduler node_modules/react-dom/cjs/react-dom-client.development.js:17635:8
+ > renderRootConcurrent node_modules/react-dom/cjs/react-dom-client.development.js:17617:14
+ > performWorkOnRoot node_modules/react-dom/cjs/react-dom-client.development.js:16503:10
+ > performWorkOnRootViaSchedulerTask node_modules/react-dom/cjs/react-dom-client.development.js:18957:6
+ > MessagePort.performWorkUntilDeadline node_modules/scheduler/cjs/scheduler.development.js:45:47
+
+[2m٥:٠٥:٣٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <QueryClientProvider client={{}} data-tsd-source="/src/route...">
+      <OutletImpl data-tsd-source="/src/route...">
+        <Suspense fallback={null}>
+          <MatchImpl matchId="/auth/auth">
+            <MatchView router={{...}} matchId="/auth/auth" resetKey={1785420333607} matchState={{routeId:"/...", ...}}>
+              <SafeFragment>
+                <SafeFragment fallback={null}>
+                  <SafeFragment getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <SafeFragment fallback={function fallback}>
+                      <MatchInnerImpl matchId="/auth/auth">
+                        <Lazy>
+                          <AuthPage>
++                           <main
++                             className="flex min-h-screen items-center justify-center bg-secondary px-4 py-10"
++                             data-tsd-source="/src/routes/auth.tsx:68:5"
++                           >
+-                           <Suspense>
+                ...
+      ...
+
+[39m > throwOnHydrationMismatch node_modules/react-dom/cjs/react-dom-client.development.js:5238:10
+ > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:12027:16
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+ > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+ > workLoopConcurrentByScheduler node_modules/react-dom/cjs/react-dom-client.development.js:17635:8
+ > renderRootConcurrent node_modules/react-dom/cjs/react-dom-client.development.js:17617:14
+ > performWorkOnRoot node_modules/react-dom/cjs/react-dom-client.development.js:16503:10
+ > performWorkOnRootViaSchedulerTask node_modules/react-dom/cjs/react-dom-client.development.js:18957:6
+ > MessagePort.performWorkUntilDeadline node_modules/scheduler/cjs/scheduler.development.js:45:47
+
+[2m٥:٠٥:٣٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mCan't perform a React state update on a component that hasn't mounted yet. This indicates that you have a side-effect in your render function that asynchronously tries to update the component. Move this work to useEffect instead.
+[2m٥:٠٥:٣٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <QueryClientProvider client={{}} data-tsd-source="/src/route...">
+      <OutletImpl data-tsd-source="/src/route...">
+        <Suspense fallback={null}>
+          <MatchImpl matchId="/auth/auth">
+            <MatchView router={{...}} matchId="/auth/auth" resetKey={1785420338087} matchState={{routeId:"/...", ...}}>
+              <SafeFragment>
+                <SafeFragment fallback={null}>
+                  <SafeFragment getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <SafeFragment fallback={function fallback}>
+                      <MatchInnerImpl matchId="/auth/auth">
+                        <Lazy>
+                          <AuthPage>
++                           <main
++                             className="flex min-h-screen items-center justify-center bg-secondary px-4 py-10"
++                             data-tsd-source="/src/routes/auth.tsx:68:5"
++                           >
+-                           <Suspense>
+                ...
+      ...
+
+[39m > throwOnHydrationMismatch node_modules/react-dom/cjs/react-dom-client.development.js:5238:10
+ > beginWork node_modules/react-dom/cjs/react-dom-client.development.js:12027:16
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:871:29
+ > performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:21
+ > workLoopConcurrentByScheduler node_modules/react-dom/cjs/react-dom-client.development.js:17635:8
+ > renderRootConcurrent node_modules/react-dom/cjs/react-dom-client.development.js:17617:14
+ > performWorkOnRoot node_modules/react-dom/cjs/react-dom-client.development.js:16503:10
+ > performWorkOnRootViaSchedulerTask node_modules/react-dom/cjs/react-dom-client.development.js:18957:6
+ > MessagePort.performWorkUntilDeadline node_modules/scheduler/cjs/scheduler.development.js:45:47
+
+[2m٥:٠٦:٠٤ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/route.tsx, /src/routes/_authenticated/route.tsx?tsr-split=component[22m
+[2m٥:٠٦:٠٤ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/route.tsx[22m
+[2m٥:٠٦:٠٤ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/_authenticated/route.tsx (resolved id: E:/Printers Project/src/routes/_authenticated/route.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+[2m٥:٠٦:٠٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[vite] Failed to reload /src/routes/_authenticated/route.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[2m٥:٠٦:٠٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[vite] Failed to reload /src/routes/_authenticated/route.tsx?tsr-split=component. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[2m٥:٠٦:٠٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[vite] Failed to reload /src/routes/_authenticated/route.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[2m٥:٠٦:٠٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[vite] Failed to reload /src/routes/_authenticated/route.tsx?tsr-split=component. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[2m٥:٠٦:٠٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٥:٠٦:٠٥ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٥:٠٦:٠٥ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+File E:\Printers Project\src\routeTree.gen.ts was modified by another process during processing.
+[2m٥:٠٦:٠٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/route.tsx[22m
+[2m٥:٠٦:٠٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/route.tsx[22m
+[2m٥:٠٦:٠٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٥:٠٦:٠٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٥:٠٦:٠٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٥:٠٦:١٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/index.tsx?tsr-split=component, /src/routes/auth.tsx?tsr-split=component, /src/components/PrinterImage.tsx, /src/routes/_authenticated/printers.index.tsx?tsr-split=component, /src/components/PrinterFormDialog.tsx[22m
+[2m٥:٠٦:١٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/integrations/supabase/client.ts[22m
+[2m٥:٠٦:١٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'getSession')
+    at http://127.0.0.1:8081/src/routes/auth.tsx?t=1785420370019&tsr-split=component:22:17
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:12900:13)
+    at runWithFiberInDEV (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:850:66)
+    at commitHookEffectListMount (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6615:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6650:55)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7616:22)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7604:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7615:6)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7604:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7615:6)
+[2m٥:٠٦:١٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'getSession')
+    at http://127.0.0.1:8081/src/routes/auth.tsx?t=1785420370019&tsr-split=component:22:17
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:12900:13)
+    at runWithFiberInDEV (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:850:66)
+    at commitHookEffectListMount (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6615:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6650:55)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7616:22)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7604:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7615:6)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7604:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7615:6)
+[2m٥:٠٦:١٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'getSession')
+    at http://127.0.0.1:8081/src/routes/auth.tsx?t=1785420370019&tsr-split=component:22:17
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:12900:13)
+    at runWithFiberInDEV (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:850:66)
+    at commitHookEffectListMount (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6615:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6650:55)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7616:22)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7604:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7615:6)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7604:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7615:6)
+[2m٥:٠٦:١٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'getSession')
+    at http://127.0.0.1:8081/src/routes/auth.tsx?t=1785420370019&tsr-split=component:22:17
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:12900:13)
+    at runWithFiberInDEV (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:850:66)
+    at commitHookEffectListMount (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6615:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6650:55)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7616:22)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7604:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7615:6)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7604:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7615:6)
+[2m٥:٠٦:١٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'getSession')
+    at http://127.0.0.1:8081/src/routes/auth.tsx?t=1785420370019&tsr-split=component:22:17
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:12900:13)
+    at runWithFiberInDEV (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:850:66)
+    at commitHookEffectListMount (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6615:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6650:55)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7616:22)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7604:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7615:6)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7604:5)
+    at commitPassiveMountOnFiber (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7615:6)
+
+The above error occurred in the <AuthPage> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٥:٠٦:١٠ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+File E:\Printers Project\src\routeTree.gen.ts was modified by another process during processing.
+[2m٥:٠٦:١٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/auth.tsx, /src/routes/auth.tsx?tsr-split=component[22m
+[2m٥:٠٦:١٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/auth.tsx[22m
+[2m٥:٠٦:١٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13) (status 500)
+caused by: Error: Failed to load url /src/routes/auth.tsx (resolved id: E:/Printers Project/src/routes/auth.tsx) in E:/Printers Project/src/routeTree.gen.ts. Does the file exist?
+    at loadAndTransform (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:20583:31)
+    at async fetchModule (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:34192:15)
+    at async handleInvoke (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26766:21)
+    at async EventEmitter.listenerForInvokeHandler (file:///E:/Printers%20Project/node_modules/vite/dist/node/chunks/node.js:26821:13)
+[2m٥:٠٦:١٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[vite] Failed to reload /src/routes/auth.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[2m٥:٠٦:١٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[vite] Failed to reload /src/routes/auth.tsx?tsr-split=component. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[2m٥:٠٦:١٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[vite] Failed to reload /src/routes/auth.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[2m٥:٠٦:١٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'getSession')
+    at http://127.0.0.1:8081/src/routes/auth.tsx?t=1785420370019&tsr-split=component:22:17
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:12900:13)
+    at runWithFiberInDEV (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:850:66)
+    at commitHookEffectListMount (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6615:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6650:55)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7686:5)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7698:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7686:5)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7698:6)
+[2m٥:٠٦:١٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'getSession')
+    at http://127.0.0.1:8081/src/routes/auth.tsx?t=1785420370019&tsr-split=component:22:17
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:12900:13)
+    at runWithFiberInDEV (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:850:66)
+    at commitHookEffectListMount (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6615:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6650:55)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7686:5)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7698:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7686:5)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7698:6)
+[2m٥:٠٦:١٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'getSession')
+    at http://127.0.0.1:8081/src/routes/auth.tsx?t=1785420370019&tsr-split=component:22:17
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:12900:13)
+    at runWithFiberInDEV (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:850:66)
+    at commitHookEffectListMount (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6615:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6650:55)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7686:5)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7698:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7686:5)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7698:6)
+[2m٥:٠٦:١٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'getSession')
+    at http://127.0.0.1:8081/src/routes/auth.tsx?t=1785420370019&tsr-split=component:22:17
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:12900:13)
+    at runWithFiberInDEV (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:850:66)
+    at commitHookEffectListMount (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6615:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6650:55)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7686:5)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7698:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7686:5)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7698:6)
+[2m٥:٠٦:١٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'getSession')
+    at http://127.0.0.1:8081/src/routes/auth.tsx?t=1785420370019&tsr-split=component:22:17
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:12900:13)
+    at runWithFiberInDEV (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:850:66)
+    at commitHookEffectListMount (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6615:153)
+    at commitHookPassiveMountEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:6650:55)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7699:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7686:5)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7698:6)
+    at recursivelyTraverseReconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7686:5)
+    at reconnectPassiveEffects (http://127.0.0.1:8081/node_modules/.vite/deps/react-dom_client.js?v=0a336a24:7698:6)
+
+The above error occurred in the <AuthPage> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٥:٠٦:١٢ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٥:٠٦:١٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٥:٠٦:١٣ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٥:٠٦:١٣ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٥:٠٨:٢٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mHTML Element with id=qr-scan-region not found
+[2m٥:٠٨:٢٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mHTML Element with id=qr-scan-region not found
+[2m٥:٠٨:٢٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mHTML Element with id=qr-scan-region not found
+[2m٥:٠٨:٢٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mHTML Element with id=qr-scan-region not found
+[2m٥:٠٨:٢٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mHTML Element with id=qr-scan-region not found
+
+The above error occurred in the <errorComponent> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٥:٠٨:٢٢ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٥:٠٩:٠٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mHTML Element with id=qr-scan-region not found
+[2m٥:٠٩:٠٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mHTML Element with id=qr-scan-region not found
+[2m٥:٠٩:٠٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mHTML Element with id=qr-scan-region not found
+[2m٥:٠٩:٠٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mHTML Element with id=qr-scan-region not found
+[2m٥:٠٩:٠٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mHTML Element with id=qr-scan-region not found
+
+The above error occurred in the <errorComponent> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٥:٠٩:٠٧ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
