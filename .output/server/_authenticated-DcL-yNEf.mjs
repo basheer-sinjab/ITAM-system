@@ -8,7 +8,7 @@ import { n as useQuery } from "./_libs/tanstack__react-query.mjs";
 import { E as Archive, a as TriangleAlert, b as CircleSlash, c as Sparkles, f as Printer, l as ShieldAlert, n as Wrench, s as Star, v as Droplets } from "./_libs/lucide-react.mjs";
 import { t as PrinterImage } from "./_ssr/PrinterImage-WihmddPu.mjs";
 import { h as Link } from "./_libs/@tanstack/react-router+[...].mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/_authenticated-Br_iUh4o.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_authenticated-DcL-yNEf.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var Card = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
@@ -92,7 +92,7 @@ function StatCard({ label, value, icon: Icon, tone = "primary" }) {
 		})] })]
 	});
 }
-function DashboardHero({ total, active, alerts }) {
+function DashboardHero() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "relative overflow-hidden rounded-3xl bg-sidebar px-6 py-7 text-sidebar-foreground shadow-float sm:px-8 sm:py-8",
 		children: [
@@ -114,35 +114,23 @@ function DashboardHero({ total, active, alerts }) {
 						children: "تابع الأصول والمخزون والصيانة بوضوح، واتخذ الإجراء المناسب قبل أن تتعطل الأعمال."
 					})
 				] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "flex gap-7 rounded-2xl border border-white/10 bg-black/10 px-5 py-4",
+					className: "printer-animation",
+					role: "img",
+					"aria-label": "طابعة تطبع ورقة",
 					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							className: "text-2xl font-bold text-white",
-							children: total
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							className: "mt-1 text-xs text-sidebar-foreground/60",
-							children: "إجمالي الأصول"
-						})] }),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							className: "border-r border-white/10 pr-7",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								className: "text-2xl font-bold text-sidebar-primary",
-								children: active
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								className: "mt-1 text-xs text-sidebar-foreground/60",
-								children: "تعمل الآن"
-							})]
+							className: "printer-animation__paper",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {})
+							]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							className: "border-r border-white/10 pr-7",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								className: "text-2xl font-bold text-warning",
-								children: alerts
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								className: "mt-1 text-xs text-sidebar-foreground/60",
-								children: "تحتاج انتباهًا"
-							})]
-						})
+							className: "printer-animation__body",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "printer-animation__indicator" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "printer-animation__slot" })]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "printer-animation__output" })
 					]
 				})]
 			})
@@ -158,7 +146,6 @@ function Dashboard() {
 	const { printers, toners, maintenance, replacements, settings } = data;
 	const threshold = settings?.low_stock_threshold ?? 2;
 	const warrantyDays = settings?.warranty_alert_days ?? 30;
-	const count = (s) => printers.filter((p) => p.status === s).length;
 	const lowStock = toners.filter((t) => t.quantity > 0 && t.quantity <= Math.max(t.min_quantity, threshold));
 	const outOfStock = toners.filter((t) => t.quantity <= 0);
 	const favorites = printers.filter((p) => p.is_favorite);
@@ -198,11 +185,7 @@ function Dashboard() {
 				className: "text-sm text-muted-foreground",
 				children: "نظرة عامة على أصول الطباعة في الشركة"
 			})] }),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardHero, {
-				total: printers.length,
-				active: count("active"),
-				alerts: lowStock.length + outOfStock.length + expired.length + expiring.length
-			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardHero, {}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 				className: "grid gap-4 sm:grid-cols-2 xl:grid-cols-5",
 				children: [

@@ -1,17 +1,17 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-Cf5R2vlO.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-DlapQa85.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "E:/Printers Project/src/routes/__root.tsx",
 		children: ["/_authenticated"],
 		preloads: [
-			"/assets/index-Bj6R4mwM.js",
+			"/assets/index-DrMrQkKj.js",
 			"/assets/jsx-runtime-yLamxOIm.js",
 			"/assets/link-BIZAheVM.js"
 		],
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-Bj6R4mwM.js"
+			src: "/assets/index-DrMrQkKj.js"
 		} }]
 	},
 	"/_authenticated": {
@@ -26,7 +26,7 @@ var tsrStartManifest = () => ({ routes: {
 			"/_authenticated/printers/"
 		],
 		preloads: [
-			"/assets/route-DbitQzLn.js",
+			"/assets/route-CB5OSj1H.js",
 			"/assets/createLucideIcon-Dhi9XBT_.js",
 			"/assets/droplets-BIJtxTMT.js",
 			"/assets/printer-BcJd8laj.js"
@@ -36,105 +36,105 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/Printers Project/src/routes/_authenticated/reports.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/reports-ChWP72Bq.js",
-			"/assets/dist-CFauY3JP.js",
-			"/assets/label-CvB8hygS.js",
-			"/assets/select-Dcyoyy3H.js",
+			"/assets/reports-DGlGwK8r.js",
+			"/assets/dist-OlJwtQee.js",
+			"/assets/label-ybCxwJBP.js",
+			"/assets/select-EPS86IVM.js",
 			"/assets/pms-C-HmxCJs.js",
-			"/assets/PrinterFormDialog-CHR-6YD6.js",
-			"/assets/table-B_7zTRcm.js"
+			"/assets/PrinterFormDialog-BgHYavUo.js",
+			"/assets/table-DYbpQnKo.js"
 		]
 	},
 	"/_authenticated/settings": {
 		filePath: "E:/Printers Project/src/routes/_authenticated/settings.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/settings-DzTR4VaZ.js",
-			"/assets/dist-CFauY3JP.js",
-			"/assets/label-CvB8hygS.js",
-			"/assets/dist-DuqmAm0r.js",
+			"/assets/settings-DNf-Ft37.js",
+			"/assets/dist-OlJwtQee.js",
+			"/assets/label-ybCxwJBP.js",
+			"/assets/dist-liaPGRb7.js",
 			"/assets/trash-2-2vApe132.js",
 			"/assets/plus-CehALaYj.js",
-			"/assets/tabs-CbOPOR6H.js"
+			"/assets/tabs-BxnQeYie.js"
 		]
 	},
 	"/_authenticated/suppliers": {
 		filePath: "E:/Printers Project/src/routes/_authenticated/suppliers.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/suppliers-B7OvRMxM.js",
-			"/assets/dist-CFauY3JP.js",
-			"/assets/label-CvB8hygS.js",
+			"/assets/suppliers-BtSwCi95.js",
+			"/assets/dist-OlJwtQee.js",
+			"/assets/label-ybCxwJBP.js",
 			"/assets/trash-2-2vApe132.js",
 			"/assets/plus-CehALaYj.js",
-			"/assets/textarea-C_SQ0LLi.js",
-			"/assets/table-B_7zTRcm.js"
+			"/assets/textarea-BAr8zdL0.js",
+			"/assets/table-DYbpQnKo.js"
 		]
 	},
 	"/_authenticated/toners": {
 		filePath: "E:/Printers Project/src/routes/_authenticated/toners.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/toners-CsWbPM5h.js",
-			"/assets/dist-CFauY3JP.js",
-			"/assets/label-CvB8hygS.js",
-			"/assets/badge-Bf7AkD3G.js",
-			"/assets/select-Dcyoyy3H.js",
+			"/assets/toners-BYzQz7yQ.js",
+			"/assets/dist-OlJwtQee.js",
+			"/assets/label-ybCxwJBP.js",
+			"/assets/badge-CxfX_mUi.js",
+			"/assets/select-EPS86IVM.js",
 			"/assets/trash-2-2vApe132.js",
 			"/assets/plus-CehALaYj.js",
 			"/assets/search-CFiVXvWR.js",
 			"/assets/pms-C-HmxCJs.js",
-			"/assets/textarea-C_SQ0LLi.js",
-			"/assets/table-B_7zTRcm.js"
+			"/assets/textarea-BAr8zdL0.js",
+			"/assets/table-DYbpQnKo.js"
 		]
 	},
 	"/_authenticated/": {
 		filePath: "E:/Printers Project/src/routes/_authenticated/index.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/_authenticated-BUfSyJeF.js",
-			"/assets/dist-CFauY3JP.js",
-			"/assets/badge-Bf7AkD3G.js",
+			"/assets/_authenticated-2aKWKa2K.js",
+			"/assets/dist-OlJwtQee.js",
+			"/assets/badge-CxfX_mUi.js",
 			"/assets/star-vnF-n8hL.js",
 			"/assets/pms-C-HmxCJs.js",
-			"/assets/PrinterImage-BigI9eby.js"
+			"/assets/PrinterImage-qnGQWqyp.js"
 		]
 	},
 	"/_authenticated/printers/$id": {
 		filePath: "E:/Printers Project/src/routes/_authenticated/printers.$id.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/printers._id-tcvx_GNz.js",
-			"/assets/dist-CFauY3JP.js",
-			"/assets/label-CvB8hygS.js",
-			"/assets/badge-Bf7AkD3G.js",
-			"/assets/select-Dcyoyy3H.js",
+			"/assets/printers._id-BHWWQIz8.js",
+			"/assets/dist-OlJwtQee.js",
+			"/assets/label-ybCxwJBP.js",
+			"/assets/badge-CxfX_mUi.js",
+			"/assets/select-EPS86IVM.js",
 			"/assets/trash-2-2vApe132.js",
 			"/assets/plus-CehALaYj.js",
 			"/assets/star-vnF-n8hL.js",
 			"/assets/pms-C-HmxCJs.js",
-			"/assets/PrinterImage-BigI9eby.js",
-			"/assets/tabs-CbOPOR6H.js",
-			"/assets/textarea-C_SQ0LLi.js",
-			"/assets/PrinterFormDialog-CHR-6YD6.js",
-			"/assets/table-B_7zTRcm.js"
+			"/assets/PrinterImage-qnGQWqyp.js",
+			"/assets/tabs-BxnQeYie.js",
+			"/assets/textarea-BAr8zdL0.js",
+			"/assets/PrinterFormDialog-BgHYavUo.js",
+			"/assets/table-DYbpQnKo.js"
 		]
 	},
 	"/_authenticated/printers/": {
 		filePath: "E:/Printers Project/src/routes/_authenticated/printers.index.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/printers.index-DLjy88AQ.js",
-			"/assets/dist-CFauY3JP.js",
-			"/assets/label-CvB8hygS.js",
-			"/assets/badge-Bf7AkD3G.js",
-			"/assets/select-Dcyoyy3H.js",
+			"/assets/printers.index-BtufzGNf.js",
+			"/assets/dist-OlJwtQee.js",
+			"/assets/label-ybCxwJBP.js",
+			"/assets/badge-CxfX_mUi.js",
+			"/assets/select-EPS86IVM.js",
 			"/assets/plus-CehALaYj.js",
 			"/assets/search-CFiVXvWR.js",
 			"/assets/star-vnF-n8hL.js",
 			"/assets/pms-C-HmxCJs.js",
-			"/assets/PrinterImage-BigI9eby.js",
-			"/assets/PrinterFormDialog-CHR-6YD6.js"
+			"/assets/PrinterImage-qnGQWqyp.js",
+			"/assets/PrinterFormDialog-BgHYavUo.js"
 		]
 	}
 } });
