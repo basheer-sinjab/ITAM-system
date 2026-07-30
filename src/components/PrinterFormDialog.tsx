@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { DateInput } from "@/components/DateInput";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -262,13 +263,12 @@ export function PrinterFormDialog({
           </Field>
 
           <Field label="تاريخ الشراء">
-            <Input type="date" value={form.purchase_date} onChange={(e) => set("purchase_date", e.target.value)} />
+            <DateInput value={form.purchase_date} onChange={(value) => set("purchase_date", value)} />
           </Field>
           <Field label="تاريخ انتهاء الضمان">
-            <Input
-              type="date"
+            <DateInput
               value={form.warranty_expiry}
-              onChange={(e) => set("warranty_expiry", e.target.value)}
+              onChange={(value) => set("warranty_expiry", value)}
             />
           </Field>
 

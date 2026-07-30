@@ -3,7 +3,7 @@ import { i as supabase, n as exportLocalData, r as restoreLocalData, t as cn } f
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { i as useQueryClient, n as useQuery, t as useMutation } from "../_libs/tanstack__react-query.mjs";
-import { b as Download, h as Pencil, m as Plus, o as Trash2, r as Upload, t as X, w as Check } from "../_libs/lucide-react.mjs";
+import { C as Check, m as Pencil, o as Trash2, p as Plus, r as Upload, t as X, y as Download } from "../_libs/lucide-react.mjs";
 import { n as Input, r as Label, t as Button } from "./label-S2lCEF3z.mjs";
 import { i as TabsTrigger, n as TabsContent, r as TabsList, t as Tabs } from "./tabs-CeyKuXzD.mjs";
 import { n as toast } from "../_libs/sonner.mjs";

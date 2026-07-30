@@ -42,23 +42,26 @@ export type MaintenanceType = keyof typeof MAINTENANCE_TYPES;
 
 export function formatDate(value?: string | null) {
   if (!value) return "—";
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return "—";
-  return new Intl.DateTimeFormat("ar-EG", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    numberingSystem: "latn",
-  }).format(d);
+  const datePart = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+  if (datePart) return `${datePart[3]}/${datePart[2]}/${datePart[1]}`;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`;
 }
 
 export function today() {
-  return new Date().toISOString().slice(0, 10);
+  const date = new Date();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
 export function daysUntil(date?: string | null) {
   if (!date) return null;
-  const diff = new Date(date).getTime() - new Date().setHours(0, 0, 0, 0);
+  const datePart = /^(\d{4})-(\d{2})-(\d{2})/.exec(date);
+  const target = datePart
+    ? new Date(Number(datePart[1]), Number(datePart[2]) - 1, Number(datePart[3]))
+    : new Date(date);
+  if (Number.isNaN(target.getTime())) return null;
+  const diff = target.getTime() - new Date().setHours(0, 0, 0, 0);
   return Math.round(diff / 86400000);
 }
 
