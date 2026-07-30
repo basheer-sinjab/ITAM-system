@@ -6,7 +6,7 @@ import { r as QueryClientProvider } from "../_libs/tanstack__react-query.mjs";
 import { _ as useRouter, c as HeadContent, d as Outlet, f as lazyRouteComponent, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
 import { t as Route$8 } from "./printers._id-D3Jt23AF.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-09xYU77K.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-BopWIt5M.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var Toaster$1 = ({ ...props }) => {
@@ -21,7 +21,7 @@ var Toaster$1 = ({ ...props }) => {
 		...props
 	});
 };
-var styles_default = "/assets/styles-Dj4LKGPg.css";
+var styles_default = "/assets/styles-DiCUmBNp.css";
 function reportLovableError(error, context = {}) {
 	if (typeof window === "undefined") return;
 	window.__lovableEvents?.captureException?.(error, {
@@ -177,7 +177,7 @@ function RootComponent() {
 		})]
 	});
 }
-var $$splitComponentImporter$6 = () => import("./route-DwFIq-t_.mjs");
+var $$splitComponentImporter$6 = () => import("./route-4-2samju.mjs");
 var Route$6 = createFileRoute("/_authenticated")({
 	ssr: false,
 	component: lazyRouteComponent($$splitComponentImporter$6, "component")
