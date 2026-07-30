@@ -1,5 +1,3 @@
-import { supabase } from "@/integrations/supabase/client";
-
 export const PRINTER_STATUS = {
   active: "نشطة",
   maintenance: "تحت الصيانة",
@@ -64,26 +62,23 @@ export function daysUntil(date?: string | null) {
   return Math.round(diff / 86400000);
 }
 
-/** Signed URL cache for the private printer-images bucket. */
-const urlCache = new Map<string, string>();
 export async function resolveImage(path?: string | null) {
-  if (!path) return null;
-  if (path.startsWith("http")) return path;
-  if (urlCache.has(path)) return urlCache.get(path)!;
-  const { data } = await supabase.storage.from("printer-images").createSignedUrl(path, 60 * 60 * 8);
-  if (data?.signedUrl) {
-    urlCache.set(path, data.signedUrl);
-    return data.signedUrl;
-  }
-  return null;
+  return path ?? null;
 }
 
 export async function uploadPrinterImage(file: File) {
-  const ext = file.name.split(".").pop() || "jpg";
-  const path = `${crypto.randomUUID()}.${ext}`;
-  const { error } = await supabase.storage.from("printer-images").upload(path, file);
-  if (error) throw error;
-  return path;
+  const formData = new FormData();
+  formData.append("image", file);
+  const response = await fetch("/api/printer-images", { method: "POST", body: formData });
+  const body = await response.json();
+  if (!response.ok) throw new Error(body.message ?? "تعذر رفع الصورة");
+  return body.path as string;
+}
+
+export async function deletePrinterImage(path?: string | null) {
+  if (!path?.startsWith("/uploads/printers/")) return;
+  const response = await fetch(`/api/printer-images?path=${encodeURIComponent(path)}`, { method: "DELETE" });
+  if (!response.ok) throw new Error("تعذر حذف الصورة القديمة");
 }
 
 export function must<T>(res: { data: T; error: { message: string } | null }): T {

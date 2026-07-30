@@ -1,10 +1,8 @@
-import { r as __require, t as __commonJSMin } from "../_runtime.mjs";
-import processModule from "node:process";
-import { Buffer } from "node:buffer";
+import { n as __require, t as __commonJSMin } from "../_runtime.mjs";
 //#region node_modules/pngjs/lib/chunkstream.js
 var require_chunkstream = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var util$5 = __require("node:util");
-	var Stream$2 = __require("node:stream");
+	var util$5 = __require("util");
+	var Stream$2 = __require("stream");
 	var ChunkStream = module.exports = function() {
 		Stream$2.call(this);
 		this._buffers = [];
@@ -21,7 +19,7 @@ var require_chunkstream = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			allowLess: length < 0,
 			func: callback
 		});
-		processModule.nextTick(function() {
+		process.nextTick(function() {
 			this._process();
 			if (this._paused && this._reads && this._reads.length > 0) {
 				this._paused = false;
@@ -336,7 +334,7 @@ var require_filter_parse = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 //#endregion
 //#region node_modules/pngjs/lib/filter-parse-async.js
 var require_filter_parse_async = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var util$4 = __require("node:util");
+	var util$4 = __require("util");
 	var ChunkStream = require_chunkstream();
 	var Filter = require_filter_parse();
 	var FilterAsync = module.exports = function(bitmapInfo) {
@@ -855,8 +853,8 @@ var require_format_normaliser = /* @__PURE__ */ __commonJSMin(((exports, module)
 //#endregion
 //#region node_modules/pngjs/lib/parser-async.js
 var require_parser_async = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var util$3 = __require("node:util");
-	var zlib$4 = __require("node:zlib");
+	var util$3 = __require("util");
+	var zlib$4 = __require("zlib");
 	var ChunkStream = require_chunkstream();
 	var FilterAsync = require_filter_parse_async();
 	var Parser = require_parser();
@@ -1210,7 +1208,7 @@ var require_packer = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	var CrcStream = require_crc();
 	var bitPacker = require_bitpacker();
 	var filter = require_filter_pack();
-	var zlib$3 = __require("node:zlib");
+	var zlib$3 = __require("zlib");
 	var Packer = module.exports = function(options) {
 		this._options = options;
 		options.deflateChunkSize = options.deflateChunkSize || 32768;
@@ -1285,8 +1283,8 @@ var require_packer = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 //#endregion
 //#region node_modules/pngjs/lib/packer-async.js
 var require_packer_async = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var util$2 = __require("node:util");
-	var Stream$1 = __require("node:stream");
+	var util$2 = __require("util");
+	var Stream$1 = __require("stream");
 	var constants = require_constants();
 	var Packer = require_packer();
 	var PackerAsync = module.exports = function(opt) {
@@ -1316,10 +1314,10 @@ var require_packer_async = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 //#endregion
 //#region node_modules/pngjs/lib/sync-inflate.js
 var require_sync_inflate = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var assert = __require("node:assert").ok;
-	var zlib$2 = __require("node:zlib");
-	var util$1 = __require("node:util");
-	var kMaxLength = __require("node:buffer").kMaxLength;
+	var assert = __require("assert").ok;
+	var zlib$2 = __require("zlib");
+	var util$1 = __require("util");
+	var kMaxLength = __require("buffer").kMaxLength;
 	function Inflate(opts) {
 		if (!(this instanceof Inflate)) return new Inflate(opts);
 		if (opts && opts.chunkSize < zlib$2.Z_MIN_CHUNK) opts.chunkSize = zlib$2.Z_MIN_CHUNK;
@@ -1332,7 +1330,7 @@ var require_sync_inflate = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		return new Inflate(opts);
 	}
 	function _close(engine, callback) {
-		if (callback) processModule.nextTick(callback);
+		if (callback) process.nextTick(callback);
 		if (!engine._handle) return;
 		engine._handle.close();
 		engine._handle = null;
@@ -1457,7 +1455,7 @@ var require_filter_parse_sync = /* @__PURE__ */ __commonJSMin(((exports) => {
 //#region node_modules/pngjs/lib/parser-sync.js
 var require_parser_sync = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	var hasSyncZlib = true;
-	var zlib$1 = __require("node:zlib");
+	var zlib$1 = __require("zlib");
 	var inflateSync = require_sync_inflate();
 	if (!zlib$1.deflateSync) hasSyncZlib = false;
 	var SyncReader = require_sync_reader();
@@ -1532,7 +1530,7 @@ var require_parser_sync = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 //#region node_modules/pngjs/lib/packer-sync.js
 var require_packer_sync = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	var hasSyncZlib = true;
-	var zlib = __require("node:zlib");
+	var zlib = __require("zlib");
 	if (!zlib.deflateSync) hasSyncZlib = false;
 	var constants = require_constants();
 	var Packer = require_packer();
@@ -1567,8 +1565,8 @@ var require_png_sync = /* @__PURE__ */ __commonJSMin(((exports) => {
 //#endregion
 //#region node_modules/pngjs/lib/png.js
 var require_png = /* @__PURE__ */ __commonJSMin(((exports) => {
-	var util = __require("node:util");
-	var Stream = __require("node:stream");
+	var util = __require("util");
+	var Stream = __require("stream");
 	var Parser = require_parser_async();
 	var Packer = require_packer_async();
 	var PNGSync = require_png_sync();
@@ -1603,7 +1601,7 @@ var require_png = /* @__PURE__ */ __commonJSMin(((exports) => {
 			this.emit("error", "No data provided");
 			return this;
 		}
-		processModule.nextTick(function() {
+		process.nextTick(function() {
 			this._packer.pack(this.data, this.width, this.height, this.gamma);
 		}.bind(this));
 		return this;

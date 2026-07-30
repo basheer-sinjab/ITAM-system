@@ -1,7 +1,6 @@
-import { r as __require, t as __commonJSMin } from "../_runtime.mjs";
+import { n as __require, t as __commonJSMin } from "../_runtime.mjs";
 import { t as require_dijkstra } from "./dijkstrajs.mjs";
 import { t as require_png$1 } from "./pngjs.mjs";
-import { Buffer } from "node:buffer";
 //#region node_modules/qrcode/lib/can-promise.js
 var require_can_promise = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = function() {
@@ -2130,7 +2129,7 @@ var require_utils = /* @__PURE__ */ __commonJSMin(((exports) => {
 //#endregion
 //#region node_modules/qrcode/lib/renderer/png.js
 var require_png = /* @__PURE__ */ __commonJSMin(((exports) => {
-	var fs = __require("node:fs");
+	var fs = __require("fs");
 	var PNG = require_png$1().PNG;
 	var Utils = require_utils();
 	exports.render = function render(qrData, options) {
@@ -2242,7 +2241,7 @@ var require_utf8 = /* @__PURE__ */ __commonJSMin(((exports) => {
 			cb = options;
 			options = void 0;
 		}
-		const fs = __require("node:fs");
+		const fs = __require("fs");
 		const utf8 = exports.render(qrData, options);
 		fs.writeFile(path, utf8, cb);
 	};
@@ -2402,7 +2401,7 @@ var require_svg = /* @__PURE__ */ __commonJSMin(((exports) => {
 			cb = options;
 			options = void 0;
 		}
-		const fs = __require("node:fs");
+		const fs = __require("fs");
 		const xmlStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">" + exports.render(qrData, options);
 		fs.writeFile(path, xmlStr, cb);
 	};

@@ -19,7 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PRINTER_STATUS, uploadPrinterImage } from "@/lib/pms";
+import { deletePrinterImage, PRINTER_STATUS, uploadPrinterImage } from "@/lib/pms";
+import { PrinterImage } from "@/components/PrinterImage";
 import type { TablesInsert } from "@/integrations/supabase/types";
 import { toast } from "sonner";
 
@@ -99,6 +100,7 @@ export function PrinterFormDialog({
   const { data: lookups } = useLookups();
   const [form, setForm] = useState({ ...EMPTY });
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -125,6 +127,16 @@ export function PrinterFormDialog({
     }
     setFile(null);
   }, [open, printer]);
+
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
 
   const save = useMutation({
     mutationFn: async () => {
@@ -155,6 +167,7 @@ export function PrinterFormDialog({
       if (printer) {
         const { error } = await supabase.from("printers").update(payload).eq("id", printer.id);
         if (error) throw error;
+        if (file && printer.image_url && printer.image_url !== imagePath) await deletePrinterImage(printer.image_url);
       } else {
         const { error } = await supabase.from("printers").insert(payload);
         if (error) throw error;
@@ -261,6 +274,11 @@ export function PrinterFormDialog({
 
           <Field label="صورة الطابعة" className="sm:col-span-2">
             <Input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+            {previewUrl ? (
+              <img src={previewUrl} alt="معاينة الصورة الجديدة" className="mt-2 h-40 w-full object-cover" />
+            ) : (
+              <PrinterImage path={printer?.image_url} alt={printer?.name ?? "صورة الطابعة"} className="mt-2 h-40 w-full" />
+            )}
           </Field>
 
           <Field label="ملاحظات" className="sm:col-span-2">

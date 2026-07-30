@@ -1,6 +1,4 @@
-import { i as __toESM, t as __commonJSMin } from "../_runtime.mjs";
-import { a as performance_default } from "./h3+rou3+srvx+unenv.mjs";
-import { f as globalthis_default, p as init_globalthis } from "./@tanstack/router-core+[...].mjs";
+import { r as __toESM, t as __commonJSMin } from "../_runtime.mjs";
 //#region node_modules/html5-qrcode/esm/core.js
 var Html5QrcodeSupportedFormats;
 (function(Html5QrcodeSupportedFormats) {
@@ -302,7 +300,6 @@ var VideoConstraintsUtil = function() {
 //#endregion
 //#region node_modules/html5-qrcode/esm/zxing-html5-qrcode-decoder.js
 var import_zxing_js_umd = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
-	init_globalthis();
 	(function(global, factory) {
 		typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, factory(global.ZXing = {}));
 	})(exports, (function(exports$1) {
@@ -2341,7 +2338,7 @@ var import_zxing_js_umd = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin
 				};
 			}
 		}
-		var __awaiter = (globalThis || globalthis_default || self || window || void 0) && (globalThis || globalthis_default || self || window || void 0).__awaiter || function(thisArg, _arguments, P, generator) {
+		var __awaiter = (globalThis || global || self || window || void 0) && (globalThis || global || self || window || void 0).__awaiter || function(thisArg, _arguments, P, generator) {
 			function adopt(value) {
 				return value instanceof P ? value : new P(function(resolve) {
 					resolve(value);
@@ -21474,7 +21471,7 @@ var import_zxing_js_umd = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin
 		*/
 		function getBigIntConstructor() {
 			if (typeof window !== "undefined") return window["BigInt"] || null;
-			if (typeof globalthis_default !== "undefined") return globalthis_default["BigInt"] || null;
+			if (typeof global !== "undefined") return global["BigInt"] || null;
 			if (typeof self !== "undefined") return self["BigInt"] || null;
 			throw new Error("Can't search globals for BigInt!");
 		}
@@ -25788,7 +25785,7 @@ var Html5QrcodeShim = function() {
 			return __generator$5(this, function(_a) {
 				switch (_a.label) {
 					case 0:
-						startTime = performance_default.now();
+						startTime = performance.now();
 						_a.label = 1;
 					case 1:
 						_a.trys.push([
@@ -25813,7 +25810,7 @@ var Html5QrcodeShim = function() {
 			return __generator$5(this, function(_a) {
 				switch (_a.label) {
 					case 0:
-						startTime = performance_default.now();
+						startTime = performance.now();
 						_a.label = 1;
 					case 1:
 						_a.trys.push([
@@ -25847,7 +25844,7 @@ var Html5QrcodeShim = function() {
 	};
 	Html5QrcodeShim.prototype.possiblyLogPerformance = function(startTime) {
 		if (!this.verbose) return;
-		var executionTime = performance_default.now() - startTime;
+		var executionTime = performance.now() - startTime;
 		this.executionResults.push(executionTime);
 		this.executions++;
 		this.possiblyFlushPerformanceReport();

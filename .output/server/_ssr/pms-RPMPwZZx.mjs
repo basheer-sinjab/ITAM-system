@@ -1,0 +1,67 @@
+//#region node_modules/.nitro/vite/services/ssr/assets/pms-RPMPwZZx.js
+var PRINTER_STATUS = {
+	active: "نشطة",
+	maintenance: "تحت الصيانة",
+	out_of_service: "خارج الخدمة",
+	retired: "مؤرشفة"
+};
+var STATUS_CLASS = {
+	active: "bg-success/15 text-success border-success/30",
+	maintenance: "bg-warning/20 text-warning-foreground border-warning/40",
+	out_of_service: "bg-destructive/15 text-destructive border-destructive/30",
+	retired: "bg-muted text-muted-foreground border-border"
+};
+var TONER_COLORS = {
+	black: "أسود",
+	cyan: "سماوي",
+	magenta: "أرجواني",
+	yellow: "أصفر",
+	other: "أخرى"
+};
+var MAINTENANCE_TYPES = {
+	repair: "إصلاح",
+	part_replacement: "استبدال قطعة",
+	cleaning: "تنظيف",
+	preventive: "صيانة وقائية",
+	setup: "إعداد / تهيئة",
+	other: "أخرى"
+};
+function formatDate(value) {
+	if (!value) return "—";
+	const d = new Date(value);
+	if (Number.isNaN(d.getTime())) return "—";
+	return new Intl.DateTimeFormat("ar-EG", {
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		numberingSystem: "latn"
+	}).format(d);
+}
+function today() {
+	return (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+}
+function daysUntil(date) {
+	if (!date) return null;
+	const diff = new Date(date).getTime() - (/* @__PURE__ */ new Date()).setHours(0, 0, 0, 0);
+	return Math.round(diff / 864e5);
+}
+async function resolveImage(path) {
+	return path ?? null;
+}
+async function uploadPrinterImage(file) {
+	const formData = new FormData();
+	formData.append("image", file);
+	const response = await fetch("/api/printer-images", {
+		method: "POST",
+		body: formData
+	});
+	const body = await response.json();
+	if (!response.ok) throw new Error(body.message ?? "تعذر رفع الصورة");
+	return body.path;
+}
+async function deletePrinterImage(path) {
+	if (!path?.startsWith("/uploads/printers/")) return;
+	if (!(await fetch(`/api/printer-images?path=${encodeURIComponent(path)}`, { method: "DELETE" })).ok) throw new Error("تعذر حذف الصورة القديمة");
+}
+//#endregion
+export { daysUntil as a, resolveImage as c, TONER_COLORS as i, today as l, PRINTER_STATUS as n, deletePrinterImage as o, STATUS_CLASS as r, formatDate as s, MAINTENANCE_TYPES as t, uploadPrinterImage as u };
