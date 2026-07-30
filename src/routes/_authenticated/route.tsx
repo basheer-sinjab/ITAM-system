@@ -21,7 +21,7 @@ function AppLayout() {
       <aside className="no-print sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-l border-sidebar-border/70 bg-sidebar text-sidebar-foreground lg:flex">
         <div className="flex items-center gap-3 px-6 py-7">
           <span className="flex size-11 items-center justify-center rounded-2xl bg-sidebar-primary text-sidebar-primary-foreground shadow-lg shadow-black/10"><Printer className="size-5" /></span>
-          <div><p className="text-base font-bold leading-tight">إدارة الطابعات</p><p className="mt-1 text-xs text-sidebar-foreground/55">مساحة العمل المحلية</p></div>
+          <div><p className="text-base font-bold leading-tight">إدارة الطابعات</p></div>
         </div>
         <nav className="flex-1 space-y-1 px-4">
           {NAV.map((item) => <Link key={item.to} to={item.to} activeOptions={{ exact: item.exact }} className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[status=active]:bg-sidebar-primary data-[status=active]:text-sidebar-primary-foreground data-[status=active]:shadow-sm"><item.icon className="size-[18px]" />{item.label}</Link>)}
