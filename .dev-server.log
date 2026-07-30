@@ -452,3 +452,57 @@ The above error occurred in the <errorComponent> component.
 React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
 
 [2m٥:٠٩:٠٧ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٥:٢٢:٥٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/__root.tsx[22m
+[2m٥:٢٢:٥٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/styles.css[22m
+[2m٥:٢٢:٥٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٥:٢٣:٠٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/components/ui/card.tsx[22m
+[2m٥:٢٣:٠٤ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/components/ui/button.tsx[22m
+[2m٥:٢٣:١٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/components/ui/input.tsx[22m
+[2m٥:٢٣:١٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/__root.tsx[22m
+[2m٥:٢٣:١٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/__root.tsx[22m
+[2m٥:٢٤:٠٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/index.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component[22m
+[2m٥:٢٤:٠٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/index.tsx[22m
+[2m٥:٢٤:١٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/printers.index.tsx, /src/routes/_authenticated/printers.index.tsx?tsr-split=component[22m
+[2m٥:٢٤:١٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/printers.index.tsx[22m
+[2m٥:٢٤:٣٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/route.tsx, /src/routes/_authenticated/route.tsx?tsr-split=component[22m
+[2m٥:٢٤:٣٣ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/route.tsx[22m
+[2m٥:٣٢:٠٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/index.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component[22m
+[2m٥:٣٢:٠٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/index.tsx[22m
+[2m٥:٣٢:٠٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٥:٣٢:٠٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/index.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component[22m
+[2m٥:٣٢:٠٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/index.tsx[22m
+[2m٥:٣٢:١٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/index.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component[22m
+[2m٥:٣٢:١٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/index.tsx[22m
+[2m٥:٣٥:٤١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1785422141569} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+

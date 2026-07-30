@@ -94,7 +94,7 @@ function PrintersPage() {
     list?.find((x) => x.id === id)?.name ?? "—";
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-7xl space-y-8">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">الطابعات</h1>
@@ -155,7 +155,7 @@ function PrintersPage() {
       {isLoading ? (
         <p className="text-muted-foreground">جارٍ التحميل…</p>
       ) : filtered.length === 0 ? (
-        <div className="surface-panel p-12 text-center text-muted-foreground">
+        <div className="empty-state p-12 text-center text-muted-foreground">
           لا توجد طابعات مطابقة.
         </div>
       ) : (
@@ -165,10 +165,10 @@ function PrintersPage() {
               key={p.id}
               to="/printers/$id"
               params={{ id: p.id }}
-              className="surface-panel group overflow-hidden transition-shadow hover:shadow-float"
+              className="surface-panel interactive-card group overflow-hidden hover:interactive-card-hover"
             >
               <div className="relative">
-                <PrinterImage path={p.image_url} alt={p.name} className="h-40 w-full" />
+                <PrinterImage path={p.image_url} alt={p.name} className="h-48 w-full" />
                 {p.is_favorite && (
                   <Star className="absolute top-3 left-3 size-5 fill-warning text-warning" />
                 )}
@@ -179,7 +179,7 @@ function PrintersPage() {
                   {PRINTER_STATUS[p.status as PrinterStatus]}
                 </Badge>
               </div>
-              <div className="space-y-2 p-4">
+              <div className="space-y-3 p-5">
                 <div className="flex items-baseline justify-between gap-2">
                   <h3 className="font-semibold">{p.name}</h3>
                   <span className="font-mono text-xs text-muted-foreground" dir="ltr">

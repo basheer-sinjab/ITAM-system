@@ -528,6 +528,32 @@ var ShieldAlert = createLucideIcon("shield-alert", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var Sparkles = createLucideIcon("sparkles", [
+	["path", {
+		d: "M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z",
+		key: "1s2grr"
+	}],
+	["path", {
+		d: "M20 2v4",
+		key: "1rf3ol"
+	}],
+	["path", {
+		d: "M22 4h-4",
+		key: "gwowj6"
+	}],
+	["circle", {
+		cx: "4",
+		cy: "20",
+		r: "2",
+		key: "6kqj1y"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var Star = createLucideIcon("star", [["path", {
 	d: "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z",
 	key: "r04s7s"
@@ -636,4 +662,4 @@ var X = createLucideIcon("x", [["path", {
 	key: "d8bk6v"
 }]]);
 //#endregion
-export { ArrowRight as C, Check as S, Archive as T, Droplets as _, Trash2 as a, ChevronUp as b, Settings as c, Printer as d, Plus as f, FileText as g, LayoutDashboard as h, TriangleAlert as i, Search as l, PackagePlus as m, Wrench as n, Star as o, Pencil as p, Truck as r, ShieldAlert as s, X as t, QrCode as u, Download as v, ArrowLeftRight as w, ChevronDown as x, CircleSlash as y };
+export { Check as C, Archive as E, ChevronDown as S, ArrowLeftRight as T, FileText as _, Trash2 as a, CircleSlash as b, ShieldAlert as c, QrCode as d, Printer as f, LayoutDashboard as g, PackagePlus as h, TriangleAlert as i, Settings as l, Pencil as m, Wrench as n, Star as o, Plus as p, Truck as r, Sparkles as s, X as t, Search as u, Droplets as v, ArrowRight as w, ChevronUp as x, Download as y };

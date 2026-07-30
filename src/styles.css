@@ -11,7 +11,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
-  --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans Arabic", "Noto Sans Arabic", "Alexandria", ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -56,19 +56,19 @@
   --color-toner-magenta: var(--toner-magenta);
   --color-toner-yellow: var(--toner-yellow);
   --color-toner-other: var(--toner-other);
-  --shadow-card: 0 1px 2px oklch(0.2 0.03 240 / 0.06), 0 8px 24px -12px oklch(0.2 0.03 240 / 0.18);
-  --shadow-float: 0 10px 40px -14px oklch(0.2 0.03 240 / 0.28);
+  --shadow-card: 0 1px 2px oklch(0.2 0.03 240 / 0.03), 0 12px 28px -18px oklch(0.2 0.03 240 / 0.18);
+  --shadow-float: 0 22px 45px -22px oklch(0.2 0.03 240 / 0.32);
 }
 
 :root {
-  --radius: 0.75rem;
-  --background: oklch(0.977 0.005 240);
+  --radius: 0.9rem;
+  --background: oklch(0.982 0.004 245);
   --foreground: oklch(0.22 0.03 250);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.22 0.03 250);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.03 250);
-  --primary: oklch(0.52 0.11 205);
+  --primary: oklch(0.48 0.11 225);
   --primary-foreground: oklch(0.99 0.005 200);
   --secondary: oklch(0.955 0.011 235);
   --secondary-foreground: oklch(0.3 0.035 245);
@@ -92,7 +92,7 @@
   --chart-3: oklch(0.75 0.15 75);
   --chart-4: oklch(0.58 0.2 25);
   --chart-5: oklch(0.6 0.12 250);
-  --sidebar: oklch(0.26 0.035 245);
+  --sidebar: oklch(0.22 0.032 250);
   --sidebar-foreground: oklch(0.93 0.012 240);
   --sidebar-primary: oklch(0.62 0.12 200);
   --sidebar-primary-foreground: oklch(0.99 0.005 200);
@@ -152,7 +152,19 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    letter-spacing: -0.012em;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
   }
+
+  ::selection { background: color-mix(in oklch, var(--primary) 18%, transparent); }
+  button, a, input, textarea, [role="button"] { transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease, color 160ms ease; }
+  button:not(:disabled):active { transform: scale(0.98); }
+  table { border-collapse: separate; border-spacing: 0; }
+  thead { background: color-mix(in oklch, var(--muted) 65%, transparent); }
+  th { font-size: 0.75rem; font-weight: 600; color: var(--muted-foreground); letter-spacing: 0; }
+  tr { transition: background-color 160ms ease; }
+  tbody tr:hover { background: color-mix(in oklch, var(--accent) 42%, transparent); }
 }
 
 @utility surface-panel {
@@ -160,6 +172,45 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
+}
+
+@utility page-heading {
+  font-size: 1.875rem;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+@utility page-subtitle {
+  margin-top: 0.35rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+@utility interactive-card {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+@utility interactive-card-hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-float);
+  border-color: color-mix(in oklch, var(--primary) 28%, var(--border));
+}
+
+@utility empty-state {
+  display: flex;
+  min-height: 14rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed color-mix(in oklch, var(--border) 88%, var(--primary));
+  border-radius: var(--radius-xl);
+  background: color-mix(in oklch, var(--card) 75%, var(--muted));
+}
+
+@keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  main > * { animation: rise-in 320ms ease-out both; }
 }
 
 @media print {

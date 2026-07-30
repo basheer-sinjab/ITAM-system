@@ -21,6 +21,7 @@ import {
   AlertTriangle,
   Star,
   ShieldAlert,
+  Sparkles,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/")({
@@ -87,15 +88,39 @@ function StatCard({
     success: "bg-success/15 text-success",
   };
   return (
-    <div className="surface-panel flex items-center gap-4 p-5">
-      <span className={`flex size-11 items-center justify-center rounded-xl ${tones[tone]}`}>
-        <Icon className="size-5" />
+    <div className="surface-panel interactive-card flex items-center gap-4 p-5 hover:interactive-card-hover">
+      <span className={`flex size-12 items-center justify-center rounded-2xl ${tones[tone]}`}>
+        <Icon className="size-5" strokeWidth={2.2} />
       </span>
       <div>
-        <p className="text-2xl font-bold leading-none">{value}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{label}</p>
+        <p className="text-3xl font-bold leading-none tracking-tight">{value}</p>
+        <p className="mt-1.5 text-sm text-muted-foreground">{label}</p>
       </div>
     </div>
+  );
+}
+
+function DashboardHero({ total, active, alerts }: { total: number; active: number; alerts: number }) {
+  return (
+    <section className="relative overflow-hidden rounded-3xl bg-sidebar px-6 py-7 text-sidebar-foreground shadow-float sm:px-8 sm:py-8">
+      <div className="absolute -left-14 -top-16 size-52 rounded-full bg-sidebar-primary/20 blur-3xl" />
+      <div className="absolute -bottom-20 right-1/3 size-56 rounded-full bg-primary/20 blur-3xl" />
+      <div className="relative flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+        <div>
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs text-sidebar-foreground/80">
+            <Sparkles className="size-3.5 text-sidebar-primary" />
+            نظرة تشغيلية مباشرة
+          </div>
+          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">كل ما تحتاجه لإدارة الطابعات، في مكان واحد.</h2>
+          <p className="mt-2 max-w-2xl text-sm text-sidebar-foreground/65">تابع الأصول والمخزون والصيانة بوضوح، واتخذ الإجراء المناسب قبل أن تتعطل الأعمال.</p>
+        </div>
+        <div className="flex gap-7 rounded-2xl border border-white/10 bg-black/10 px-5 py-4">
+          <div><p className="text-2xl font-bold text-white">{total}</p><p className="mt-1 text-xs text-sidebar-foreground/60">إجمالي الأصول</p></div>
+          <div className="border-r border-white/10 pr-7"><p className="text-2xl font-bold text-sidebar-primary">{active}</p><p className="mt-1 text-xs text-sidebar-foreground/60">تعمل الآن</p></div>
+          <div className="border-r border-white/10 pr-7"><p className="text-2xl font-bold text-warning">{alerts}</p><p className="mt-1 text-xs text-sidebar-foreground/60">تحتاج انتباهًا</p></div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -141,11 +166,13 @@ function Dashboard() {
     : [];
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-7xl space-y-9">
       <header>
         <h1 className="text-2xl font-bold">لوحة التحكم</h1>
         <p className="text-sm text-muted-foreground">نظرة عامة على أصول الطباعة في الشركة</p>
       </header>
+
+      <DashboardHero total={printers.length} active={count("active")} alerts={lowStock.length + outOfStock.length + expired.length + expiring.length} />
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <StatCard label="إجمالي الطابعات" value={printers.length} icon={Printer} />
@@ -169,11 +196,11 @@ function Dashboard() {
               التنبيهات ({alerts.length})
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="grid gap-2 sm:grid-cols-2">
             {alerts.slice(0, 12).map((a, i) => (
               <div
                 key={i}
-                className={`rounded-lg border px-3 py-2 text-sm ${
+                className={`rounded-xl border px-3.5 py-3 text-sm transition-transform hover:-translate-y-0.5 ${
                   a.tone === "destructive"
                     ? "border-destructive/30 bg-destructive/10 text-destructive"
                     : "border-warning/40 bg-warning/15 text-warning-foreground"
@@ -192,16 +219,16 @@ function Dashboard() {
             <Star className="size-4 fill-warning text-warning" />
             الطابعات المفضلة
           </h2>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {favorites.map((p) => (
               <Link
                 key={p.id}
                 to="/printers/$id"
                 params={{ id: p.id }}
-                className="surface-panel overflow-hidden transition-shadow hover:shadow-float"
+                className="surface-panel interactive-card overflow-hidden hover:interactive-card-hover"
               >
-                <PrinterImage path={p.image_url} alt={p.name} className="h-32 w-full" />
-                <div className="space-y-1 p-4">
+                <PrinterImage path={p.image_url} alt={p.name} className="h-36 w-full" />
+                <div className="space-y-2 p-4">
                   <p className="font-semibold">{p.name}</p>
                   <p className="text-xs text-muted-foreground">
                     {p.model ?? "—"} · {p.asset_id}
