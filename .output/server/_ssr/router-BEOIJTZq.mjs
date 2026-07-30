@@ -1,12 +1,16 @@
-import { t as Route$8 } from "./printers._id-Dq66Jz_6.js";
-import { useEffect } from "react";
-import { HeadContent, Link, Outlet, Scripts, createFileRoute, createRootRouteWithContext, createRouter, lazyRouteComponent, useRouter } from "@tanstack/react-router";
-import { jsx, jsxs } from "react/jsx-runtime";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "sonner";
-//#region src/components/ui/sonner.tsx
+import { r as __toESM } from "../_runtime.mjs";
+import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
+import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
+import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
+import { r as QueryClientProvider } from "../_libs/tanstack__react-query.mjs";
+import { _ as useRouter, c as HeadContent, d as Outlet, f as lazyRouteComponent, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
+import { t as Route$8 } from "./printers._id-Dq66Jz_6.mjs";
+import { t as Toaster } from "../_libs/sonner.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/router-BEOIJTZq.js
+var import_react = /* @__PURE__ */ __toESM(require_react());
+var import_jsx_runtime = require_jsx_runtime();
 var Toaster$1 = ({ ...props }) => {
-	return /* @__PURE__ */ jsx(Toaster, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster, {
 		className: "toaster group",
 		toastOptions: { classNames: {
 			toast: "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
@@ -17,11 +21,7 @@ var Toaster$1 = ({ ...props }) => {
 		...props
 	});
 };
-//#endregion
-//#region src/styles.css?url
-var styles_default = "/assets/styles-2QSD6YHI.css";
-//#endregion
-//#region src/lib/lovable-error-reporting.ts
+var styles_default = "/assets/styles-fAm9qsKN.css";
 function reportLovableError(error, context = {}) {
 	if (typeof window === "undefined") return;
 	window.__lovableEvents?.captureException?.(error, {
@@ -40,29 +40,27 @@ function reportLovableError(error, context = {}) {
 		filename: window.location.pathname
 	});
 }
-//#endregion
-//#region src/routes/__root.tsx
 function NotFoundComponent() {
-	return /* @__PURE__ */ jsx("div", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		className: "flex min-h-screen items-center justify-center bg-background px-4",
-		children: /* @__PURE__ */ jsxs("div", {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "max-w-md text-center",
 			children: [
-				/* @__PURE__ */ jsx("h1", {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
 					className: "text-7xl font-bold text-foreground",
 					children: "404"
 				}),
-				/* @__PURE__ */ jsx("h2", {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
 					className: "mt-4 text-xl font-semibold text-foreground",
 					children: "الصفحة غير موجودة"
 				}),
-				/* @__PURE__ */ jsx("p", {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "mt-2 text-sm text-muted-foreground",
 					children: "الصفحة التي تبحث عنها غير متوفرة أو تم نقلها."
 				}),
-				/* @__PURE__ */ jsx("div", {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					className: "mt-6",
-					children: /* @__PURE__ */ jsx(Link, {
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
 						to: "/",
 						className: "inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90",
 						children: "العودة للرئيسية"
@@ -75,32 +73,32 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }) {
 	console.error(error);
 	const router = useRouter();
-	useEffect(() => {
+	(0, import_react.useEffect)(() => {
 		reportLovableError(error, { boundary: "tanstack_root_error_component" });
 	}, [error]);
-	return /* @__PURE__ */ jsx("div", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		className: "flex min-h-screen items-center justify-center bg-background px-4",
-		children: /* @__PURE__ */ jsxs("div", {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			className: "max-w-md text-center",
 			children: [
-				/* @__PURE__ */ jsx("h1", {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
 					className: "text-xl font-semibold tracking-tight text-foreground",
 					children: "تعذر تحميل الصفحة"
 				}),
-				/* @__PURE__ */ jsx("p", {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "mt-2 text-sm text-muted-foreground",
 					children: "حدث خطأ غير متوقع. يمكنك المحاولة مرة أخرى أو العودة للرئيسية."
 				}),
-				/* @__PURE__ */ jsxs("div", {
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "mt-6 flex flex-wrap justify-center gap-2",
-					children: [/* @__PURE__ */ jsx("button", {
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 						onClick: () => {
 							router.invalidate();
 							reset();
 						},
 						className: "inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90",
 						children: "إعادة المحاولة"
-					}), /* @__PURE__ */ jsx("a", {
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
 						href: "/",
 						className: "inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent",
 						children: "الرئيسية"
@@ -163,32 +161,28 @@ var Route$7 = createRootRouteWithContext()({
 	errorComponent: ErrorComponent
 });
 function RootShell({ children }) {
-	return /* @__PURE__ */ jsxs("html", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("html", {
 		lang: "ar",
 		dir: "rtl",
-		children: [/* @__PURE__ */ jsx("head", { children: /* @__PURE__ */ jsx(HeadContent, {}) }), /* @__PURE__ */ jsxs("body", { children: [children, /* @__PURE__ */ jsx(Scripts, {})] })]
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("head", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HeadContent, {}) }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("body", { children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Scripts, {})] })]
 	});
 }
 function RootComponent() {
 	const { queryClient } = Route$7.useRouteContext();
-	return /* @__PURE__ */ jsxs(QueryClientProvider, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(QueryClientProvider, {
 		client: queryClient,
-		children: [/* @__PURE__ */ jsx(Outlet, {}), /* @__PURE__ */ jsx(Toaster$1, {
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster$1, {
 			position: "top-center",
 			dir: "rtl"
 		})]
 	});
 }
-//#endregion
-//#region src/routes/_authenticated/route.tsx
-var $$splitComponentImporter$6 = () => import("./route-DwFIq-t_.js");
+var $$splitComponentImporter$6 = () => import("./route-DwFIq-t_.mjs");
 var Route$6 = createFileRoute("/_authenticated")({
 	ssr: false,
 	component: lazyRouteComponent($$splitComponentImporter$6, "component")
 });
-//#endregion
-//#region src/routes/_authenticated/index.tsx
-var $$splitComponentImporter$5 = () => import("./_authenticated-iFPeyq5a.js");
+var $$splitComponentImporter$5 = () => import("../_authenticated-iFPeyq5a.mjs");
 var Route$5 = createFileRoute("/_authenticated/")({
 	head: () => ({ meta: [
 		{ title: "لوحة التحكم — نظام إدارة الطابعات" },
@@ -207,9 +201,7 @@ var Route$5 = createFileRoute("/_authenticated/")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$5, "component")
 });
-//#endregion
-//#region src/routes/_authenticated/reports.tsx
-var $$splitComponentImporter$4 = () => import("./reports-qdV4_iIA.js");
+var $$splitComponentImporter$4 = () => import("./reports-qdV4_iIA.mjs");
 var Route$4 = createFileRoute("/_authenticated/reports")({
 	head: () => ({ meta: [
 		{ title: "التقارير — نظام إدارة الطابعات" },
@@ -228,9 +220,7 @@ var Route$4 = createFileRoute("/_authenticated/reports")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$4, "component")
 });
-//#endregion
-//#region src/routes/_authenticated/settings.tsx
-var $$splitComponentImporter$3 = () => import("./settings-BbNBrrm6.js");
+var $$splitComponentImporter$3 = () => import("./settings-CXOE0cOR.mjs");
 var Route$3 = createFileRoute("/_authenticated/settings")({
 	head: () => ({ meta: [
 		{ title: "الإعدادات — نظام إدارة الطابعات" },
@@ -249,9 +239,7 @@ var Route$3 = createFileRoute("/_authenticated/settings")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$3, "component")
 });
-//#endregion
-//#region src/routes/_authenticated/suppliers.tsx
-var $$splitComponentImporter$2 = () => import("./suppliers-Coxn7k5V.js");
+var $$splitComponentImporter$2 = () => import("./suppliers-Coxn7k5V.mjs");
 var Route$2 = createFileRoute("/_authenticated/suppliers")({
 	head: () => ({ meta: [
 		{ title: "الموردون — نظام إدارة الطابعات" },
@@ -270,9 +258,7 @@ var Route$2 = createFileRoute("/_authenticated/suppliers")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$2, "component")
 });
-//#endregion
-//#region src/routes/_authenticated/toners.tsx
-var $$splitComponentImporter$1 = () => import("./toners-Dh1CXCg1.js");
+var $$splitComponentImporter$1 = () => import("./toners-Dh1CXCg1.mjs");
 var Route$1 = createFileRoute("/_authenticated/toners")({
 	head: () => ({ meta: [
 		{ title: "مخزون الأحبار — نظام إدارة الطابعات" },
@@ -291,9 +277,7 @@ var Route$1 = createFileRoute("/_authenticated/toners")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-//#endregion
-//#region src/routes/_authenticated/printers.index.tsx
-var $$splitComponentImporter = () => import("./printers.index-D-_1JPwu.js");
+var $$splitComponentImporter = () => import("./printers.index-D-_1JPwu.mjs");
 var Route = createFileRoute("/_authenticated/printers/")({
 	head: () => ({ meta: [
 		{ title: "الطابعات — نظام إدارة الطابعات" },
@@ -312,8 +296,6 @@ var Route = createFileRoute("/_authenticated/printers/")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter, "component")
 });
-//#endregion
-//#region src/routeTree.gen.ts
 var AuthenticatedRouteRoute = Route$6.update({
 	id: "/_authenticated",
 	getParentRoute: () => Route$7
@@ -363,8 +345,6 @@ var AuthenticatedRouteRouteChildren = {
 };
 var rootRouteChildren = { AuthenticatedRouteRoute: AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren) };
 var routeTree = Route$7._addFileChildren(rootRouteChildren)._addFileTypes();
-//#endregion
-//#region src/router.tsx
 var getRouter = () => {
 	const queryClient = new QueryClient();
 	return createRouter({

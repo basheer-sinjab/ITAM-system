@@ -33,14 +33,14 @@ function SettingsPage() {
         <p className="text-sm text-muted-foreground">القوائم الأساسية وتنبيهات النظام</p>
       </header>
 
-      <Tabs defaultValue="branches">
-        <TabsList>
-          <TabsTrigger value="branches">الفروع</TabsTrigger>
-          <TabsTrigger value="departments">الأقسام</TabsTrigger>
-          <TabsTrigger value="persons">الأشخاص المسؤولون</TabsTrigger>
-          <TabsTrigger value="parts">قطع الغيار</TabsTrigger>
-          <TabsTrigger value="alerts">التنبيهات</TabsTrigger>
-          <TabsTrigger value="backup">النسخ الاحتياطي</TabsTrigger>
+      <Tabs defaultValue="branches" dir="rtl" className="w-full">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-3 xl:grid-cols-6">
+          <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="branches">الفروع</TabsTrigger>
+          <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="departments">الأقسام</TabsTrigger>
+          <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="persons">الأشخاص المسؤولون</TabsTrigger>
+          <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="parts">قطع الغيار</TabsTrigger>
+          <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="alerts">التنبيهات</TabsTrigger>
+          <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="backup">النسخ الاحتياطي</TabsTrigger>
         </TabsList>
 
         <TabsContent value="branches" className="mt-4">
