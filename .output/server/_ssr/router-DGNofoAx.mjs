@@ -6,7 +6,7 @@ import { r as QueryClientProvider } from "../_libs/tanstack__react-query.mjs";
 import { _ as useRouter, c as HeadContent, d as Outlet, f as lazyRouteComponent, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
 import { t as Route$8 } from "./printers._id-BcXlWcWe.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-DWrmubBT.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-DGNofoAx.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var Toaster$1 = ({ ...props }) => {
@@ -182,7 +182,7 @@ var Route$6 = createFileRoute("/_authenticated")({
 	ssr: false,
 	component: lazyRouteComponent($$splitComponentImporter$6, "component")
 });
-var $$splitComponentImporter$5 = () => import("../_authenticated-DcL-yNEf.mjs");
+var $$splitComponentImporter$5 = () => import("../_authenticated-BkWowht2.mjs");
 var Route$5 = createFileRoute("/_authenticated/")({
 	head: () => ({ meta: [
 		{ title: "لوحة التحكم — PrintersFloss" },
