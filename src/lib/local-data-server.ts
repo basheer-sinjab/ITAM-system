@@ -8,7 +8,7 @@ type Entity = { columns: string[]; sql: string; indexes?: string[] };
 
 const DATABASE_PATH = join(process.env.INIT_CWD ?? process.cwd(), "data", "itam.db");
 const ENTITIES: Record<string, Entity> = {
-  departments: { columns: ["id", "name", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, name TEXT NOT NULL UNIQUE, notes TEXT, created_at TEXT NOT NULL)" },
+  departments: { columns: ["id", "name", "branch", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, name TEXT NOT NULL, branch TEXT NOT NULL DEFAULT '', notes TEXT, created_at TEXT NOT NULL, UNIQUE(name, branch))", indexes: ["CREATE INDEX IF NOT EXISTS idx_departments_branch_name ON departments(branch, name)"] },
   employees: { columns: ["id", "full_name", "email", "phone", "department_id", "status", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS employees (id TEXT PRIMARY KEY, full_name TEXT NOT NULL, email TEXT, phone TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, status TEXT NOT NULL DEFAULT 'active', notes TEXT, created_at TEXT NOT NULL)", indexes: ["CREATE INDEX IF NOT EXISTS idx_employees_department ON employees(department_id)", "CREATE INDEX IF NOT EXISTS idx_employees_name ON employees(full_name)"] },
   assets: { columns: ["id", "asset_id", "name", "asset_type", "manufacturer", "model", "serial_number", "status", "location", "assigned_employee_id", "image_url", "notes", "created_at", "updated_at"], sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, image_url TEXT, notes TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)", indexes: ["CREATE INDEX IF NOT EXISTS idx_assets_employee ON assets(assigned_employee_id)", "CREATE INDEX IF NOT EXISTS idx_assets_status ON assets(status)"] },
   assignment_history: { columns: ["id", "asset_id", "employee_id", "assignment_date", "return_date", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS assignment_history (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, assignment_date TEXT NOT NULL, return_date TEXT, notes TEXT, created_at TEXT NOT NULL)", indexes: ["CREATE INDEX IF NOT EXISTS idx_assignment_asset ON assignment_history(asset_id)", "CREATE INDEX IF NOT EXISTS idx_assignment_employee ON assignment_history(employee_id)"] },
@@ -20,7 +20,17 @@ const ENTITIES: Record<string, Entity> = {
 };
 let ready: Promise<DatabaseSync> | undefined;
 function definition(table: string) { const value = ENTITIES[table]; if (!value) throw new Error("جدول ITAM غير صالح"); return value; }
-async function db() { if (!ready) ready = mkdir(dirname(DATABASE_PATH), { recursive: true }).then(() => { const database = new DatabaseSync(DATABASE_PATH); database.exec("PRAGMA foreign_keys = ON"); for (const entity of Object.values(ENTITIES)) { database.exec(entity.sql); entity.indexes?.forEach((index) => database.exec(index)); } return database; }); return ready; }
+function migrateDepartments(database: DatabaseSync) {
+  const columns = database.prepare("PRAGMA table_info(departments)").all() as Array<{ name: string }>;
+  if (!columns.length || columns.some((column) => column.name === "branch")) return;
+  database.exec("PRAGMA foreign_keys = OFF");
+  database.exec("CREATE TABLE departments_next (id TEXT PRIMARY KEY, name TEXT NOT NULL, branch TEXT NOT NULL DEFAULT '', notes TEXT, created_at TEXT NOT NULL, UNIQUE(name, branch))");
+  database.exec("INSERT INTO departments_next (id, name, branch, notes, created_at) SELECT id, name, '', notes, created_at FROM departments");
+  database.exec("DROP TABLE departments");
+  database.exec("ALTER TABLE departments_next RENAME TO departments");
+  database.exec("PRAGMA foreign_keys = ON");
+}
+async function db() { if (!ready) ready = mkdir(dirname(DATABASE_PATH), { recursive: true }).then(() => { const database = new DatabaseSync(DATABASE_PATH); migrateDepartments(database); database.exec("PRAGMA foreign_keys = ON"); for (const entity of Object.values(ENTITIES)) { database.exec(entity.sql); entity.indexes?.forEach((index) => database.exec(index)); } return database; }); return ready; }
 function hydrate(row: Row) { if (typeof row.used_items === "string") row.used_items = JSON.parse(row.used_items || "[]"); if (row.dashboard_alerts_enabled !== undefined) row.dashboard_alerts_enabled = Boolean(row.dashboard_alerts_enabled); return row; }
 async function rows(table: string) { definition(table); return (await db()).prepare(`SELECT * FROM ${table}`).all().map((row) => hydrate(row as Row)); }
 function match(row: Row, filters: Array<[string, unknown]>) { return filters.every(([field, value]) => row[field] === value); }

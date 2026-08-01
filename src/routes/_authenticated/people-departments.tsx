@@ -6,8 +6,9 @@ import {
 } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Building2, Plus, UsersRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -67,7 +68,7 @@ function PeopleDepartments() {
   const { data: departments = [] } = useQuery({
     queryKey: ["departments"],
     queryFn: async () =>
-      (await supabase.from("departments").select("*").order("name")).data ?? [],
+      (await supabase.from("departments").select("*").order("branch")).data ?? [],
   });
   const { data: assets = [] } = useQuery({
     queryKey: ["assets"],
@@ -80,24 +81,30 @@ function PeopleDepartments() {
   });
   const filteredEmployees = employees.filter((employee: any) => {
     const search = employeeSearch.trim().toLowerCase();
-    return !search || [employee.full_name, employee.email, employee.phone].some((value) => String(value ?? "").toLowerCase().includes(search));
+    return (
+      !search ||
+      [employee.full_name, employee.email, employee.phone].some((value) =>
+        String(value ?? "")
+          .toLowerCase()
+          .includes(search),
+      )
+    );
   });
   return (
-    <div className="mx-auto max-w-7xl">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold">الأشخاص والأقسام</h1>
-        <p className="text-sm text-muted-foreground">
-          الموظفون والأقسام والأصول المعيّنة
-        </p>
-      </header>
+    <div className="mx-auto max-w-7xl space-y-6">
+      <ManagementHeader icon={UsersRound} title="الأشخاص والأقسام" description="إدارة الموظفين والأقسام والتراخيص المعيّنة" />
+      <section className="grid gap-3 sm:grid-cols-2">
+        <MetricCard icon={UsersRound} label="الموظفون" value={employees.length} />
+        <MetricCard icon={Building2} label="الأقسام" value={departments.length} tone="emerald" />
+      </section>
       <Tabs defaultValue={tab}>
         <TabsList>
           <TabsTrigger value="employees">الموظفون</TabsTrigger>
           <TabsTrigger value="departments">الأقسام</TabsTrigger>
         </TabsList>
         <TabsContent value="employees" className="space-y-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <Input value={employeeSearch} onChange={(event) => setEmployeeSearch(event.target.value)} placeholder="ابحث بالاسم أو البريد أو رقم الهاتف" className="sm:max-w-sm" />
+          <div className="surface-panel flex flex-col gap-3 p-3 sm:flex-row-reverse sm:items-center sm:justify-between">
+            <div className="relative w-full sm:max-w-sm"><UsersRound className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input value={employeeSearch} onChange={(event) => setEmployeeSearch(event.target.value)} placeholder="ابحث بالاسم أو البريد أو رقم الهاتف" className="pr-9" /></div>
             <Button onClick={() => setEmployeeOpen(true)}>
               <Plus className="ml-2 size-4" />
               إضافة موظف
@@ -111,33 +118,22 @@ function PeopleDepartments() {
                 params={{ id: employee.id }}
                 className="surface-panel interactive-card p-5 hover:interactive-card-hover"
               >
-                <h2 className="font-semibold">{employee.full_name}</h2>
+                <div className="flex items-start justify-between gap-3"><span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><UsersRound className="size-5" /></span><span className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs ${employee.status === "active" ? "bg-emerald-500/10 text-emerald-700" : "bg-muted text-muted-foreground"}`}><span className={`size-2 rounded-full ${employee.status === "active" ? "bg-emerald-500" : "bg-muted-foreground"}`} />{employee.status === "active" ? "نشط" : "غير نشط"}</span></div><h2 className="mt-4 font-semibold">{employee.full_name}</h2>
                 <p className="text-sm text-muted-foreground">
                   {employee.email || "—"} · {employee.phone || "—"}
                 </p>
-                <p className="mt-3 text-sm">
-                  الأصول المعيّنة:{" "}
-                  {
-                    assets.filter(
-                      (asset: any) =>
-                        asset.assigned_employee_id === employee.id,
-                    ).length
-                  }{" "}
-                  · التراخيص:{" "}
-                  {
-                    licenseAssignments.filter(
-                      (assignment: any) =>
-                        assignment.employee_id === employee.id,
-                    ).length
-                  }
-                </p>
+                <p className="mt-3 text-sm">التراخيص: {licenseAssignments.filter((assignment: any) => assignment.employee_id === employee.id).length}</p>
               </Link>
             ))}
           </div>
-          {filteredEmployees.length === 0 && <p className="text-sm text-muted-foreground">لا توجد نتائج مطابقة للبحث.</p>}
+          {filteredEmployees.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              لا توجد نتائج مطابقة للبحث.
+            </p>
+          )}
         </TabsContent>
         <TabsContent value="departments" className="space-y-4">
-          <div className="flex justify-end">
+          <div className="surface-panel flex justify-end p-3">
             <Button onClick={() => setDepartmentOpen(true)}>
               <Plus className="ml-2 size-4" />
               إضافة قسم
@@ -160,7 +156,7 @@ function PeopleDepartments() {
                   params={{ id: department.id }}
                   className="surface-panel interactive-card p-5 hover:interactive-card-hover"
                 >
-                  <h2 className="font-semibold">{department.name}</h2>
+                  <div className="flex items-start justify-between gap-3"><div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-700"><Building2 className="size-5" /></div><span className="rounded-md bg-sky-500/10 px-2 py-1 text-xs font-medium text-sky-700">{department.branch || "فرع غير محدد"}</span></div><h2 className="mt-4 font-semibold">{department.name}</h2>
                   <p className="text-sm text-muted-foreground">
                     {department.notes || "—"}
                   </p>
@@ -232,7 +228,7 @@ function EmployeeForm({ departments, close, saved }: any) {
                 <SelectItem value="__none__">غير محدد</SelectItem>
                 {departments.map((department: any) => (
                   <SelectItem key={department.id} value={department.id}>
-                    {department.name}
+                    {department.name} — {department.branch || "غير محدد"}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -265,6 +261,7 @@ function EmployeeForm({ departments, close, saved }: any) {
 }
 function DepartmentForm({ close, saved }: any) {
   const [name, setName] = useState("");
+  const [branch, setBranch] = useState("");
   const [notes, setNotes] = useState("");
   return (
     <Dialog open onOpenChange={close}>
@@ -277,6 +274,13 @@ function DepartmentForm({ close, saved }: any) {
             <Input
               value={name}
               onChange={(event) => setName(event.target.value)}
+            />
+          </Field>
+          <Field label="الفرع">
+            <Input
+              value={branch}
+              onChange={(event) => setBranch(event.target.value)}
+              placeholder="مثال: فرع الرياض"
             />
           </Field>
           <Field label="الوصف">
@@ -292,7 +296,9 @@ function DepartmentForm({ close, saved }: any) {
           </Button>
           <Button
             onClick={async () => {
-              await supabase.from("departments").insert({ name, notes });
+              await supabase
+                .from("departments")
+                .insert({ name: name.trim(), branch: branch.trim(), notes });
               saved();
               close();
             }}

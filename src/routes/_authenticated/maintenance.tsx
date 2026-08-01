@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { CircleDot, Pencil, Plus, Trash2, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,31 +54,40 @@ function Maintenance() {
     queryFn: async () =>
       (await supabase.from("inventory_items").select("*")).data ?? [],
   });
+  const openRecords = records.filter((record: any) => record.status === "Open").length;
   return (
     <div className="mx-auto max-w-7xl space-y-6">
-      <header className="flex justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">سجلات الصيانة</h1>
-          <p className="text-sm text-muted-foreground">
-            الصيانة الوقائية والتصحيحية
-          </p>
-        </div>
-        <Button onClick={() => setRecord({})}>
+      <ManagementHeader
+        icon={Wrench}
+        title="سجلات الصيانة"
+        description="الصيانة الوقائية والتصحيحية للأصول"
+        action={<Button onClick={() => setRecord({})}>
           <Plus className="ml-2 size-4" />
           إضافة سجل
-        </Button>
-      </header>
+        </Button>}
+      />
+      <section className="grid gap-3 sm:grid-cols-2">
+        <MetricCard icon={Wrench} label="إجمالي السجلات" value={records.length} />
+        <MetricCard icon={CircleDot} label="صيانة مفتوحة" value={openRecords} tone="amber" />
+      </section>
       <div className="surface-panel overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b text-right text-muted-foreground">
-              {["الأصل", "التاريخ", "النوع", "الحالة", "الفني", "الحل", "التكلفة", ""].map(
-                (header) => (
-                  <th key={header} className="p-4">
-                    {header}
-                  </th>
-                ),
-              )}
+              {[
+                "الأصل",
+                "التاريخ",
+                "النوع",
+                "الحالة",
+                "الفني",
+                "الحل",
+                "التكلفة",
+                "",
+              ].map((header) => (
+                <th key={header} className="p-4">
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -89,18 +99,45 @@ function Maintenance() {
               >
                 <td className="p-4">
                   {(() => {
-                    const asset = assets.find((item: any) => item.id === maintenanceRecord.asset_id);
-                    return asset ? <><p className="font-medium">{asset.name}</p><p className="font-mono text-xs text-muted-foreground">{asset.asset_id || asset.serial_number || "—"}</p></> : "—";
+                    const asset = assets.find(
+                      (item: any) => item.id === maintenanceRecord.asset_id,
+                    );
+                    return asset ? (
+                      <>
+                        <p className="font-medium">{asset.name}</p>
+                        <p className="font-mono text-xs text-muted-foreground">
+                          {asset.asset_id || asset.serial_number || "—"}
+                        </p>
+                      </>
+                    ) : (
+                      "—"
+                    );
                   })()}
                 </td>
                 <td className="p-4">{maintenanceRecord.maintenance_date}</td>
-                <td className="p-4">{maintenanceRecord.maintenance_type === "Preventive" ? "وقائية" : "تصحيحية"}</td>
-                <td className="p-4">{maintenanceRecord.status === "Closed" ? "مغلقة" : "مفتوحة"}</td>
+                <td className="p-4">
+                  {maintenanceRecord.maintenance_type === "Preventive"
+                    ? "وقائية"
+                    : "تصحيحية"}
+                </td>
+                <td className="p-4"><span className={maintenanceRecord.status === "Closed" ? "rounded-md bg-emerald-500/10 px-2 py-1 text-xs text-emerald-700" : "rounded-md bg-amber-500/10 px-2 py-1 text-xs text-amber-700"}>{maintenanceRecord.status === "Closed" ? "مغلقة" : "مفتوحة"}</span></td>
                 <td className="p-4">{maintenanceRecord.technician || "—"}</td>
-                <td className="max-w-64 p-4">{maintenanceRecord.resolution || "—"}</td>
+                <td className="max-w-64 p-4">
+                  {maintenanceRecord.resolution || "—"}
+                </td>
                 <td className="p-4">{maintenanceRecord.cost || 0}</td>
                 <td className="p-4">
-                  <Button size="icon" variant="ghost" aria-label="تعديل السجل" onClick={(event) => { event.stopPropagation(); setRecord(maintenanceRecord); }}><Pencil className="size-4" /></Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    aria-label="تعديل السجل"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setRecord(maintenanceRecord);
+                    }}
+                  >
+                    <Pencil className="size-4" />
+                  </Button>
                 </td>
               </tr>
             ))}
@@ -133,7 +170,10 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
   const save = async () => {
     const payload = { ...form, cost: Number(form.cost || 0) };
     const result = form.id
-      ? await supabase.from("asset_maintenance").update(payload).eq("id", form.id)
+      ? await supabase
+          .from("asset_maintenance")
+          .update(payload)
+          .eq("id", form.id)
       : await supabase.from("asset_maintenance").insert(payload);
     if (result.error) return toast.error(result.error.message);
     if (!form.id) {
@@ -143,7 +183,10 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
           await supabase
             .from("inventory_items")
             .update({
-              quantity: Math.max(0, Number(item.quantity) - Number(used.quantity)),
+              quantity: Math.max(
+                0,
+                Number(item.quantity) - Number(used.quantity),
+              ),
             })
             .eq("id", item.id);
       }
@@ -154,7 +197,10 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
   };
   const remove = async () => {
     if (!form.id || !confirm("حذف سجل الصيانة؟")) return;
-    const result = await supabase.from("asset_maintenance").delete().eq("id", form.id);
+    const result = await supabase
+      .from("asset_maintenance")
+      .delete()
+      .eq("id", form.id);
     if (result.error) return toast.error(result.error.message);
     saved();
     toast.success("تم حذف سجل الصيانة");
@@ -164,7 +210,9 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
     <Dialog open onOpenChange={close}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{form.id ? "تعديل سجل الصيانة" : "إضافة سجل صيانة"}</DialogTitle>
+          <DialogTitle>
+            {form.id ? "تعديل سجل الصيانة" : "إضافة سجل صيانة"}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
@@ -247,7 +295,10 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
                   type="number"
                   min="0"
                   placeholder="0"
-                  value={form.used_items.find((used: any) => used.id === item.id)?.quantity || ""}
+                  value={
+                    form.used_items.find((used: any) => used.id === item.id)
+                      ?.quantity || ""
+                  }
                   onChange={(event) => {
                     const quantity = Number(event.target.value);
                     set("used_items", [
@@ -276,7 +327,16 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
           ))}
         </div>
         <DialogFooter>
-          {form.id && <Button variant="outline" className="text-destructive" onClick={remove}><Trash2 className="ml-2 size-4" />حذف</Button>}
+          {form.id && (
+            <Button
+              variant="outline"
+              className="text-destructive"
+              onClick={remove}
+            >
+              <Trash2 className="ml-2 size-4" />
+              حذف
+            </Button>
+          )}
           <Button variant="outline" onClick={close}>
             إلغاء
           </Button>

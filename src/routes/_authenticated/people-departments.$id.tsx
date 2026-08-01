@@ -91,7 +91,12 @@ function DepartmentDetails() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold">{department.name}</h1>
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-2xl font-bold">{department.name}</h1>
+              <span className="rounded-md bg-sky-500/10 px-2 py-1 text-xs font-medium text-sky-700">
+                {department.branch || "فرع غير محدد"}
+              </span>
+            </div>
             <p className="mt-1 text-sm text-muted-foreground">
               {department.notes || "لا يوجد وصف للقسم."}
             </p>
@@ -196,10 +201,12 @@ function EmployeeRow({ employee, assets }: { employee: any; assets: any[] }) {
 }
 function DepartmentEdit({ open, onOpenChange, department, saved }: any) {
   const [name, setName] = useState("");
+  const [branch, setBranch] = useState("");
   const [notes, setNotes] = useState("");
   useEffect(() => {
     if (open) {
       setName(department.name);
+      setBranch(department.branch || "");
       setNotes(department.notes || "");
     }
   }, [open, department]);
@@ -207,7 +214,7 @@ function DepartmentEdit({ open, onOpenChange, department, saved }: any) {
     if (!name.trim()) return toast.error("اسم القسم مطلوب");
     const result = await supabase
       .from("departments")
-      .update({ name: name.trim(), notes: notes || null })
+      .update({ name: name.trim(), branch: branch.trim(), notes: notes || null })
       .eq("id", department.id);
     if (result.error) return toast.error(result.error.message);
     saved();
@@ -225,6 +232,13 @@ function DepartmentEdit({ open, onOpenChange, department, saved }: any) {
             <Input
               value={name}
               onChange={(event) => setName(event.target.value)}
+            />
+          </Field>
+          <Field label="الفرع">
+            <Input
+              value={branch}
+              onChange={(event) => setBranch(event.target.value)}
+              placeholder="مثال: فرع الرياض"
             />
           </Field>
           <Field label="الوصف">

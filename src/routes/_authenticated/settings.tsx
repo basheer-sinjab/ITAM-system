@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Pencil, Trash2, Check, X, Download, Upload } from "lucide-react";
+import { Plus, Pencil, Trash2, Check, X, Download, Upload, Settings2 } from "lucide-react";
 import { toast } from "sonner";
 import { createLocalBackup, restoreLocalBackup } from "@/lib/local-backup";
+import { ManagementHeader } from "@/components/ManagementVisuals";
 
 type LookupTable = "branches" | "departments" | "responsible_persons" | "parts";
 
@@ -28,10 +29,7 @@ export const Route = createFileRoute("/_authenticated/settings")({
 function SettingsPage() {
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-bold">الإعدادات</h1>
-        <p className="text-sm text-muted-foreground">القوائم الأساسية وتنبيهات النظام</p>
-      </header>
+      <ManagementHeader icon={Settings2} title="الإعدادات" description="القوائم الأساسية وتنبيهات النظام والنسخ الاحتياطي" />
 
       <Tabs defaultValue="branches" dir="rtl" className="w-full">
         <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-3 xl:grid-cols-6">

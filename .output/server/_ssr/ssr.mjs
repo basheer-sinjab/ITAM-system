@@ -101,10 +101,12 @@ var ENTITIES = {
 		columns: [
 			"id",
 			"name",
+			"branch",
 			"notes",
 			"created_at"
 		],
-		sql: "CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, name TEXT NOT NULL UNIQUE, notes TEXT, created_at TEXT NOT NULL)"
+		sql: "CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, name TEXT NOT NULL, branch TEXT NOT NULL DEFAULT '', notes TEXT, created_at TEXT NOT NULL, UNIQUE(name, branch))",
+		indexes: ["CREATE INDEX IF NOT EXISTS idx_departments_branch_name ON departments(branch, name)"]
 	},
 	employees: {
 		columns: [
@@ -231,9 +233,20 @@ function definition(table) {
 	if (!value) throw new Error("جدول ITAM غير صالح");
 	return value;
 }
+function migrateDepartments(database) {
+	const columns = database.prepare("PRAGMA table_info(departments)").all();
+	if (!columns.length || columns.some((column) => column.name === "branch")) return;
+	database.exec("PRAGMA foreign_keys = OFF");
+	database.exec("CREATE TABLE departments_next (id TEXT PRIMARY KEY, name TEXT NOT NULL, branch TEXT NOT NULL DEFAULT '', notes TEXT, created_at TEXT NOT NULL, UNIQUE(name, branch))");
+	database.exec("INSERT INTO departments_next (id, name, branch, notes, created_at) SELECT id, name, '', notes, created_at FROM departments");
+	database.exec("DROP TABLE departments");
+	database.exec("ALTER TABLE departments_next RENAME TO departments");
+	database.exec("PRAGMA foreign_keys = ON");
+}
 async function db() {
 	if (!ready) ready = mkdir(dirname(DATABASE_PATH), { recursive: true }).then(() => {
 		const database = new DatabaseSync(DATABASE_PATH);
+		migrateDepartments(database);
 		database.exec("PRAGMA foreign_keys = ON");
 		for (const entity of Object.values(ENTITIES)) {
 			database.exec(entity.sql);
@@ -436,7 +449,7 @@ async function handleLocalImageRequest(request) {
 }
 var serverEntryPromise;
 async function getServerEntry() {
-	if (!serverEntryPromise) serverEntryPromise = import("./server-CWkFgJWG.mjs").then((m) => m.default ?? m);
+	if (!serverEntryPromise) serverEntryPromise = import("./server-C5KttL64.mjs").then((m) => m.default ?? m);
 	return serverEntryPromise;
 }
 async function normalizeCatastrophicSsrResponse(response) {
