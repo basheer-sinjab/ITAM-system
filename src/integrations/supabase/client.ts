@@ -8,13 +8,9 @@
 type Row = Record<string, any>;
 type Result = { data: any; error: Error | null };
 
-const LEGACY_DATABASE = "printers-manager-local";
 const TABLES = [
-  "branches", "departments", "responsible_persons", "parts", "suppliers",
-  "toners", "toner_stock_entries", "printers", "toner_replacements",
-  "toner_replacement_items", "maintenance_records", "printer_transfers", "app_settings",
-  "assets", "employees", "assignment_history", "inventory_items", "asset_maintenance",
-  "licenses", "license_assignments",
+  "departments", "employees", "assets", "assignment_history", "inventory_items",
+  "asset_maintenance", "licenses", "license_assignments", "app_settings",
 ] as const;
 type TableName = (typeof TABLES)[number];
 const now = () => new Date().toISOString();
@@ -36,62 +32,8 @@ async function api<T>(path: string, init?: RequestInit) {
   return body as T;
 }
 
-function readLegacyData(): Promise<Record<TableName, Row[]> | null> {
-  return new Promise((resolve) => {
-    const request = indexedDB.open(LEGACY_DATABASE);
-    request.onerror = () => resolve(null);
-    request.onsuccess = () => {
-      const database = request.result;
-      const stores = TABLES.filter((table) => database.objectStoreNames.contains(table));
-      if (stores.length === 0) {
-        database.close();
-        resolve(null);
-        return;
-      }
-
-      const data = Object.fromEntries(TABLES.map((table) => [table, []])) as Record<TableName, Row[]>;
-      const transaction = database.transaction(stores, "readonly");
-      for (const table of stores) {
-        const rows = transaction.objectStore(table).getAll();
-        rows.onsuccess = () => { data[table] = rows.result as Row[]; };
-        rows.onerror = () => resolve(null);
-      }
-      transaction.oncomplete = () => {
-        database.close();
-        resolve(data);
-      };
-      transaction.onerror = () => {
-        database.close();
-        resolve(null);
-      };
-    };
-  });
-}
-
-let migrationPromise: Promise<void> | undefined;
-async function migrateLegacyData() {
-  const status = await api<{ hasData: boolean; migrationComplete: boolean }>("/status");
-  if (status.hasData || status.migrationComplete) return;
-  const data = await readLegacyData();
-  if (data && Object.values(data).some((rows) => rows.length > 0)) {
-    await api("/restore", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(data) });
-  }
-}
-
-function ensureLegacyMigration() {
-  migrationPromise ??= migrateLegacyData();
-  return migrationPromise;
-}
-
 function defaults(table: string, value: Row): Row {
   const base = { id: uuid(), created_at: now(), ...value };
-  if (table === "printers") return { status: "active", is_favorite: false, asset_id: `PRN-${String(Date.now()).slice(-4)}`, updated_at: now(), ...base };
-  if (table === "toners") return { color: "black", quantity: 0, min_quantity: 1, updated_at: now(), ...base };
-  if (table === "maintenance_records") return { service_date: new Date().toISOString().slice(0, 10), maintenance_type: "repair", replaced_parts: [], ...base };
-  if (table === "toner_replacements") return { change_date: new Date().toISOString().slice(0, 10), ...base };
-  if (table === "toner_replacement_items") return { quantity: 1, ...base };
-  if (table === "toner_stock_entries") return { entry_date: new Date().toISOString().slice(0, 10), ...base };
-  if (table === "printer_transfers") return { transfer_date: new Date().toISOString().slice(0, 10), ...base };
   if (table === "assets") return { ...base, asset_type: value.asset_type ?? "Printer", status: value.status ?? "active", updated_at: now() };
   if (table === "employees") return { status: "active", ...base };
   if (table === "assignment_history") return { assignment_date: new Date().toISOString().slice(0, 10), return_date: null, ...base };
@@ -99,7 +41,7 @@ function defaults(table: string, value: Row): Row {
   if (table === "asset_maintenance") return { maintenance_date: new Date().toISOString().slice(0, 10), maintenance_type: "Corrective", status: "Closed", used_items: [], cost: 0, ...base };
   if (table === "licenses") return { seat_count: 1, ...base };
   if (table === "license_assignments") return { assignment_date: new Date().toISOString().slice(0, 10), ...base };
-  if (table === "app_settings") return { id: true, low_stock_threshold: 2, dashboard_alerts_enabled: true, warranty_alert_days: 30, updated_at: now(), ...value };
+  if (table === "app_settings") return { id: "default", low_stock_threshold: 2, dashboard_alerts_enabled: true, warranty_alert_days: 30, updated_at: now(), ...value };
   return base;
 }
 
@@ -139,7 +81,6 @@ class Query {
   maybeSingle() { this.one = true; return this; }
   async execute(): Promise<Result> {
     try {
-      await ensureLegacyMigration();
       const payload = this.operation === "insert"
         ? await applyInsertDefaults(this.table, this.payload!)
         : this.operation === "upsert"
@@ -194,7 +135,6 @@ async function getRows(table: string) {
 }
 
 export async function exportLocalData(): Promise<Record<TableName, Row[]>> {
-  await ensureLegacyMigration();
   return (await api<{ data: Record<TableName, Row[]> }>("/export")).data;
 }
 

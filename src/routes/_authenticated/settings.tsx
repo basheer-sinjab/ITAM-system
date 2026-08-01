@@ -246,7 +246,7 @@ function AlertSettings() {
   const { data: settings } = useQuery({
     queryKey: ["app_settings"],
     queryFn: async () =>
-      (await supabase.from("app_settings").select("*").eq("id", true).maybeSingle()).data,
+      (await supabase.from("app_settings").select("*").eq("id", "default").maybeSingle()).data,
   });
 
   const [draft, setDraft] = useState<{
@@ -266,7 +266,7 @@ function AlertSettings() {
 
   const save = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("app_settings").upsert({ id: true, ...current });
+      const { error } = await supabase.from("app_settings").upsert({ id: "default", ...current });
       if (error) throw error;
     },
     onSuccess: () => {
