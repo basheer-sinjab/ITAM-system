@@ -7,7 +7,7 @@ import { o as require_jsx_runtime } from "./_libs/@radix-ui/react-collection+[..
 import { n as useQuery } from "./_libs/tanstack__react-query.mjs";
 import { D as CircleCheck, F as ArrowLeft, N as Boxes, S as KeyRound, T as ClipboardCheck, _ as Package, a as UserRound, m as Plus, n as Wrench, s as TriangleAlert, u as ShieldCheck, w as Clock3, y as Monitor } from "./_libs/lucide-react.mjs";
 import { a as Group, c as MeshBasicMaterial, d as PlaneGeometry, f as PointLight, i as DirectionalLight, l as MeshStandardMaterial, m as SphereGeometry, n as BoxGeometry, o as HemisphereLight, p as Scene, r as CircleGeometry, s as Mesh, t as WebGLRenderer, u as PerspectiveCamera } from "./_libs/three.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/_authenticated-YZfzol9B.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_authenticated-CldfywmR.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function DashboardDeviceScene() {
@@ -28,7 +28,6 @@ function DashboardDeviceScene() {
 		container.appendChild(renderer.domElement);
 		const root = new Group();
 		root.rotation.set(-.12, -.38, .04);
-		root.scale.setScalar(.9);
 		scene.add(root);
 		const darkMaterial = new MeshStandardMaterial({
 			color: 1060163,
@@ -99,6 +98,9 @@ function DashboardDeviceScene() {
 			const { width, height } = container.getBoundingClientRect();
 			renderer.setSize(width, height, false);
 			camera.aspect = width / height;
+			const wideScene = camera.aspect > 1.7;
+			root.position.x = wideScene ? 1.25 : .4;
+			root.scale.setScalar(wideScene ? 1.1 : .9);
 			camera.updateProjectionMatrix();
 		};
 		const observer = new ResizeObserver(resize);

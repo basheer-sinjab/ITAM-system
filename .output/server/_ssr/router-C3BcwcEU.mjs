@@ -11,7 +11,7 @@ import { t as Route$13 } from "./people-departments-Bve2Rypq.mjs";
 import { t as Route$14 } from "./people-departments._id-CJ8WoyYI.mjs";
 import { t as Route$15 } from "./people-departments.employee._id-DjgA5v6P.mjs";
 import { t as Route$16 } from "./printers._id-CDvE2KOf.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-D_QTfLlJ.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-C3BcwcEU.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var Toaster$1 = ({ ...props }) => {
@@ -187,7 +187,7 @@ var Route$9 = createFileRoute("/_authenticated")({
 	ssr: false,
 	component: lazyRouteComponent($$splitComponentImporter$9, "component")
 });
-var $$splitComponentImporter$8 = () => import("../_authenticated-YZfzol9B.mjs");
+var $$splitComponentImporter$8 = () => import("../_authenticated-CldfywmR.mjs");
 var Route$8 = createFileRoute("/_authenticated/")({
 	head: () => ({ meta: [{ title: "لوحة التحكم — PrintersFloss" }, {
 		name: "description",
