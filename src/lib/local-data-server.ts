@@ -18,6 +18,8 @@ const TABLES = new Set([
   "branches", "departments", "responsible_persons", "parts", "suppliers",
   "toners", "toner_stock_entries", "printers", "toner_replacements",
   "toner_replacement_items", "maintenance_records", "printer_transfers", "app_settings",
+  "assets", "employees", "assignment_history", "inventory_items", "asset_maintenance",
+  "licenses", "license_assignments",
 ]);
 const PROJECT_DIRECTORY = process.env.INIT_CWD ?? process.cwd();
 const DATABASE_PATH = join(PROJECT_DIRECTORY, "data", "printers.db");

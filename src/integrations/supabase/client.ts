@@ -13,10 +13,21 @@ const TABLES = [
   "branches", "departments", "responsible_persons", "parts", "suppliers",
   "toners", "toner_stock_entries", "printers", "toner_replacements",
   "toner_replacement_items", "maintenance_records", "printer_transfers", "app_settings",
+  "assets", "employees", "assignment_history", "inventory_items", "asset_maintenance",
+  "licenses", "license_assignments",
 ] as const;
 type TableName = (typeof TABLES)[number];
 const now = () => new Date().toISOString();
 const uuid = () => crypto.randomUUID();
+const ASSET_PREFIXES: Record<string, string> = {
+  Printer: "PR",
+  "Desktop PC": "PC",
+  Laptop: "LT",
+  Monitor: "MT",
+  "Mobile Phone": "PH",
+  "Network Device": "NW",
+  Other: "OT",
+};
 
 async function api<T>(path: string, init?: RequestInit) {
   const response = await fetch(`/api/local-data${path}`, init);
@@ -81,8 +92,39 @@ function defaults(table: string, value: Row): Row {
   if (table === "toner_replacement_items") return { quantity: 1, ...base };
   if (table === "toner_stock_entries") return { entry_date: new Date().toISOString().slice(0, 10), ...base };
   if (table === "printer_transfers") return { transfer_date: new Date().toISOString().slice(0, 10), ...base };
+  if (table === "assets") return { ...base, asset_type: value.asset_type ?? "Printer", status: value.status ?? "active", updated_at: now() };
+  if (table === "employees") return { status: "active", ...base };
+  if (table === "assignment_history") return { assignment_date: new Date().toISOString().slice(0, 10), return_date: null, ...base };
+  if (table === "inventory_items") return { category: "Consumable", quantity: 0, minimum_quantity: 1, ...base };
+  if (table === "asset_maintenance") return { maintenance_date: new Date().toISOString().slice(0, 10), maintenance_type: "Corrective", status: "Closed", used_items: [], cost: 0, ...base };
+  if (table === "licenses") return { seat_count: 1, ...base };
+  if (table === "license_assignments") return { assignment_date: new Date().toISOString().slice(0, 10), ...base };
   if (table === "app_settings") return { id: true, low_stock_threshold: 2, dashboard_alerts_enabled: true, warranty_alert_days: 30, updated_at: now(), ...value };
   return base;
+}
+
+function nextAssetId(assetType: string | undefined, assets: Row[]) {
+  const prefix = ASSET_PREFIXES[assetType ?? ""] ?? "OT";
+  const expression = new RegExp(`^${prefix}-(\\d+)$`);
+  const highest = assets.reduce((maximum, asset) => {
+    const match = expression.exec(String(asset.asset_id ?? ""));
+    return match ? Math.max(maximum, Number(match[1])) : maximum;
+  }, 0);
+  return `${prefix}-${String(highest + 1).padStart(3, "0")}`;
+}
+
+async function applyInsertDefaults(table: string, payload: Row | Row[]) {
+  const values = Array.isArray(payload) ? payload : [payload];
+  if (table !== "assets") return values.map((value) => defaults(table, value));
+
+  const knownAssets = await getRows("assets");
+  const prepared: Row[] = [];
+  for (const value of values) {
+    const asset = defaults(table, value);
+    asset.asset_id ||= nextAssetId(asset.asset_type, [...knownAssets, ...prepared]);
+    prepared.push(asset);
+  }
+  return prepared;
 }
 
 class Query {
@@ -99,8 +141,10 @@ class Query {
     try {
       await ensureLegacyMigration();
       const payload = this.operation === "insert"
-        ? (Array.isArray(this.payload) ? this.payload : [this.payload!]).map((item) => defaults(this.table, item))
-        : this.operation === "upsert" ? defaults(this.table, this.payload!) : this.payload;
+        ? await applyInsertDefaults(this.table, this.payload!)
+        : this.operation === "upsert"
+          ? (await applyInsertDefaults(this.table, this.payload!))[0]
+          : this.payload;
       const response = await api<{ data: Row[] | Row | null }>("/query", {
         method: "POST",
         headers: { "content-type": "application/json" },

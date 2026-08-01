@@ -32,5 +32,5 @@ export function PrinterImage({
     );
   }
 
-  return <img src={data} alt={alt} loading="lazy" className={cn("object-cover", className)} />;
+  return <img src={data} alt={alt} loading="lazy" className={cn("bg-secondary object-contain", className)} />;
 }

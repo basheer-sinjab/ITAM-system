@@ -2,27 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { PrinterImage } from "@/components/PrinterImage";
-import {
-  PRINTER_STATUS,
-  STATUS_CLASS,
-  formatDate,
-  daysUntil,
-  MAINTENANCE_TYPES,
-  type PrinterStatus,
-} from "@/lib/pms";
-import {
-  Printer,
-  Wrench,
-  CircleSlash,
-  Archive,
-  Droplets,
-  AlertTriangle,
-  Star,
-  ShieldAlert,
-  Sparkles,
-} from "lucide-react";
+import { daysUntil, formatDate } from "@/lib/pms";
+import { AlertTriangle, Boxes, ClipboardCheck, KeyRound, Monitor, Sparkles, Wrench } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -30,10 +11,10 @@ export const Route = createFileRoute("/_authenticated/")({
       { title: "لوحة التحكم — PrintersFloss" },
       {
         name: "description",
-        content: "نظرة عامة على حالة الطابعات ومخزون الأحبار وآخر عمليات الصيانة والتنبيهات.",
+        content: "نظرة عامة على الأصول والصيانة والمخزون والتراخيص.",
       },
       { property: "og:title", content: "لوحة التحكم — PrintersFloss" },
-      { property: "og:description", content: "إحصائيات الطابعات والأحبار والتنبيهات الداخلية." },
+      { property: "og:description", content: "إحصائيات الأصول والصيانة والمخزون والتراخيص." },
     ],
   }),
   component: Dashboard,
@@ -43,27 +24,17 @@ function useDashboard() {
   return useQuery({
     queryKey: ["dashboard"],
     queryFn: async () => {
-      const [printers, toners, maintenance, replacements, settings] = await Promise.all([
-        supabase.from("printers").select("*").order("created_at", { ascending: false }),
-        supabase.from("toners").select("*").order("name"),
-        supabase
-          .from("maintenance_records")
-          .select("*, printers(name, asset_id)")
-          .order("service_date", { ascending: false })
-          .limit(5),
-        supabase
-          .from("toner_replacements")
-          .select("*, printers(name, asset_id), toner_replacement_items(*)")
-          .order("change_date", { ascending: false })
-          .limit(5),
-        supabase.from("app_settings").select("*").maybeSingle(),
+      const [assets, assetMaintenance, inventory, licenses] = await Promise.all([
+        supabase.from("assets").select("*"),
+        supabase.from("asset_maintenance").select("*").order("maintenance_date", { ascending: false }),
+        supabase.from("inventory_items").select("*"),
+        supabase.from("licenses").select("*"),
       ]);
       return {
-        printers: printers.data ?? [],
-        toners: toners.data ?? [],
-        maintenance: maintenance.data ?? [],
-        replacements: replacements.data ?? [],
-        settings: settings.data,
+        assets: assets.data ?? [],
+        assetMaintenance: assetMaintenance.data ?? [],
+        inventory: inventory.data ?? [],
+        licenses: licenses.data ?? [],
       };
     },
   });
@@ -111,21 +82,10 @@ function DashboardHero() {
             <Sparkles className="size-3.5 text-sidebar-primary" />
             نظرة تشغيلية مباشرة
           </div>
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">كل ما تحتاجه لإدارة الطابعات، في مكان واحد.</h2>
-          <p className="mt-2 max-w-2xl text-sm text-sidebar-foreground/65">تابع الأصول والمخزون والصيانة بوضوح، واتخذ الإجراء المناسب قبل أن تتعطل الأعمال.</p>
+          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">إدارة أصول تقنية بسيطة وواضحة.</h2>
+          <p className="mt-2 max-w-2xl text-sm text-sidebar-foreground/65">تابع الأصول والمخزون والصيانة والتراخيص من مكان واحد.</p>
         </div>
-        <div className="printer-animation" role="img" aria-label="طابعة تطبع ورقة">
-          <div className="printer-animation__paper">
-            <span />
-            <span />
-            <span />
-          </div>
-          <div className="printer-animation__body">
-            <span className="printer-animation__indicator" />
-            <div className="printer-animation__slot" />
-          </div>
-          <div className="printer-animation__output" />
-        </div>
+        <Monitor className="size-20 text-sidebar-primary" aria-hidden="true" />
       </div>
     </section>
   );
@@ -138,138 +98,52 @@ function Dashboard() {
     return <p className="text-muted-foreground">جارٍ التحميل…</p>;
   }
 
-  const { printers, toners, maintenance, replacements, settings } = data;
-  const threshold = settings?.low_stock_threshold ?? 2;
-  const warrantyDays = settings?.warranty_alert_days ?? 30;
-
-  const count = (status: PrinterStatus) => printers.filter((printer) => printer.status === status).length;
-  const lowStock = toners.filter((t) => t.quantity > 0 && t.quantity <= Math.max(t.min_quantity, threshold));
-  const outOfStock = toners.filter((t) => t.quantity <= 0);
-  const favorites = printers.filter((p) => p.is_favorite);
-
-  const expired = printers.filter((p) => {
-    const d = daysUntil(p.warranty_expiry);
-    return d !== null && d < 0 && p.status !== "retired";
+  const { assets, assetMaintenance, inventory, licenses } = data;
+  const lowStock = inventory.filter((item) => item.quantity <= item.minimum_quantity);
+  const expiringLicenses = licenses.filter((license) => {
+    const days = daysUntil(license.expiration_date);
+    return days !== null && days >= 0 && days <= 30;
   });
-  const expiring = printers.filter((p) => {
-    const d = daysUntil(p.warranty_expiry);
-    return d !== null && d >= 0 && d <= warrantyDays;
-  });
-
-  const alertsOn = settings?.dashboard_alerts_enabled ?? true;
-  const alerts = alertsOn
-    ? [
-        ...outOfStock.map((t) => ({ tone: "destructive", text: `الحبر "${t.name}" نفد من المخزون` })),
-        ...lowStock.map((t) => ({
-          tone: "warning",
-          text: `مخزون الحبر "${t.name}" منخفض (${t.quantity} متبقٍ)`,
-        })),
-        ...expired.map((p) => ({ tone: "destructive", text: `انتهى ضمان الطابعة ${p.name} (${p.asset_id})` })),
-        ...expiring.map((p) => ({
-          tone: "warning",
-          text: `ضمان الطابعة ${p.name} ينتهي خلال ${daysUntil(p.warranty_expiry)} يومًا`,
-        })),
-      ]
-    : [];
+  const assetName = (assetId: string) => assets.find((asset) => asset.id === assetId)?.name ?? "—";
 
   return (
     <div className="mx-auto max-w-7xl space-y-9">
       <header>
         <h1 className="text-2xl font-bold">لوحة التحكم</h1>
-        <p className="text-sm text-muted-foreground">نظرة عامة على أصول الطباعة في الشركة</p>
+        <p className="text-sm text-muted-foreground">نظرة عامة على أصول تقنية المعلومات في الشركة</p>
       </header>
 
       <DashboardHero />
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-        <StatCard label="إجمالي الطابعات" value={printers.length} icon={Printer} />
-        <StatCard label="طابعات نشطة" value={count("active")} icon={Printer} tone="success" />
-        <StatCard label="تحت الصيانة" value={count("maintenance")} icon={Wrench} tone="warning" />
-        <StatCard label="خارج الخدمة" value={count("out_of_service")} icon={CircleSlash} tone="destructive" />
-        <StatCard label="مؤرشفة" value={count("retired")} icon={Archive} tone="muted" />
+        <Link to="/assets" className="block">
+          <StatCard label="إجمالي الأصول" value={assets.length} icon={Monitor} />
+        </Link>
+        <StatCard label="الأصول المعيّنة" value={assets.filter((asset) => asset.assigned_employee_id).length} icon={ClipboardCheck} tone="success" />
+        <StatCard label="صيانة مفتوحة" value={assetMaintenance.filter((record) => record.status === "Open").length} icon={Wrench} tone="warning" />
+        <StatCard label="عناصر منخفضة" value={lowStock.length} icon={Boxes} tone="destructive" />
+        <StatCard label="تراخيص تنتهي قريبًا" value={expiringLicenses.length} icon={KeyRound} tone="warning" />
       </section>
-
-      <section className="grid gap-4 sm:grid-cols-3">
-        <StatCard label="أنواع الأحبار" value={toners.length} icon={Droplets} />
-        <StatCard label="أحبار منخفضة" value={lowStock.length} icon={AlertTriangle} tone="warning" />
-        <StatCard label="أحبار نفدت" value={outOfStock.length} icon={ShieldAlert} tone="destructive" />
-      </section>
-
-      {alerts.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <AlertTriangle className="size-4 text-warning" />
-              التنبيهات ({alerts.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-2 sm:grid-cols-2">
-            {alerts.slice(0, 12).map((a, i) => (
-              <div
-                key={i}
-                className={`rounded-xl border px-3.5 py-3 text-sm transition-transform hover:-translate-y-0.5 ${
-                  a.tone === "destructive"
-                    ? "border-destructive/30 bg-destructive/10 text-destructive"
-                    : "border-warning/40 bg-warning/15 text-warning-foreground"
-                }`}
-              >
-                {a.text}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      )}
-
-      {favorites.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="flex items-center gap-2 text-lg font-semibold">
-            <Star className="size-4 fill-warning text-warning" />
-            الطابعات المفضلة
-          </h2>
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            {favorites.map((p) => (
-              <Link
-                key={p.id}
-                to="/printers/$id"
-                params={{ id: p.id }}
-                className="surface-panel interactive-card overflow-hidden hover:interactive-card-hover"
-              >
-                <PrinterImage path={p.image_url} alt={p.name} className="h-36 w-full" />
-                <div className="space-y-2 p-4">
-                  <p className="font-semibold">{p.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {p.model ?? "—"} · {p.asset_id}
-                  </p>
-                  <Badge variant="outline" className={STATUS_CLASS[p.status as PrinterStatus]}>
-                    {PRINTER_STATUS[p.status as PrinterStatus]}
-                  </Badge>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
 
       <section className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">آخر عمليات الصيانة</CardTitle>
+            <CardTitle className="text-base">آخر سجلات الصيانة</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {maintenance.length === 0 && <p className="text-sm text-muted-foreground">لا توجد سجلات.</p>}
-            {maintenance.map((m) => (
+            {assetMaintenance.length === 0 && <p className="text-sm text-muted-foreground">لا توجد سجلات.</p>}
+            {assetMaintenance.slice(0, 5).map((m) => (
               <div key={m.id} className="flex items-start justify-between gap-3 border-b pb-3 last:border-0">
                 <div>
                   <p className="text-sm font-medium">
-                    {m.printers?.name} <span className="text-muted-foreground">({m.printers?.asset_id})</span>
+                    {assetName(m.asset_id)}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {MAINTENANCE_TYPES[m.maintenance_type as keyof typeof MAINTENANCE_TYPES]} —{" "}
-                    {m.description || "بدون وصف"}
+                    {m.maintenance_type} — {m.problem_description || "بدون وصف"}
                   </p>
                 </div>
                 <span className="whitespace-nowrap text-xs text-muted-foreground">
-                  {formatDate(m.service_date)}
+                  {formatDate(m.maintenance_date)}
                 </span>
               </div>
             ))}
@@ -278,27 +152,12 @@ function Dashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">آخر عمليات تغيير الأحبار</CardTitle>
+            <CardTitle className="text-base">تنبيهات المخزون والتراخيص</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {replacements.length === 0 && <p className="text-sm text-muted-foreground">لا توجد سجلات.</p>}
-            {replacements.map((r) => (
-              <div key={r.id} className="flex items-start justify-between gap-3 border-b pb-3 last:border-0">
-                <div>
-                  <p className="text-sm font-medium">
-                    {r.printers?.name} <span className="text-muted-foreground">({r.printers?.asset_id})</span>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {(r.toner_replacement_items ?? [])
-                      .map((i) => `${i.toner_name} ×${i.quantity}`)
-                      .join("، ") || "—"}
-                  </p>
-                </div>
-                <span className="whitespace-nowrap text-xs text-muted-foreground">
-                  {formatDate(r.change_date)}
-                </span>
-              </div>
-            ))}
+            {lowStock.length === 0 && expiringLicenses.length === 0 && <p className="text-sm text-muted-foreground">لا توجد تنبيهات.</p>}
+            {lowStock.map((item) => <div key={item.id} className="flex items-center justify-between border-b pb-3 text-sm"><span>{item.name}</span><span className="text-destructive">مخزون منخفض: {item.quantity}</span></div>)}
+            {expiringLicenses.map((license) => <div key={license.id} className="flex items-center justify-between border-b pb-3 text-sm"><span>{license.license_name}</span><span className="text-warning-foreground">ينتهي: {formatDate(license.expiration_date)}</span></div>)}
           </CardContent>
         </Card>
       </section>

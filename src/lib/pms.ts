@@ -6,6 +6,9 @@ export const PRINTER_STATUS = {
 } as const;
 export type PrinterStatus = keyof typeof PRINTER_STATUS;
 
+export const ASSET_TYPES = ["Printer", "Desktop PC", "Laptop", "Monitor", "Mobile Phone", "Network Device", "Other"] as const;
+export const MAINTENANCE_STATUSES = ["Open", "Closed"] as const;
+
 export const STATUS_CLASS: Record<PrinterStatus, string> = {
   active: "bg-success/15 text-success border-success/30",
   maintenance: "bg-warning/20 text-warning-foreground border-warning/40",

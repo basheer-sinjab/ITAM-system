@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, Link } from "@tanstack/react-router";
-import { LayoutDashboard, Printer, Droplets, Truck, Settings, FileText } from "lucide-react";
+import { LayoutDashboard, Monitor, Wrench, Package, KeyRound, Users } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -8,11 +8,11 @@ export const Route = createFileRoute("/_authenticated")({
 
 const NAV = [
   { to: "/", label: "لوحة التحكم", icon: LayoutDashboard, exact: true },
-  { to: "/printers", label: "الطابعات", icon: Printer, exact: false },
-  { to: "/toners", label: "مخزون الأحبار", icon: Droplets, exact: false },
-  { to: "/suppliers", label: "الموردون", icon: Truck, exact: false },
-  { to: "/reports", label: "التقارير", icon: FileText, exact: false },
-  { to: "/settings", label: "الإعدادات", icon: Settings, exact: false },
+  { to: "/assets", label: "الأصول", icon: Monitor, exact: false },
+  { to: "/maintenance", label: "الصيانة", icon: Wrench, exact: false },
+  { to: "/inventory", label: "المخزون", icon: Package, exact: false },
+  { to: "/licenses", label: "التراخيص", icon: KeyRound, exact: false },
+  { to: "/people-departments", label: "الأشخاص والأقسام", icon: Users, exact: false },
 ] as const;
 
 function AppLayout() {
