@@ -2,7 +2,7 @@ import { t as cn } from "./utils-CWZASUqA.mjs";
 import { l as resolveImage } from "./pms-DLuiFJ6_.mjs";
 import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { n as useQuery } from "../_libs/tanstack__react-query.mjs";
-import { u as Printer } from "../_libs/lucide-react.mjs";
+import { f as Printer } from "../_libs/lucide-react.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/PrinterImage-BBPVBnou.js
 var import_jsx_runtime = require_jsx_runtime();
 function PrinterImage({ path, alt, className }) {
