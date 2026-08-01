@@ -1,7 +1,7 @@
 import { r as __toESM } from "../../_runtime.mjs";
 import { u as require_react } from "../@floating-ui/react-dom+[...].mjs";
 import { a as useComposedRefs, n as createContextScope, o as require_jsx_runtime, t as createCollection } from "./react-collection+[...].mjs";
-import { _ as useId, g as useCallbackRef, h as useControllableState, v as useLayoutEffect2, y as Primitive } from "./react-dialog+[...].mjs";
+import { _ as useId, g as useControllableState, h as useCallbackRef, v as useLayoutEffect2, y as Primitive } from "./react-dialog+[...].mjs";
 import { t as composeEventHandlers } from "../radix-ui__primitive.mjs";
 import { t as useDirection } from "../radix-ui__react-direction.mjs";
 //#region node_modules/@radix-ui/react-use-is-hydrated/dist/index.mjs

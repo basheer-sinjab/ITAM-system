@@ -72,24 +72,9 @@ function useId(deterministicId) {
 }
 __name$9(useId, "useId");
 //#endregion
-//#region node_modules/@radix-ui/react-use-callback-ref/dist/index.mjs
+//#region node_modules/@radix-ui/react-use-effect-event/dist/index.mjs
 var __defProp$8 = Object.defineProperty;
 var __name$8 = (target, value) => __defProp$8(target, "name", {
-	value,
-	configurable: true
-});
-function useCallbackRef$1(callback) {
-	const callbackRef = import_react.useRef(callback);
-	import_react.useEffect(() => {
-		callbackRef.current = callback;
-	});
-	return import_react.useMemo(() => ((...args) => callbackRef.current?.(...args)), []);
-}
-__name$8(useCallbackRef$1, "useCallbackRef");
-//#endregion
-//#region node_modules/@radix-ui/react-use-effect-event/dist/index.mjs
-var __defProp$7 = Object.defineProperty;
-var __name$7 = (target, value) => __defProp$7(target, "name", {
 	value,
 	configurable: true
 });
@@ -108,16 +93,16 @@ function useEffectEvent(callback) {
 	});
 	return import_react.useMemo(() => ((...args) => ref.current?.(...args)), []);
 }
-__name$7(useEffectEvent, "useEffectEvent");
+__name$8(useEffectEvent, "useEffectEvent");
 //#endregion
 //#region node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs
-var __defProp$6 = Object.defineProperty;
-var __name$6 = (target, value) => __defProp$6(target, "name", {
+var __defProp$7 = Object.defineProperty;
+var __name$7 = (target, value) => __defProp$7(target, "name", {
 	value,
 	configurable: true
 });
 var useInsertionEffect = import_react[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
-function useControllableState({ prop, defaultProp, onChange = /* @__PURE__ */ __name$6(() => {}, "onChange"), caller }) {
+function useControllableState({ prop, defaultProp, onChange = /* @__PURE__ */ __name$7(() => {}, "onChange"), caller }) {
 	const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
 		defaultProp,
 		onChange
@@ -135,7 +120,7 @@ function useControllableState({ prop, defaultProp, onChange = /* @__PURE__ */ __
 		onChangeRef
 	])];
 }
-__name$6(useControllableState, "useControllableState");
+__name$7(useControllableState, "useControllableState");
 function useUncontrolledState({ defaultProp, onChange }) {
 	const [value, setValue] = import_react.useState(defaultProp);
 	const prevValueRef = import_react.useRef(value);
@@ -155,11 +140,11 @@ function useUncontrolledState({ defaultProp, onChange }) {
 		onChangeRef
 	];
 }
-__name$6(useUncontrolledState, "useUncontrolledState");
+__name$7(useUncontrolledState, "useUncontrolledState");
 function isFunction(value) {
 	return typeof value === "function";
 }
-__name$6(isFunction, "isFunction");
+__name$7(isFunction, "isFunction");
 var SYNC_STATE = Symbol("RADIX:SYNC_STATE");
 function useControllableStateReducer(reducer, userArgs, initialArg, init) {
 	const { prop: controlledState, defaultProp, onChange: onChangeProp, caller } = userArgs;
@@ -210,153 +195,26 @@ function useControllableStateReducer(reducer, userArgs, initialArg, init) {
 	]);
 	return [state, dispatch];
 }
-__name$6(useControllableStateReducer, "useControllableStateReducer");
+__name$7(useControllableStateReducer, "useControllableStateReducer");
 //#endregion
-//#region node_modules/@radix-ui/react-presence/dist/index.mjs
-var __defProp$5 = Object.defineProperty;
-var __name$5 = (target, value) => __defProp$5(target, "name", {
+//#region node_modules/@radix-ui/react-use-callback-ref/dist/index.mjs
+var __defProp$6 = Object.defineProperty;
+var __name$6 = (target, value) => __defProp$6(target, "name", {
 	value,
 	configurable: true
 });
-function useStateMachine(initialState, machine) {
-	return import_react.useReducer((state, event) => {
-		return machine[state][event] ?? state;
-	}, initialState);
-}
-__name$5(useStateMachine, "useStateMachine");
-var Presence = /* @__PURE__ */ __name$5((props) => {
-	const { present, children } = props;
-	const presence = usePresence(present);
-	const child = typeof children === "function" ? children({ present: presence.isPresent }) : import_react.Children.only(children);
-	const ref = useStableComposedRefs(presence.ref, getElementRef(child));
-	return typeof children === "function" || presence.isPresent ? import_react.cloneElement(child, { ref }) : null;
-}, "Presence");
-function usePresence(present) {
-	const [node, setNode] = import_react.useState();
-	const stylesRef = import_react.useRef(null);
-	const prevPresentRef = import_react.useRef(present);
-	const prevAnimationNameRef = import_react.useRef("none");
-	const mountAnimationNameRef = import_react.useRef(void 0);
-	const [state, send] = useStateMachine(present ? "mounted" : "unmounted", {
-		mounted: {
-			UNMOUNT: "unmounted",
-			ANIMATION_OUT: "unmountSuspended"
-		},
-		unmountSuspended: {
-			MOUNT: "mounted",
-			ANIMATION_END: "unmounted"
-		},
-		unmounted: { MOUNT: "mounted" }
-	});
+function useCallbackRef$1(callback) {
+	const callbackRef = import_react.useRef(callback);
 	import_react.useEffect(() => {
-		if (state === "mounted") {
-			prevAnimationNameRef.current = mountAnimationNameRef.current ?? getAnimationName(stylesRef.current);
-			mountAnimationNameRef.current = void 0;
-		} else prevAnimationNameRef.current = "none";
-	}, [state]);
-	useLayoutEffect2(() => {
-		const styles = stylesRef.current;
-		const wasPresent = prevPresentRef.current;
-		if (wasPresent !== present) {
-			const prevAnimationName = prevAnimationNameRef.current;
-			const currentAnimationName = getAnimationName(styles);
-			if (present) {
-				mountAnimationNameRef.current = currentAnimationName;
-				send("MOUNT");
-			} else if (currentAnimationName === "none" || styles?.display === "none") send("UNMOUNT");
-			else if (wasPresent && prevAnimationName !== currentAnimationName) send("ANIMATION_OUT");
-			else send("UNMOUNT");
-			prevPresentRef.current = present;
-		}
-	}, [present, send]);
-	useLayoutEffect2(() => {
-		if (node) {
-			let timeoutId;
-			const ownerWindow = node.ownerDocument.defaultView ?? window;
-			const handleAnimationEnd = /* @__PURE__ */ __name$5((event) => {
-				const isCurrentAnimation = getAnimationName(stylesRef.current).includes(CSS.escape(event.animationName));
-				if (event.target === node && isCurrentAnimation) {
-					send("ANIMATION_END");
-					if (!prevPresentRef.current) {
-						const currentFillMode = node.style.animationFillMode;
-						node.style.animationFillMode = "forwards";
-						timeoutId = ownerWindow.setTimeout(() => {
-							if (node.style.animationFillMode === "forwards") node.style.animationFillMode = currentFillMode;
-						});
-					}
-				}
-			}, "handleAnimationEnd");
-			const handleAnimationStart = /* @__PURE__ */ __name$5((event) => {
-				if (event.target === node) prevAnimationNameRef.current = getAnimationName(stylesRef.current);
-			}, "handleAnimationStart");
-			node.addEventListener("animationstart", handleAnimationStart);
-			node.addEventListener("animationcancel", handleAnimationEnd);
-			node.addEventListener("animationend", handleAnimationEnd);
-			return () => {
-				ownerWindow.clearTimeout(timeoutId);
-				node.removeEventListener("animationstart", handleAnimationStart);
-				node.removeEventListener("animationcancel", handleAnimationEnd);
-				node.removeEventListener("animationend", handleAnimationEnd);
-			};
-		} else send("ANIMATION_END");
-	}, [node, send]);
-	return {
-		isPresent: ["mounted", "unmountSuspended"].includes(state),
-		ref: import_react.useCallback((node2) => {
-			if (node2) {
-				const styles = getComputedStyle(node2);
-				stylesRef.current = styles;
-				mountAnimationNameRef.current = getAnimationName(styles);
-			} else stylesRef.current = null;
-			setNode(node2);
-		}, [])
-	};
+		callbackRef.current = callback;
+	});
+	return import_react.useMemo(() => ((...args) => callbackRef.current?.(...args)), []);
 }
-__name$5(usePresence, "usePresence");
-function setRef(ref, value) {
-	if (typeof ref === "function") return ref(value);
-	else if (ref !== null && ref !== void 0) ref.current = value;
-}
-__name$5(setRef, "setRef");
-function useStableComposedRefs(...refs) {
-	const refsRef = import_react.useRef(refs);
-	refsRef.current = refs;
-	return import_react.useCallback((node) => {
-		const currentRefs = refsRef.current;
-		let hasCleanup = false;
-		const cleanups = currentRefs.map((ref) => {
-			const cleanup = setRef(ref, node);
-			if (!hasCleanup && typeof cleanup === "function") hasCleanup = true;
-			return cleanup;
-		});
-		if (hasCleanup) return () => {
-			for (let i = 0; i < cleanups.length; i++) {
-				const cleanup = cleanups[i];
-				if (typeof cleanup === "function") cleanup();
-				else setRef(currentRefs[i], null);
-			}
-		};
-	}, []);
-}
-__name$5(useStableComposedRefs, "useStableComposedRefs");
-function getAnimationName(styles) {
-	return styles?.animationName || "none";
-}
-__name$5(getAnimationName, "getAnimationName");
-function getElementRef(element) {
-	let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
-	let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-	if (mayWarn) return element.ref;
-	getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
-	mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-	if (mayWarn) return element.props.ref;
-	return element.props.ref || element.ref;
-}
-__name$5(getElementRef, "getElementRef");
+__name$6(useCallbackRef$1, "useCallbackRef");
 //#endregion
 //#region node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs
-var __defProp$4 = Object.defineProperty;
-var __name$4 = (target, value) => __defProp$4(target, "name", {
+var __defProp$5 = Object.defineProperty;
+var __name$5 = (target, value) => __defProp$5(target, "name", {
 	value,
 	configurable: true
 });
@@ -370,7 +228,7 @@ var DismissableLayerContext = import_react.createContext({
 	branches: /* @__PURE__ */ new Set(),
 	dismissableSurfaces: /* @__PURE__ */ new Set()
 });
-var DismissableLayer = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$4(function DismissableLayer2(props, forwardedRef) {
+var DismissableLayer = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$5(function DismissableLayer2(props, forwardedRef) {
 	const { disableOutsidePointerEvents = false, deferPointerDownOutside = false, onEscapeKeyDown, onPointerDownOutside, onFocusOutside, onInteractOutside, onDismiss, ...layerProps } = props;
 	const context = import_react.useContext(DismissableLayerContext);
 	const [node, setNode] = import_react.useState(null);
@@ -457,7 +315,7 @@ var DismissableLayer = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ _
 		};
 	}, [node, context]);
 	import_react.useEffect(() => {
-		const handleUpdate = /* @__PURE__ */ __name$4(() => force({}), "handleUpdate");
+		const handleUpdate = /* @__PURE__ */ __name$5(() => force({}), "handleUpdate");
 		document.addEventListener(CONTEXT_UPDATE, handleUpdate);
 		return () => document.removeEventListener(CONTEXT_UPDATE, handleUpdate);
 	}, []);
@@ -485,8 +343,8 @@ function useDismissableLayerSurface() {
 	}, [node, context.dismissableSurfaces]);
 	return setNode;
 }
-__name$4(useDismissableLayerSurface, "useDismissableLayerSurface");
-var IS_TRUE = /* @__PURE__ */ __name$4(() => true, "IS_TRUE");
+__name$5(useDismissableLayerSurface, "useDismissableLayerSurface");
+var IS_TRUE = /* @__PURE__ */ __name$5(() => true, "IS_TRUE");
 function usePointerDownOutside(onPointerDownOutside, args) {
 	const { ownerDocument = globalThis?.document, deferPointerDownOutside = false, isDeferredPointerDownOutsideRef, dismissableSurfaces, shouldHandlePointerDownOutside = IS_TRUE } = args;
 	const handlePointerDownOutside = useCallbackRef$1(onPointerDownOutside);
@@ -500,11 +358,11 @@ function usePointerDownOutside(onPointerDownOutside, args) {
 			isDeferredPointerDownOutsideRef.current = false;
 			interceptedOutsideInteractionEventsRef.current.clear();
 		}
-		__name$4(resetOutsideInteraction, "resetOutsideInteraction");
+		__name$5(resetOutsideInteraction, "resetOutsideInteraction");
 		function isOutsideInteractionIntercepted() {
 			return Array.from(interceptedOutsideInteractionEventsRef.current.values()).some(Boolean);
 		}
-		__name$4(isOutsideInteractionIntercepted, "isOutsideInteractionIntercepted");
+		__name$5(isOutsideInteractionIntercepted, "isOutsideInteractionIntercepted");
 		function handleInteractionCapture(event) {
 			if (!isPointerDownOutsideRef.current) return;
 			const target = event.target;
@@ -513,12 +371,12 @@ function usePointerDownOutside(onPointerDownOutside, args) {
 				if (isPointerDownOutsideRef.current) handleClickRef.current();
 			}, 0);
 		}
-		__name$4(handleInteractionCapture, "handleInteractionCapture");
+		__name$5(handleInteractionCapture, "handleInteractionCapture");
 		function handleInteractionBubble(event) {
 			if (isPointerDownOutsideRef.current) interceptedOutsideInteractionEventsRef.current.set(event.type, false);
 		}
-		__name$4(handleInteractionBubble, "handleInteractionBubble");
-		const handlePointerDown = /* @__PURE__ */ __name$4((event) => {
+		__name$5(handleInteractionBubble, "handleInteractionBubble");
+		const handlePointerDown = /* @__PURE__ */ __name$5((event) => {
 			if (event.target && !isPointerInsideReactTreeRef.current) {
 				let handleAndDispatchPointerDownOutsideEvent2 = function() {
 					ownerDocument.removeEventListener("click", handleClickRef.current);
@@ -526,7 +384,7 @@ function usePointerDownOutside(onPointerDownOutside, args) {
 					resetOutsideInteraction();
 					if (!wasOutsideInteractionIntercepted) handleAndDispatchCustomEvent(POINTER_DOWN_OUTSIDE, handlePointerDownOutside, eventDetail, { discrete: true });
 				};
-				__name$4(handleAndDispatchPointerDownOutsideEvent2, "handleAndDispatchPointerDownOutsideEvent");
+				__name$5(handleAndDispatchPointerDownOutsideEvent2, "handleAndDispatchPointerDownOutsideEvent");
 				if (!shouldHandlePointerDownOutside(event.target)) {
 					ownerDocument.removeEventListener("click", handleClickRef.current);
 					resetOutsideInteraction();
@@ -581,30 +439,30 @@ function usePointerDownOutside(onPointerDownOutside, args) {
 		dismissableSurfaces,
 		shouldHandlePointerDownOutside
 	]);
-	return { onPointerDownCapture: /* @__PURE__ */ __name$4(() => isPointerInsideReactTreeRef.current = true, "onPointerDownCapture") };
+	return { onPointerDownCapture: /* @__PURE__ */ __name$5(() => isPointerInsideReactTreeRef.current = true, "onPointerDownCapture") };
 }
-__name$4(usePointerDownOutside, "usePointerDownOutside");
+__name$5(usePointerDownOutside, "usePointerDownOutside");
 function useFocusOutside(onFocusOutside, ownerDocument = globalThis?.document) {
 	const handleFocusOutside = useCallbackRef$1(onFocusOutside);
 	const isFocusInsideReactTreeRef = import_react.useRef(false);
 	import_react.useEffect(() => {
-		const handleFocus = /* @__PURE__ */ __name$4((event) => {
+		const handleFocus = /* @__PURE__ */ __name$5((event) => {
 			if (event.target && !isFocusInsideReactTreeRef.current) handleAndDispatchCustomEvent(FOCUS_OUTSIDE, handleFocusOutside, { originalEvent: event }, { discrete: false });
 		}, "handleFocus");
 		ownerDocument.addEventListener("focusin", handleFocus);
 		return () => ownerDocument.removeEventListener("focusin", handleFocus);
 	}, [ownerDocument, handleFocusOutside]);
 	return {
-		onFocusCapture: /* @__PURE__ */ __name$4(() => isFocusInsideReactTreeRef.current = true, "onFocusCapture"),
-		onBlurCapture: /* @__PURE__ */ __name$4(() => isFocusInsideReactTreeRef.current = false, "onBlurCapture")
+		onFocusCapture: /* @__PURE__ */ __name$5(() => isFocusInsideReactTreeRef.current = true, "onFocusCapture"),
+		onBlurCapture: /* @__PURE__ */ __name$5(() => isFocusInsideReactTreeRef.current = false, "onBlurCapture")
 	};
 }
-__name$4(useFocusOutside, "useFocusOutside");
+__name$5(useFocusOutside, "useFocusOutside");
 function dispatchUpdate() {
 	const event = new CustomEvent(CONTEXT_UPDATE);
 	document.dispatchEvent(event);
 }
-__name$4(dispatchUpdate, "dispatchUpdate");
+__name$5(dispatchUpdate, "dispatchUpdate");
 function handleAndDispatchCustomEvent(name, handler, detail, { discrete }) {
 	const target = detail.originalEvent.target;
 	const event = new CustomEvent(name, {
@@ -616,11 +474,11 @@ function handleAndDispatchCustomEvent(name, handler, detail, { discrete }) {
 	if (discrete) dispatchDiscreteCustomEvent(target, event);
 	else target.dispatchEvent(event);
 }
-__name$4(handleAndDispatchCustomEvent, "handleAndDispatchCustomEvent");
+__name$5(handleAndDispatchCustomEvent, "handleAndDispatchCustomEvent");
 //#endregion
 //#region node_modules/@radix-ui/react-focus-scope/dist/index.mjs
-var __defProp$3 = Object.defineProperty;
-var __name$3 = (target, value) => __defProp$3(target, "name", {
+var __defProp$4 = Object.defineProperty;
+var __name$4 = (target, value) => __defProp$4(target, "name", {
 	value,
 	configurable: true
 });
@@ -630,7 +488,7 @@ var EVENT_OPTIONS = {
 	bubbles: false,
 	cancelable: true
 };
-var FocusScope = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$3(function FocusScope2(props, forwardedRef) {
+var FocusScope = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$4(function FocusScope2(props, forwardedRef) {
 	const { loop = false, trapped = false, onMountAutoFocus: onMountAutoFocusProp, onUnmountAutoFocus: onUnmountAutoFocusProp, ...scopeProps } = props;
 	const [container, setContainer] = import_react.useState(null);
 	const onMountAutoFocus = useCallbackRef$1(onMountAutoFocusProp);
@@ -662,9 +520,9 @@ var FocusScope = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$
 				if (document.activeElement !== document.body) return;
 				for (const mutation of mutations) if (mutation.removedNodes.length > 0) focus(container);
 			};
-			__name$3(handleFocusIn2, "handleFocusIn");
-			__name$3(handleFocusOut2, "handleFocusOut");
-			__name$3(handleMutations2, "handleMutations");
+			__name$4(handleFocusIn2, "handleFocusIn");
+			__name$4(handleFocusOut2, "handleFocusOut");
+			__name$4(handleMutations2, "handleMutations");
 			document.addEventListener("focusin", handleFocusIn2);
 			document.addEventListener("focusout", handleFocusOut2);
 			const mutationObserver = new MutationObserver(handleMutations2);
@@ -751,15 +609,15 @@ function focusFirst(candidates, { select = false } = {}) {
 		if (document.activeElement !== previouslyFocusedElement) return;
 	}
 }
-__name$3(focusFirst, "focusFirst");
+__name$4(focusFirst, "focusFirst");
 function getTabbableEdges(container) {
 	const candidates = getTabbableCandidates(container);
 	return [findVisible(candidates, container), findVisible(candidates.reverse(), container)];
 }
-__name$3(getTabbableEdges, "getTabbableEdges");
+__name$4(getTabbableEdges, "getTabbableEdges");
 function getTabbableCandidates(container) {
 	const nodes = [];
-	const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, { acceptNode: /* @__PURE__ */ __name$3((node) => {
+	const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, { acceptNode: /* @__PURE__ */ __name$4((node) => {
 		const isHiddenInput = node.tagName === "INPUT" && node.type === "hidden";
 		if (node.disabled || node.hidden || isHiddenInput) return NodeFilter.FILTER_SKIP;
 		return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
@@ -767,12 +625,12 @@ function getTabbableCandidates(container) {
 	while (walker.nextNode()) nodes.push(walker.currentNode);
 	return nodes;
 }
-__name$3(getTabbableCandidates, "getTabbableCandidates");
+__name$4(getTabbableCandidates, "getTabbableCandidates");
 function findVisible(elements, container) {
 	const canUseCheckVisibility = typeof container.checkVisibility === "function" && container.checkVisibility({ checkVisibilityCSS: true });
 	for (const element of elements) if (!(canUseCheckVisibility ? !element.checkVisibility({ checkVisibilityCSS: true }) : isHidden(element, { upTo: container }))) return element;
 }
-__name$3(findVisible, "findVisible");
+__name$4(findVisible, "findVisible");
 function isHidden(node, { upTo }) {
 	if (getComputedStyle(node).visibility === "hidden") return true;
 	while (node) {
@@ -782,11 +640,11 @@ function isHidden(node, { upTo }) {
 	}
 	return false;
 }
-__name$3(isHidden, "isHidden");
+__name$4(isHidden, "isHidden");
 function isSelectableInput(element) {
 	return element instanceof HTMLInputElement && "select" in element;
 }
-__name$3(isSelectableInput, "isSelectableInput");
+__name$4(isSelectableInput, "isSelectableInput");
 function focus(element, { select = false } = {}) {
 	if (element && element.focus) {
 		const previouslyFocusedElement = document.activeElement;
@@ -794,7 +652,7 @@ function focus(element, { select = false } = {}) {
 		if (element !== previouslyFocusedElement && isSelectableInput(element) && select) element.select();
 	}
 }
-__name$3(focus, "focus");
+__name$4(focus, "focus");
 var focusScopesStack = createFocusScopesStack();
 function createFocusScopesStack() {
 	let stack = [];
@@ -811,26 +669,26 @@ function createFocusScopesStack() {
 		}
 	};
 }
-__name$3(createFocusScopesStack, "createFocusScopesStack");
+__name$4(createFocusScopesStack, "createFocusScopesStack");
 function arrayRemove(array, item) {
 	const updatedArray = [...array];
 	const index = updatedArray.indexOf(item);
 	if (index !== -1) updatedArray.splice(index, 1);
 	return updatedArray;
 }
-__name$3(arrayRemove, "arrayRemove");
+__name$4(arrayRemove, "arrayRemove");
 function removeLinks(items) {
 	return items.filter((item) => item.tagName !== "A");
 }
-__name$3(removeLinks, "removeLinks");
+__name$4(removeLinks, "removeLinks");
 //#endregion
 //#region node_modules/@radix-ui/react-portal/dist/index.mjs
-var __defProp$2 = Object.defineProperty;
-var __name$2 = (target, value) => __defProp$2(target, "name", {
+var __defProp$3 = Object.defineProperty;
+var __name$3 = (target, value) => __defProp$3(target, "name", {
 	value,
 	configurable: true
 });
-var Portal = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$2(function Portal2(props, forwardedRef) {
+var Portal = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$3(function Portal2(props, forwardedRef) {
 	const { container: containerProp, ...portalProps } = props;
 	const [mounted, setMounted] = import_react.useState(false);
 	useLayoutEffect2(() => setMounted(true), []);
@@ -840,6 +698,148 @@ var Portal = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name$2(fu
 		ref: forwardedRef
 	}), container) : null;
 }, "Portal"));
+//#endregion
+//#region node_modules/@radix-ui/react-presence/dist/index.mjs
+var __defProp$2 = Object.defineProperty;
+var __name$2 = (target, value) => __defProp$2(target, "name", {
+	value,
+	configurable: true
+});
+function useStateMachine(initialState, machine) {
+	return import_react.useReducer((state, event) => {
+		return machine[state][event] ?? state;
+	}, initialState);
+}
+__name$2(useStateMachine, "useStateMachine");
+var Presence = /* @__PURE__ */ __name$2((props) => {
+	const { present, children } = props;
+	const presence = usePresence(present);
+	const child = typeof children === "function" ? children({ present: presence.isPresent }) : import_react.Children.only(children);
+	const ref = useStableComposedRefs(presence.ref, getElementRef(child));
+	return typeof children === "function" || presence.isPresent ? import_react.cloneElement(child, { ref }) : null;
+}, "Presence");
+function usePresence(present) {
+	const [node, setNode] = import_react.useState();
+	const stylesRef = import_react.useRef(null);
+	const prevPresentRef = import_react.useRef(present);
+	const prevAnimationNameRef = import_react.useRef("none");
+	const mountAnimationNameRef = import_react.useRef(void 0);
+	const [state, send] = useStateMachine(present ? "mounted" : "unmounted", {
+		mounted: {
+			UNMOUNT: "unmounted",
+			ANIMATION_OUT: "unmountSuspended"
+		},
+		unmountSuspended: {
+			MOUNT: "mounted",
+			ANIMATION_END: "unmounted"
+		},
+		unmounted: { MOUNT: "mounted" }
+	});
+	import_react.useEffect(() => {
+		if (state === "mounted") {
+			prevAnimationNameRef.current = mountAnimationNameRef.current ?? getAnimationName(stylesRef.current);
+			mountAnimationNameRef.current = void 0;
+		} else prevAnimationNameRef.current = "none";
+	}, [state]);
+	useLayoutEffect2(() => {
+		const styles = stylesRef.current;
+		const wasPresent = prevPresentRef.current;
+		if (wasPresent !== present) {
+			const prevAnimationName = prevAnimationNameRef.current;
+			const currentAnimationName = getAnimationName(styles);
+			if (present) {
+				mountAnimationNameRef.current = currentAnimationName;
+				send("MOUNT");
+			} else if (currentAnimationName === "none" || styles?.display === "none") send("UNMOUNT");
+			else if (wasPresent && prevAnimationName !== currentAnimationName) send("ANIMATION_OUT");
+			else send("UNMOUNT");
+			prevPresentRef.current = present;
+		}
+	}, [present, send]);
+	useLayoutEffect2(() => {
+		if (node) {
+			let timeoutId;
+			const ownerWindow = node.ownerDocument.defaultView ?? window;
+			const handleAnimationEnd = /* @__PURE__ */ __name$2((event) => {
+				const isCurrentAnimation = getAnimationName(stylesRef.current).includes(CSS.escape(event.animationName));
+				if (event.target === node && isCurrentAnimation) {
+					send("ANIMATION_END");
+					if (!prevPresentRef.current) {
+						const currentFillMode = node.style.animationFillMode;
+						node.style.animationFillMode = "forwards";
+						timeoutId = ownerWindow.setTimeout(() => {
+							if (node.style.animationFillMode === "forwards") node.style.animationFillMode = currentFillMode;
+						});
+					}
+				}
+			}, "handleAnimationEnd");
+			const handleAnimationStart = /* @__PURE__ */ __name$2((event) => {
+				if (event.target === node) prevAnimationNameRef.current = getAnimationName(stylesRef.current);
+			}, "handleAnimationStart");
+			node.addEventListener("animationstart", handleAnimationStart);
+			node.addEventListener("animationcancel", handleAnimationEnd);
+			node.addEventListener("animationend", handleAnimationEnd);
+			return () => {
+				ownerWindow.clearTimeout(timeoutId);
+				node.removeEventListener("animationstart", handleAnimationStart);
+				node.removeEventListener("animationcancel", handleAnimationEnd);
+				node.removeEventListener("animationend", handleAnimationEnd);
+			};
+		} else send("ANIMATION_END");
+	}, [node, send]);
+	return {
+		isPresent: ["mounted", "unmountSuspended"].includes(state),
+		ref: import_react.useCallback((node2) => {
+			if (node2) {
+				const styles = getComputedStyle(node2);
+				stylesRef.current = styles;
+				mountAnimationNameRef.current = getAnimationName(styles);
+			} else stylesRef.current = null;
+			setNode(node2);
+		}, [])
+	};
+}
+__name$2(usePresence, "usePresence");
+function setRef(ref, value) {
+	if (typeof ref === "function") return ref(value);
+	else if (ref !== null && ref !== void 0) ref.current = value;
+}
+__name$2(setRef, "setRef");
+function useStableComposedRefs(...refs) {
+	const refsRef = import_react.useRef(refs);
+	refsRef.current = refs;
+	return import_react.useCallback((node) => {
+		const currentRefs = refsRef.current;
+		let hasCleanup = false;
+		const cleanups = currentRefs.map((ref) => {
+			const cleanup = setRef(ref, node);
+			if (!hasCleanup && typeof cleanup === "function") hasCleanup = true;
+			return cleanup;
+		});
+		if (hasCleanup) return () => {
+			for (let i = 0; i < cleanups.length; i++) {
+				const cleanup = cleanups[i];
+				if (typeof cleanup === "function") cleanup();
+				else setRef(currentRefs[i], null);
+			}
+		};
+	}, []);
+}
+__name$2(useStableComposedRefs, "useStableComposedRefs");
+function getAnimationName(styles) {
+	return styles?.animationName || "none";
+}
+__name$2(getAnimationName, "getAnimationName");
+function getElementRef(element) {
+	let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+	let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+	if (mayWarn) return element.ref;
+	getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+	mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+	if (mayWarn) return element.props.ref;
+	return element.props.ref || element.ref;
+}
+__name$2(getElementRef, "getElementRef");
 //#endregion
 //#region node_modules/@radix-ui/react-focus-guards/dist/index.mjs
 var __defProp$1 = Object.defineProperty;
@@ -1908,4 +1908,4 @@ function getState(open) {
 }
 __name(getState, "getState");
 //#endregion
-export { useId as _, DialogOverlay as a, hideOthers as c, Portal as d, FocusScope as f, useCallbackRef$1 as g, useControllableState as h, DialogDescription as i, ReactRemoveScroll as l, Presence as m, DialogClose as n, DialogPortal as o, DismissableLayer as p, DialogContent as r, DialogTitle as s, Dialog as t, useFocusGuards as u, useLayoutEffect2 as v, Primitive as y };
+export { useId as _, DialogOverlay as a, hideOthers as c, Presence as d, Portal as f, useControllableState as g, useCallbackRef$1 as h, DialogDescription as i, ReactRemoveScroll as l, DismissableLayer as m, DialogClose as n, DialogPortal as o, FocusScope as p, DialogContent as r, DialogTitle as s, Dialog as t, useFocusGuards as u, useLayoutEffect2 as v, Primitive as y };

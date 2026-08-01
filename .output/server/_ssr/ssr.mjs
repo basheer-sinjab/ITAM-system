@@ -108,7 +108,14 @@ var TABLES = /* @__PURE__ */ new Set([
 	"toner_replacement_items",
 	"maintenance_records",
 	"printer_transfers",
-	"app_settings"
+	"app_settings",
+	"assets",
+	"employees",
+	"assignment_history",
+	"inventory_items",
+	"asset_maintenance",
+	"licenses",
+	"license_assignments"
 ]);
 var PROJECT_DIRECTORY = process.env.INIT_CWD ?? process.cwd();
 var DATABASE_PATH = join(PROJECT_DIRECTORY, "data", "printers.db");
@@ -314,7 +321,7 @@ async function handleLocalImageRequest(request) {
 }
 var serverEntryPromise;
 async function getServerEntry() {
-	if (!serverEntryPromise) serverEntryPromise = import("./server-QYXVqS7_.mjs").then((m) => m.default ?? m);
+	if (!serverEntryPromise) serverEntryPromise = import("./server-wBrZMy-s.mjs").then((m) => m.default ?? m);
 	return serverEntryPromise;
 }
 async function normalizeCatastrophicSsrResponse(response) {
