@@ -1,0 +1,21 @@
+
+> dev
+> vite dev --host 127.0.0.1
+
+
+  [32m[1mVITE[22m v8.2.0[39m  [2mready in [0m[1m5542[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m8080[22m/[39m
+[2m٩:٥٨:٥٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m connected.
+[2m١٠:٠٠:٠٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/assets.index.tsx?tsr-split=component[22m
+[2m١٠:٠٠:٠٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/assets.index.tsx[22m
+[2m١٠:٠٠:٠٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m١٠:٤٣:٥٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m١٠:٤٣:٥٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/assets.$id.tsx[22m
+[2m١٠:٤٣:٥٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m١٠:٤٧:٣٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.tsx, /src/routes/_authenticated/people-departments.tsx?tsr-split=component[22m
+[2m١٠:٤٧:٣٦ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.tsx[22m
+[2m١٠:٤٧:٤٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.tsx, /src/routes/_authenticated/people-departments.tsx?tsr-split=component[22m
+[2m١٠:٤٧:٤٥ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.tsx[22m
+[2m١٠:٤٩:٣٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/licenses.tsx, /src/routes/_authenticated/licenses.tsx?tsr-split=component[22m
+[2m١٠:٤٩:٣٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/licenses.tsx[22m

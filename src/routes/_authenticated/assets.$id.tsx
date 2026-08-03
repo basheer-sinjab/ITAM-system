@@ -224,6 +224,7 @@ function AssetDetails() {
         onOpenChange={setEdit}
         asset={asset}
         employees={employees}
+        departments={departments}
         onSaved={() => queryClient.invalidateQueries()}
       />
     </div>

@@ -3,177 +3,54 @@ import { DatabaseSync } from "node:sqlite";
 import { dirname, join } from "node:path";
 
 type Row = Record<string, unknown>;
-type Operation = "select" | "insert" | "update" | "delete" | "upsert";
-type QueryRequest = {
-  table: string;
-  operation: Operation;
-  payload?: Row | Row[];
-  filters?: Array<[string, unknown]>;
-  ordering?: [string, boolean];
-  take?: number;
-  one?: boolean;
+type Query = { table: string; operation: "select" | "insert" | "update" | "delete" | "upsert"; payload?: Row | Row[]; filters?: Array<[string, unknown]>; ordering?: [string, boolean]; take?: number; one?: boolean };
+type Entity = { columns: string[]; sql: string; indexes?: string[] };
+
+const DATABASE_PATH = join(process.env.INIT_CWD ?? process.cwd(), "data", "itam.db");
+const ENTITIES: Record<string, Entity> = {
+  branches: { columns: ["id", "name", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS branches (id TEXT PRIMARY KEY, name TEXT NOT NULL, notes TEXT, created_at TEXT NOT NULL)" },
+  technicians: { columns: ["id", "name", "created_at"], sql: "CREATE TABLE IF NOT EXISTS technicians (id TEXT PRIMARY KEY, name TEXT NOT NULL, created_at TEXT NOT NULL)" },
+  departments: { columns: ["id", "name", "branch", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, name TEXT NOT NULL, branch TEXT NOT NULL DEFAULT '', notes TEXT, created_at TEXT NOT NULL, UNIQUE(name, branch))", indexes: ["CREATE INDEX IF NOT EXISTS idx_departments_branch_name ON departments(branch, name)"] },
+  employees: { columns: ["id", "full_name", "email", "phone", "department_id", "status", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS employees (id TEXT PRIMARY KEY, full_name TEXT NOT NULL, email TEXT, phone TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, status TEXT NOT NULL DEFAULT 'active', notes TEXT, created_at TEXT NOT NULL)", indexes: ["CREATE INDEX IF NOT EXISTS idx_employees_department ON employees(department_id)", "CREATE INDEX IF NOT EXISTS idx_employees_name ON employees(full_name)"] },
+  assets: { columns: ["id", "asset_id", "name", "asset_type", "manufacturer", "model", "serial_number", "status", "location", "department_id", "assigned_employee_id", "image_url", "notes", "created_at", "updated_at"], sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, image_url TEXT, notes TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)", indexes: ["CREATE INDEX IF NOT EXISTS idx_assets_employee ON assets(assigned_employee_id)", "CREATE INDEX IF NOT EXISTS idx_assets_department ON assets(department_id)", "CREATE INDEX IF NOT EXISTS idx_assets_status ON assets(status)"] },
+  assignment_history: { columns: ["id", "asset_id", "employee_id", "assignment_date", "return_date", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS assignment_history (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, assignment_date TEXT NOT NULL, return_date TEXT, notes TEXT, created_at TEXT NOT NULL)", indexes: ["CREATE INDEX IF NOT EXISTS idx_assignment_asset ON assignment_history(asset_id)", "CREATE INDEX IF NOT EXISTS idx_assignment_employee ON assignment_history(employee_id)"] },
+  inventory_items: { columns: ["id", "name", "category", "color", "quantity", "minimum_quantity", "location", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'Consumable', color TEXT, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity >= 0), minimum_quantity REAL NOT NULL DEFAULT 1 CHECK(minimum_quantity >= 0), location TEXT, notes TEXT, created_at TEXT NOT NULL)" },
+  asset_maintenance: { columns: ["id", "asset_id", "maintenance_date", "maintenance_type", "status", "technician", "cost", "problem_description", "resolution", "notes", "used_items", "created_at"], sql: "CREATE TABLE IF NOT EXISTS asset_maintenance (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, maintenance_date TEXT NOT NULL, maintenance_type TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'Closed' CHECK(status IN ('Open','Closed')), technician TEXT, cost REAL NOT NULL DEFAULT 0 CHECK(cost >= 0), problem_description TEXT, resolution TEXT, notes TEXT, used_items TEXT NOT NULL DEFAULT '[]', created_at TEXT NOT NULL)", indexes: ["CREATE INDEX IF NOT EXISTS idx_maintenance_asset_date ON asset_maintenance(asset_id, maintenance_date DESC)", "CREATE INDEX IF NOT EXISTS idx_maintenance_status ON asset_maintenance(status)"] },
+  licenses: { columns: ["id", "license_name", "product_name", "license_type", "seat_count", "expiration_date", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS licenses (id TEXT PRIMARY KEY, license_name TEXT NOT NULL, product_name TEXT, license_type TEXT, seat_count INTEGER NOT NULL DEFAULT 1 CHECK(seat_count >= 0), expiration_date TEXT, notes TEXT, created_at TEXT NOT NULL)" },
+  license_assignments: { columns: ["id", "license_id", "employee_id", "asset_id", "assignment_date", "notes", "created_at"], sql: "CREATE TABLE IF NOT EXISTS license_assignments (id TEXT PRIMARY KEY, license_id TEXT NOT NULL REFERENCES licenses(id) ON DELETE CASCADE, employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, asset_id TEXT REFERENCES assets(id) ON DELETE SET NULL, assignment_date TEXT NOT NULL, notes TEXT, created_at TEXT NOT NULL, CHECK(employee_id IS NOT NULL OR asset_id IS NOT NULL))", indexes: ["CREATE INDEX IF NOT EXISTS idx_license_assignment_license ON license_assignments(license_id)", "CREATE INDEX IF NOT EXISTS idx_license_assignment_employee ON license_assignments(employee_id)", "CREATE INDEX IF NOT EXISTS idx_license_assignment_asset ON license_assignments(asset_id)"] },
+  app_settings: { columns: ["id", "low_stock_threshold", "dashboard_alerts_enabled", "warranty_alert_days", "updated_at"], sql: "CREATE TABLE IF NOT EXISTS app_settings (id TEXT PRIMARY KEY, low_stock_threshold REAL NOT NULL DEFAULT 2, dashboard_alerts_enabled INTEGER NOT NULL DEFAULT 1, warranty_alert_days INTEGER NOT NULL DEFAULT 30, updated_at TEXT NOT NULL)" },
 };
-
-const TABLES = new Set([
-  "branches", "departments", "responsible_persons", "parts", "suppliers",
-  "toners", "toner_stock_entries", "printers", "toner_replacements",
-  "toner_replacement_items", "maintenance_records", "printer_transfers", "app_settings",
-  "assets", "employees", "assignment_history", "inventory_items", "asset_maintenance",
-  "licenses", "license_assignments",
-]);
-const PROJECT_DIRECTORY = process.env.INIT_CWD ?? process.cwd();
-const DATABASE_PATH = join(PROJECT_DIRECTORY, "data", "printers.db");
-let database: DatabaseSync | undefined;
-let databaseReady: Promise<DatabaseSync> | undefined;
-
-async function getDatabase() {
-  if (!databaseReady) {
-    databaseReady = mkdir(dirname(DATABASE_PATH), { recursive: true }).then(() => {
-      database = new DatabaseSync(DATABASE_PATH);
-      database.exec(`
-        CREATE TABLE IF NOT EXISTS records (
-          table_name TEXT NOT NULL,
-          id TEXT NOT NULL,
-          data TEXT NOT NULL,
-          PRIMARY KEY (table_name, id)
-        )
-      `);
-      database.exec(`
-        CREATE TABLE IF NOT EXISTS metadata (
-          key TEXT PRIMARY KEY,
-          value TEXT NOT NULL
-        )
-      `);
-      return database;
-    });
-  }
-  return databaseReady;
+let ready: Promise<DatabaseSync> | undefined;
+function definition(table: string) { const value = ENTITIES[table]; if (!value) throw new Error("جدول ITAM غير صالح"); return value; }
+function migrateDepartments(database: DatabaseSync) {
+  const columns = database.prepare("PRAGMA table_info(departments)").all() as Array<{ name: string }>;
+  if (!columns.length || columns.some((column) => column.name === "branch")) return;
+  database.exec("PRAGMA foreign_keys = OFF");
+  database.exec("CREATE TABLE departments_next (id TEXT PRIMARY KEY, name TEXT NOT NULL, branch TEXT NOT NULL DEFAULT '', notes TEXT, created_at TEXT NOT NULL, UNIQUE(name, branch))");
+  database.exec("INSERT INTO departments_next (id, name, branch, notes, created_at) SELECT id, name, '', notes, created_at FROM departments");
+  database.exec("DROP TABLE departments");
+  database.exec("ALTER TABLE departments_next RENAME TO departments");
+  database.exec("PRAGMA foreign_keys = ON");
 }
-
-function validateTable(table: string) {
-  if (!TABLES.has(table)) throw new Error("جدول بيانات غير صالح");
-}
-
-function rowId(row: Row) {
-  if (row.id === undefined || row.id === null) throw new Error("معرّف السجل مطلوب");
-  return String(row.id);
-}
-
-async function readRows(table: string) {
-  const db = await getDatabase();
-  return db.prepare("SELECT data FROM records WHERE table_name = ?").all(table)
-    .map(({ data }) => JSON.parse(String(data)) as Row);
-}
-
-function matches(row: Row, filters: Array<[string, unknown]>) {
-  return filters.every(([field, value]) => row[field] === value);
-}
-
-async function markMigrationComplete() {
-  const db = await getDatabase();
-  db.prepare("INSERT OR REPLACE INTO metadata (key, value) VALUES ('legacy_migration_complete', 'true')").run();
-}
-
-async function isMigrationComplete() {
-  const db = await getDatabase();
-  return db.prepare("SELECT value FROM metadata WHERE key = 'legacy_migration_complete'").get() !== undefined;
-}
-
-async function runQuery(query: QueryRequest) {
-  validateTable(query.table);
-  const db = await getDatabase();
-  const filters = query.filters ?? [];
-  let rows = await readRows(query.table);
-
-  if (query.operation === "insert" || query.operation === "upsert") {
-    const values = Array.isArray(query.payload) ? query.payload : [query.payload];
-    if (!values.every(Boolean)) throw new Error("بيانات السجل مطلوبة");
-    for (const value of values as Row[]) {
-      db.prepare("INSERT OR REPLACE INTO records (table_name, id, data) VALUES (?, ?, ?)")
-        .run(query.table, rowId(value), JSON.stringify(value));
-    }
-    rows = values as Row[];
-    await markMigrationComplete();
-  } else if (query.operation === "update") {
-    if (!query.payload || Array.isArray(query.payload)) throw new Error("بيانات التحديث مطلوبة");
-    rows = rows.filter((row) => matches(row, filters)).map((row) => ({ ...row, ...query.payload }));
-    for (const row of rows) {
-      db.prepare("UPDATE records SET data = ? WHERE table_name = ? AND id = ?")
-        .run(JSON.stringify(row), query.table, rowId(row));
-    }
-    await markMigrationComplete();
-  } else if (query.operation === "delete") {
-    rows = rows.filter((row) => matches(row, filters));
-    for (const row of rows) {
-      db.prepare("DELETE FROM records WHERE table_name = ? AND id = ?").run(query.table, rowId(row));
-    }
-    await markMigrationComplete();
-  } else {
-    rows = rows.filter((row) => matches(row, filters));
-    if (query.ordering) {
-      const [field, ascending] = query.ordering;
-      rows.sort((left, right) => String(left[field] ?? "").localeCompare(String(right[field] ?? "")) * (ascending ? 1 : -1));
-    }
-    if (query.take) rows = rows.slice(0, query.take);
-  }
-
-  return query.one ? (rows[0] ?? null) : rows;
-}
-
-async function exportData() {
-  return Object.fromEntries(await Promise.all([...TABLES].map(async (table) => [table, await readRows(table)])));
-}
-
-async function restoreData(data: Record<string, Row[]>) {
-  for (const table of TABLES) {
-    if (!Array.isArray(data[table])) throw new Error("تحتوي النسخة الاحتياطية على بيانات غير صالحة");
-  }
-
-  const db = await getDatabase();
-  db.exec("BEGIN");
-  try {
-    db.prepare("DELETE FROM records").run();
-    const insert = db.prepare("INSERT INTO records (table_name, id, data) VALUES (?, ?, ?)");
-    for (const table of TABLES) {
-      for (const row of data[table]) insert.run(table, rowId(row), JSON.stringify(row));
-    }
-    db.exec("COMMIT");
-    await markMigrationComplete();
-  } catch (error) {
-    db.exec("ROLLBACK");
-    throw error;
+function migrateInventory(database: DatabaseSync) {
+  const columns = database.prepare("PRAGMA table_info(inventory_items)").all() as Array<{ name: string }>;
+  if (columns.length && !columns.some((column) => column.name === "color")) {
+    database.exec("ALTER TABLE inventory_items ADD COLUMN color TEXT");
   }
 }
-
-function jsonResponse(data: unknown, status = 200) {
-  return Response.json(data, { status });
-}
-
-export async function handleLocalDataRequest(request: Request) {
-  const url = new URL(request.url);
-  if (!url.pathname.startsWith("/api/local-data")) return null;
-
-  try {
-    if (url.pathname === "/api/local-data/status" && request.method === "GET") {
-      const hasData = (await getDatabase()).prepare("SELECT 1 FROM records LIMIT 1").get() !== undefined;
-      return jsonResponse({ hasData, migrationComplete: await isMigrationComplete() });
-    }
-
-    if (url.pathname === "/api/local-data/query" && request.method === "POST") {
-      return jsonResponse({ data: await runQuery(await request.json() as QueryRequest), error: null });
-    }
-
-    if (url.pathname === "/api/local-data/export" && request.method === "GET") {
-      return jsonResponse({ data: await exportData() });
-    }
-
-    if (url.pathname === "/api/local-data/restore" && request.method === "POST") {
-      await restoreData(await request.json() as Record<string, Row[]>);
-      return jsonResponse({ ok: true });
-    }
-
-    return new Response("Not found", { status: 404 });
-  } catch (error) {
-    return jsonResponse({ message: error instanceof Error ? error.message : "تعذر الوصول إلى قاعدة البيانات" }, 400);
+function migrateAssets(database: DatabaseSync) {
+  const columns = database.prepare("PRAGMA table_info(assets)").all() as Array<{ name: string }>;
+  if (columns.length && !columns.some((column) => column.name === "department_id")) {
+    database.exec("ALTER TABLE assets ADD COLUMN department_id TEXT REFERENCES departments(id) ON DELETE SET NULL");
   }
 }
+async function db() { if (!ready) ready = mkdir(dirname(DATABASE_PATH), { recursive: true }).then(() => { const database = new DatabaseSync(DATABASE_PATH); migrateDepartments(database); database.exec("PRAGMA foreign_keys = ON"); for (const entity of Object.values(ENTITIES)) database.exec(entity.sql); migrateInventory(database); migrateAssets(database); for (const entity of Object.values(ENTITIES)) entity.indexes?.forEach((index) => database.exec(index)); return database; }); return ready; }
+function hydrate(row: Row) { if (typeof row.used_items === "string") row.used_items = JSON.parse(row.used_items || "[]"); if (row.dashboard_alerts_enabled !== undefined) row.dashboard_alerts_enabled = Boolean(row.dashboard_alerts_enabled); return row; }
+async function rows(table: string) { definition(table); return (await db()).prepare(`SELECT * FROM ${table}`).all().map((row) => hydrate(row as Row)); }
+function match(row: Row, filters: Array<[string, unknown]>) { return filters.every(([field, value]) => row[field] === value); }
+function value(column: string, row: Row) { if (column === "used_items") return JSON.stringify(row[column] ?? []); if (column === "dashboard_alerts_enabled") return row[column] ? 1 : 0; return row[column] ?? null; }
+function save(database: DatabaseSync, table: string, row: Row, upsert: boolean) { const { columns } = definition(table); if (!row.id) throw new Error("معرّف السجل مطلوب"); const placeholders = columns.map(() => "?").join(","); const updates = columns.filter((column) => column !== "id").map((column) => `${column}=excluded.${column}`).join(","); database.prepare(`${upsert ? "INSERT" : "INSERT"} INTO ${table} (${columns.join(",")}) VALUES (${placeholders})${upsert ? ` ON CONFLICT(id) DO UPDATE SET ${updates}` : ""}`).run(...columns.map((column) => value(column, row))); }
+async function run(query: Query) { const database = await db(); const filters = query.filters ?? []; let result = await rows(query.table); if (query.operation === "insert" || query.operation === "upsert") { const values = Array.isArray(query.payload) ? query.payload : [query.payload]; if (!values.every(Boolean)) throw new Error("بيانات السجل مطلوبة"); database.exec("BEGIN"); try { for (const row of values as Row[]) save(database, query.table, row, query.operation === "upsert"); database.exec("COMMIT"); } catch (error) { database.exec("ROLLBACK"); throw error; } result = values as Row[]; } else if (query.operation === "update") { if (!query.payload || Array.isArray(query.payload)) throw new Error("بيانات التحديث مطلوبة"); result = result.filter((row) => match(row, filters)).map((row) => ({ ...row, ...query.payload })); database.exec("BEGIN"); try { for (const row of result) save(database, query.table, row, true); database.exec("COMMIT"); } catch (error) { database.exec("ROLLBACK"); throw error; } } else if (query.operation === "delete") { result = result.filter((row) => match(row, filters)); const statement = database.prepare(`DELETE FROM ${query.table} WHERE id = ?`); for (const row of result) statement.run(String(row.id)); } else { result = result.filter((row) => match(row, filters)); if (query.ordering) { const [field, ascending] = query.ordering; result.sort((left, right) => String(left[field] ?? "").localeCompare(String(right[field] ?? "")) * (ascending ? 1 : -1)); } if (query.take) result = result.slice(0, query.take); } return query.one ? (result[0] ?? null) : result; }
+async function exportData() { return Object.fromEntries(await Promise.all(Object.keys(ENTITIES).map(async (table) => [table, await rows(table)]))); }
+async function restore(data: Record<string, Row[]>) { const database = await db(); for (const table of Object.keys(ENTITIES)) if (!Array.isArray(data[table])) throw new Error("تحتوي النسخة الاحتياطية على بيانات غير صالحة"); database.exec("BEGIN"); try { for (const table of Object.keys(ENTITIES).reverse()) database.exec(`DELETE FROM ${table}`); for (const table of Object.keys(ENTITIES)) for (const row of data[table]) save(database, table, row, false); database.exec("COMMIT"); } catch (error) { database.exec("ROLLBACK"); throw error; } }
+export async function handleLocalDataRequest(request: Request) { const url = new URL(request.url); if (!url.pathname.startsWith("/api/local-data")) return null; try { if (url.pathname === "/api/local-data/status" && request.method === "GET") { const database = await db(); return Response.json({ hasData: Object.keys(ENTITIES).some((table) => database.prepare(`SELECT 1 FROM ${table} LIMIT 1`).get() !== undefined), normalized: true }); } if (url.pathname === "/api/local-data/query" && request.method === "POST") return Response.json({ data: await run(await request.json() as Query), error: null }); if (url.pathname === "/api/local-data/export" && request.method === "GET") return Response.json({ data: await exportData() }); if (url.pathname === "/api/local-data/restore" && request.method === "POST") { await restore(await request.json() as Record<string, Row[]>); return Response.json({ ok: true }); } return new Response("Not found", { status: 404 }); } catch (error) { return Response.json({ message: error instanceof Error ? error.message : "تعذر الوصول إلى قاعدة البيانات" }, { status: 400 }); } }
