@@ -1,0 +1,1 @@
+function e(e,t){return Number(t)<Math.max(0,Number(e)||0)}function t(e=[],t=[]){let n=new Map;for(let t of e)n.set(t.item_id,Number(t.quantity)||0);for(let e of t)n.set(e.item_id,(n.get(e.item_id)||0)-(Number(e.quantity)||0));return[...n].map(([e,t])=>({itemId:e,quantityChange:t})).filter(e=>e.quantityChange!==0)}export{t as n,e as t};

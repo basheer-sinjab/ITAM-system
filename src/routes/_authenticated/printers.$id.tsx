@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { ConfirmButton } from "@/components/ConfirmButton";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PrinterImage } from "@/components/PrinterImage";
@@ -10,7 +11,12 @@ import { PrinterFormDialog, useLookups } from "@/components/PrinterFormDialog";
 import { TonerHistoryTab } from "@/components/printer/TonerHistoryTab";
 import { MaintenanceTab } from "@/components/printer/MaintenanceTab";
 import { TransfersTab } from "@/components/printer/TransfersTab";
-import { PRINTER_STATUS, STATUS_CLASS, formatDate, type PrinterStatus } from "@/lib/pms";
+import {
+  PRINTER_STATUS,
+  STATUS_CLASS,
+  formatDate,
+  type PrinterStatus,
+} from "@/lib/pms";
 import { ArrowRight, Pencil, Star, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
@@ -19,9 +25,15 @@ export const Route = createFileRoute("/_authenticated/printers/$id")({
   head: () => ({
     meta: [
       { title: "تفاصيل الطابعة — PrintersFloss" },
-      { name: "description", content: "بيانات الطابعة وسجل الأحبار والصيانة والنقل." },
+      {
+        name: "description",
+        content: "بيانات الطابعة وسجل الأحبار والصيانة والنقل.",
+      },
       { property: "og:title", content: "تفاصيل الطابعة — PrintersFloss" },
-      { property: "og:description", content: "بيانات الطابعة وسجل الأحبار والصيانة والنقل." },
+      {
+        property: "og:description",
+        content: "بيانات الطابعة وسجل الأحبار والصيانة والنقل.",
+      },
     ],
   }),
   component: PrinterDetails,
@@ -37,7 +49,11 @@ function PrinterDetails() {
   const { data: printer, isLoading } = useQuery({
     queryKey: ["printer", id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("printers").select("*").eq("id", id).maybeSingle();
+      const { data, error } = await supabase
+        .from("printers")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
       if (error) throw error;
       return data;
     },
@@ -71,14 +87,19 @@ function PrinterDetails() {
     return (
       <div className="surface-panel p-12 text-center">
         <p className="text-muted-foreground">الطابعة غير موجودة.</p>
-        <Link to="/printers" className="mt-4 inline-block text-primary underline">
+        <Link
+          to="/printers"
+          className="mt-4 inline-block text-primary underline"
+        >
           العودة للقائمة
         </Link>
       </div>
     );
 
-  const nameOf = (list: { id: string; name: string }[] | undefined, key: string | null) =>
-    list?.find((x) => x.id === key)?.name ?? "—";
+  const nameOf = (
+    list: { id: string; name: string }[] | undefined,
+    key: string | null,
+  ) => list?.find((x) => x.id === key)?.name ?? "—";
 
   const info: [string, string][] = [
     ["رقم الأصل", printer.asset_id],
@@ -106,7 +127,10 @@ function PrinterDetails() {
           <div>
             <h1 className="flex items-center gap-2 text-2xl font-bold">
               {printer.name}
-              <Badge variant="outline" className={STATUS_CLASS[printer.status as PrinterStatus]}>
+              <Badge
+                variant="outline"
+                className={STATUS_CLASS[printer.status as PrinterStatus]}
+              >
                 {PRINTER_STATUS[printer.status as PrinterStatus]}
               </Badge>
             </h1>
@@ -116,24 +140,34 @@ function PrinterDetails() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" className="gap-2" onClick={() => toggleFavorite.mutate()}>
-            <Star className={`size-4 ${printer.is_favorite ? "fill-warning text-warning" : ""}`} />
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={() => toggleFavorite.mutate()}
+          >
+            <Star
+              className={`size-4 ${printer.is_favorite ? "fill-warning text-warning" : ""}`}
+            />
             {printer.is_favorite ? "إزالة من المفضلة" : "إضافة للمفضلة"}
-          </Button>
-          <Button variant="outline" className="gap-2" onClick={() => setEditOpen(true)}>
-            <Pencil className="size-4" />
-            تعديل
           </Button>
           <Button
             variant="outline"
+            className="gap-2"
+            onClick={() => setEditOpen(true)}
+          >
+            <Pencil className="size-4" />
+            تعديل
+          </Button>
+          <ConfirmButton
+            variant="outline"
             className="gap-2 text-destructive"
-            onClick={() => {
-              if (confirm("هل تريد حذف هذه الطابعة وكل سجلاتها؟")) remove.mutate();
-            }}
+            title="حذف الطابعة؟"
+            description="سيتم حذف الطابعة وكل سجلاتها المرتبطة نهائيًا."
+            onConfirm={() => remove.mutate()}
           >
             <Trash2 className="size-4" />
             حذف
-          </Button>
+          </ConfirmButton>
         </div>
       </div>
 
@@ -148,7 +182,11 @@ function PrinterDetails() {
         <TabsContent value="info" className="mt-4">
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="surface-panel overflow-hidden lg:col-span-1">
-              <PrinterImage path={printer.image_url} alt={printer.name} className="h-64 w-full" />
+              <PrinterImage
+                path={printer.image_url}
+                alt={printer.name}
+                className="h-64 w-full"
+              />
             </div>
             <dl className="surface-panel grid gap-x-6 gap-y-4 p-6 sm:grid-cols-2 lg:col-span-2">
               {info.map(([label, value]) => (
@@ -172,10 +210,13 @@ function PrinterDetails() {
         <TabsContent value="transfers" className="mt-4">
           <TransfersTab printer={printer} />
         </TabsContent>
-
       </Tabs>
 
-      <PrinterFormDialog open={editOpen} onOpenChange={setEditOpen} printer={printer} />
+      <PrinterFormDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        printer={printer}
+      />
     </div>
   );
 }

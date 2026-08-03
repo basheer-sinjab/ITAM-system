@@ -119,15 +119,17 @@ var ENTITIES = {
 			"id",
 			"name",
 			"branch",
+			"branch_id",
 			"notes",
 			"created_at"
 		],
-		sql: "CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, name TEXT NOT NULL, branch TEXT NOT NULL DEFAULT '', notes TEXT, created_at TEXT NOT NULL, UNIQUE(name, branch))",
-		indexes: ["CREATE INDEX IF NOT EXISTS idx_departments_branch_name ON departments(branch, name)"]
+		sql: "CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, name TEXT NOT NULL, branch TEXT NOT NULL DEFAULT '', branch_id TEXT REFERENCES branches(id) ON DELETE SET NULL, notes TEXT, created_at TEXT NOT NULL, UNIQUE(name, branch_id))",
+		indexes: ["CREATE INDEX IF NOT EXISTS idx_departments_branch_id_name ON departments(branch_id, name)"]
 	},
 	employees: {
 		columns: [
 			"id",
+			"employee_number",
 			"full_name",
 			"email",
 			"phone",
@@ -136,8 +138,12 @@ var ENTITIES = {
 			"notes",
 			"created_at"
 		],
-		sql: "CREATE TABLE IF NOT EXISTS employees (id TEXT PRIMARY KEY, full_name TEXT NOT NULL, email TEXT, phone TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, status TEXT NOT NULL DEFAULT 'active', notes TEXT, created_at TEXT NOT NULL)",
-		indexes: ["CREATE INDEX IF NOT EXISTS idx_employees_department ON employees(department_id)", "CREATE INDEX IF NOT EXISTS idx_employees_name ON employees(full_name)"]
+		sql: "CREATE TABLE IF NOT EXISTS employees (id TEXT PRIMARY KEY, employee_number TEXT UNIQUE, full_name TEXT NOT NULL, email TEXT, phone TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, status TEXT NOT NULL DEFAULT 'active', notes TEXT, created_at TEXT NOT NULL)",
+		indexes: [
+			"CREATE INDEX IF NOT EXISTS idx_employees_department ON employees(department_id)",
+			"CREATE INDEX IF NOT EXISTS idx_employees_name ON employees(full_name)",
+			"CREATE UNIQUE INDEX IF NOT EXISTS idx_employees_number ON employees(employee_number) WHERE employee_number IS NOT NULL AND employee_number <> ''"
+		]
 	},
 	assets: {
 		columns: [
@@ -152,16 +158,19 @@ var ENTITIES = {
 			"location",
 			"department_id",
 			"assigned_employee_id",
+			"purchase_date",
+			"warranty_expiry",
 			"image_url",
 			"notes",
 			"created_at",
 			"updated_at"
 		],
-		sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, image_url TEXT, notes TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
+		sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, purchase_date TEXT, warranty_expiry TEXT, image_url TEXT, notes TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
 		indexes: [
 			"CREATE INDEX IF NOT EXISTS idx_assets_employee ON assets(assigned_employee_id)",
 			"CREATE INDEX IF NOT EXISTS idx_assets_department ON assets(department_id)",
-			"CREATE INDEX IF NOT EXISTS idx_assets_status ON assets(status)"
+			"CREATE INDEX IF NOT EXISTS idx_assets_status ON assets(status)",
+			"CREATE INDEX IF NOT EXISTS idx_assets_warranty ON assets(warranty_expiry)"
 		]
 	},
 	assignment_history: {
@@ -209,18 +218,34 @@ var ENTITIES = {
 		sql: "CREATE TABLE IF NOT EXISTS asset_maintenance (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, maintenance_date TEXT NOT NULL, maintenance_type TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'Closed' CHECK(status IN ('Open','Closed')), technician TEXT, cost REAL NOT NULL DEFAULT 0 CHECK(cost >= 0), problem_description TEXT, resolution TEXT, notes TEXT, used_items TEXT NOT NULL DEFAULT '[]', created_at TEXT NOT NULL)",
 		indexes: ["CREATE INDEX IF NOT EXISTS idx_maintenance_asset_date ON asset_maintenance(asset_id, maintenance_date DESC)", "CREATE INDEX IF NOT EXISTS idx_maintenance_status ON asset_maintenance(status)"]
 	},
+	inventory_movements: {
+		columns: [
+			"id",
+			"item_id",
+			"movement_date",
+			"movement_type",
+			"quantity",
+			"note",
+			"maintenance_id",
+			"created_at"
+		],
+		sql: "CREATE TABLE IF NOT EXISTS inventory_movements (id TEXT PRIMARY KEY, item_id TEXT NOT NULL REFERENCES inventory_items(id) ON DELETE CASCADE, movement_date TEXT NOT NULL, movement_type TEXT NOT NULL CHECK(movement_type IN ('add','use','return','adjust')), quantity REAL NOT NULL CHECK(quantity >= 0), note TEXT, maintenance_id TEXT REFERENCES asset_maintenance(id) ON DELETE SET NULL, created_at TEXT NOT NULL)",
+		indexes: ["CREATE INDEX IF NOT EXISTS idx_inventory_movements_item_date ON inventory_movements(item_id, movement_date DESC)", "CREATE INDEX IF NOT EXISTS idx_inventory_movements_maintenance ON inventory_movements(maintenance_id)"]
+	},
 	licenses: {
 		columns: [
 			"id",
 			"license_name",
 			"product_name",
 			"license_type",
+			"license_key",
+			"contract_number",
 			"seat_count",
 			"expiration_date",
 			"notes",
 			"created_at"
 		],
-		sql: "CREATE TABLE IF NOT EXISTS licenses (id TEXT PRIMARY KEY, license_name TEXT NOT NULL, product_name TEXT, license_type TEXT, seat_count INTEGER NOT NULL DEFAULT 1 CHECK(seat_count >= 0), expiration_date TEXT, notes TEXT, created_at TEXT NOT NULL)"
+		sql: "CREATE TABLE IF NOT EXISTS licenses (id TEXT PRIMARY KEY, license_name TEXT NOT NULL, product_name TEXT, license_type TEXT, license_key TEXT, contract_number TEXT, seat_count INTEGER NOT NULL DEFAULT 1 CHECK(seat_count >= 0), expiration_date TEXT, notes TEXT, created_at TEXT NOT NULL)"
 	},
 	license_assignments: {
 		columns: [
@@ -238,6 +263,18 @@ var ENTITIES = {
 			"CREATE INDEX IF NOT EXISTS idx_license_assignment_employee ON license_assignments(employee_id)",
 			"CREATE INDEX IF NOT EXISTS idx_license_assignment_asset ON license_assignments(asset_id)"
 		]
+	},
+	activity_log: {
+		columns: [
+			"id",
+			"entity_type",
+			"entity_id",
+			"action",
+			"details",
+			"created_at"
+		],
+		sql: "CREATE TABLE IF NOT EXISTS activity_log (id TEXT PRIMARY KEY, entity_type TEXT NOT NULL, entity_id TEXT, action TEXT NOT NULL, details TEXT, created_at TEXT NOT NULL)",
+		indexes: ["CREATE INDEX IF NOT EXISTS idx_activity_log_created ON activity_log(created_at DESC)", "CREATE INDEX IF NOT EXISTS idx_activity_log_entity ON activity_log(entity_type, entity_id)"]
 	},
 	app_settings: {
 		columns: [
@@ -273,6 +310,18 @@ function migrateInventory(database) {
 function migrateAssets(database) {
 	const columns = database.prepare("PRAGMA table_info(assets)").all();
 	if (columns.length && !columns.some((column) => column.name === "department_id")) database.exec("ALTER TABLE assets ADD COLUMN department_id TEXT REFERENCES departments(id) ON DELETE SET NULL");
+	if (columns.length && !columns.some((column) => column.name === "purchase_date")) database.exec("ALTER TABLE assets ADD COLUMN purchase_date TEXT");
+	if (columns.length && !columns.some((column) => column.name === "warranty_expiry")) database.exec("ALTER TABLE assets ADD COLUMN warranty_expiry TEXT");
+}
+function migrateSystemFields(database) {
+	const departmentColumns = database.prepare("PRAGMA table_info(departments)").all();
+	if (departmentColumns.length && !departmentColumns.some((column) => column.name === "branch_id")) database.exec("ALTER TABLE departments ADD COLUMN branch_id TEXT REFERENCES branches(id) ON DELETE SET NULL");
+	database.exec("UPDATE departments SET branch_id = (SELECT id FROM branches WHERE branches.name = departments.branch LIMIT 1) WHERE branch_id IS NULL AND branch <> ''");
+	const employeeColumns = database.prepare("PRAGMA table_info(employees)").all();
+	if (employeeColumns.length && !employeeColumns.some((column) => column.name === "employee_number")) database.exec("ALTER TABLE employees ADD COLUMN employee_number TEXT");
+	const licenseColumns = database.prepare("PRAGMA table_info(licenses)").all();
+	if (licenseColumns.length && !licenseColumns.some((column) => column.name === "license_key")) database.exec("ALTER TABLE licenses ADD COLUMN license_key TEXT");
+	if (licenseColumns.length && !licenseColumns.some((column) => column.name === "contract_number")) database.exec("ALTER TABLE licenses ADD COLUMN contract_number TEXT");
 }
 async function db() {
 	if (!ready) ready = mkdir(dirname(DATABASE_PATH), { recursive: true }).then(() => {
@@ -282,6 +331,8 @@ async function db() {
 		for (const entity of Object.values(ENTITIES)) database.exec(entity.sql);
 		migrateInventory(database);
 		migrateAssets(database);
+		migrateSystemFields(database);
+		database.exec("INSERT OR IGNORE INTO app_settings (id, low_stock_threshold, dashboard_alerts_enabled, warranty_alert_days, updated_at) VALUES ('default', 2, 1, 30, datetime('now'))");
 		for (const entity of Object.values(ENTITIES)) entity.indexes?.forEach((index) => database.exec(index));
 		return database;
 	});
@@ -289,6 +340,11 @@ async function db() {
 }
 function hydrate(row) {
 	if (typeof row.used_items === "string") row.used_items = JSON.parse(row.used_items || "[]");
+	if (typeof row.details === "string") try {
+		row.details = JSON.parse(row.details || "{}");
+	} catch {
+		row.details = {};
+	}
 	if (row.dashboard_alerts_enabled !== void 0) row.dashboard_alerts_enabled = Boolean(row.dashboard_alerts_enabled);
 	return row;
 }
@@ -300,7 +356,7 @@ function match(row, filters) {
 	return filters.every(([field, value]) => row[field] === value);
 }
 function value(column, row) {
-	if (column === "used_items") return JSON.stringify(row[column] ?? []);
+	if (column === "used_items" || column === "details") return JSON.stringify(row[column] ?? (column === "used_items" ? [] : {}));
 	if (column === "dashboard_alerts_enabled") return row[column] ? 1 : 0;
 	return row[column] ?? null;
 }
@@ -311,6 +367,10 @@ function save(database, table, row, upsert) {
 	const updates = columns.filter((column) => column !== "id").map((column) => `${column}=excluded.${column}`).join(",");
 	database.prepare(`${upsert ? "INSERT" : "INSERT"} INTO ${table} (${columns.join(",")}) VALUES (${placeholders})${upsert ? ` ON CONFLICT(id) DO UPDATE SET ${updates}` : ""}`).run(...columns.map((column) => value(column, row)));
 }
+function logActivity(database, table, entityId, action, details) {
+	if (table === "activity_log") return;
+	database.prepare("INSERT INTO activity_log (id, entity_type, entity_id, action, details, created_at) VALUES (?, ?, ?, ?, ?, ?)").run(crypto.randomUUID(), table, entityId ? String(entityId) : null, action, JSON.stringify(details ?? {}), (/* @__PURE__ */ new Date()).toISOString());
+}
 async function run(query) {
 	const database = await db();
 	const filters = query.filters ?? [];
@@ -320,7 +380,15 @@ async function run(query) {
 		if (!values.every(Boolean)) throw new Error("بيانات السجل مطلوبة");
 		database.exec("BEGIN");
 		try {
-			for (const row of values) save(database, query.table, row, query.operation === "upsert");
+			for (const row of values) {
+				if (query.table === "license_assignments") {
+					const license = database.prepare("SELECT seat_count FROM licenses WHERE id = ?").get(String(row.license_id));
+					const assigned = database.prepare("SELECT COUNT(*) AS count FROM license_assignments WHERE license_id = ?").get(String(row.license_id));
+					if (!license || Number(assigned.count) >= Number(license.seat_count || 0)) throw new Error("لا توجد مقاعد متاحة في هذا الترخيص");
+				}
+				save(database, query.table, row, query.operation === "upsert");
+				logActivity(database, query.table, row.id, query.operation === "upsert" ? "update" : "create", { current: row });
+			}
 			database.exec("COMMIT");
 		} catch (error) {
 			database.exec("ROLLBACK");
@@ -329,13 +397,26 @@ async function run(query) {
 		result = values;
 	} else if (query.operation === "update") {
 		if (!query.payload || Array.isArray(query.payload)) throw new Error("بيانات التحديث مطلوبة");
-		result = result.filter((row) => match(row, filters)).map((row) => ({
+		const previousRows = result.filter((row) => match(row, filters));
+		result = previousRows.map((row) => ({
 			...row,
 			...query.payload
 		}));
 		database.exec("BEGIN");
 		try {
-			for (const row of result) save(database, query.table, row, true);
+			result.forEach((row, index) => {
+				if (query.table === "licenses" && query.payload.seat_count !== void 0) {
+					const assigned = database.prepare("SELECT COUNT(*) AS count FROM license_assignments WHERE license_id = ?").get(String(row.id));
+					if (Number(row.seat_count || 0) < Number(assigned.count)) throw new Error(`لا يمكن تقليل المقاعد عن ${assigned.count} لأنها مستخدمة حاليًا`);
+				}
+				save(database, query.table, row, true);
+				const previous = previousRows[index];
+				const changes = Object.fromEntries(Object.keys(query.payload).filter((key) => previous[key] !== row[key]).map((key) => [key, {
+					from: previous[key] ?? null,
+					to: row[key] ?? null
+				}]));
+				if (Object.keys(changes).length) logActivity(database, query.table, row.id, "update", { changes });
+			});
 			database.exec("COMMIT");
 		} catch (error) {
 			database.exec("ROLLBACK");
@@ -343,8 +424,18 @@ async function run(query) {
 		}
 	} else if (query.operation === "delete") {
 		result = result.filter((row) => match(row, filters));
-		const statement = database.prepare(`DELETE FROM ${query.table} WHERE id = ?`);
-		for (const row of result) statement.run(String(row.id));
+		database.exec("BEGIN");
+		try {
+			const statement = database.prepare(`DELETE FROM ${query.table} WHERE id = ?`);
+			for (const row of result) {
+				logActivity(database, query.table, row.id, "delete", { previous: row });
+				statement.run(String(row.id));
+			}
+			database.exec("COMMIT");
+		} catch (error) {
+			database.exec("ROLLBACK");
+			throw error;
+		}
 	} else {
 		result = result.filter((row) => match(row, filters));
 		if (query.ordering) {
@@ -360,7 +451,11 @@ async function exportData() {
 }
 async function restore(data) {
 	const database = await db();
-	for (const table of Object.keys(ENTITIES)) if (!Array.isArray(data[table])) throw new Error("تحتوي النسخة الاحتياطية على بيانات غير صالحة");
+	const optionalTables = /* @__PURE__ */ new Set(["inventory_movements", "activity_log"]);
+	for (const table of Object.keys(ENTITIES)) {
+		if (data[table] === void 0 && optionalTables.has(table)) data[table] = [];
+		if (!Array.isArray(data[table])) throw new Error("تحتوي النسخة الاحتياطية على بيانات غير صالحة");
+	}
 	database.exec("BEGIN");
 	try {
 		for (const table of Object.keys(ENTITIES).reverse()) database.exec(`DELETE FROM ${table}`);
@@ -480,7 +575,7 @@ async function handleLocalImageRequest(request) {
 }
 var serverEntryPromise;
 async function getServerEntry() {
-	if (!serverEntryPromise) serverEntryPromise = import("./server-BFxwmhWW.mjs").then((m) => m.default ?? m);
+	if (!serverEntryPromise) serverEntryPromise = import("./server-De2WpWRH.mjs").then((m) => m.default ?? m);
 	return serverEntryPromise;
 }
 async function normalizeCatastrophicSsrResponse(response) {

@@ -12,10 +12,17 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { ConfirmButton } from "@/components/ConfirmButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -62,19 +69,24 @@ function DepartmentDetails() {
   });
   const { data: branches = [] } = useQuery({
     queryKey: ["branches"],
-    queryFn: async () => (await supabase.from("branches").select("*").order("name")).data ?? [],
+    queryFn: async () =>
+      (await supabase.from("branches").select("*").order("name")).data ?? [],
   });
   if (isLoading) return <p className="text-muted-foreground">جارٍ التحميل…</p>;
   if (!department)
     return <p className="text-muted-foreground">القسم غير موجود.</p>;
-  const departmentAssets = assets.filter((asset: any) =>
-    employees.some(
-      (employee: any) => employee.id === asset.assigned_employee_id,
-    ),
+  const departmentAssets = assets.filter(
+    (asset: any) =>
+      asset.department_id === id ||
+      employees.some(
+        (employee: any) => employee.id === asset.assigned_employee_id,
+      ),
   );
+  const branchName =
+    branches.find((branch: any) => branch.id === department.branch_id)?.name ||
+    branches.find((branch: any) => branch.name === department.branch)?.name ||
+    "فرع غير محدد";
   const remove = async () => {
-    if (!confirm(`حذف القسم "${department.name}"؟ سيبقى الموظفون بدون قسم.`))
-      return;
     const detach = await supabase
       .from("employees")
       .update({ department_id: null })
@@ -99,7 +111,7 @@ function DepartmentDetails() {
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-bold">{department.name}</h1>
               <span className="rounded-md bg-sky-500/10 px-2 py-1 text-xs font-medium text-sky-700">
-                {department.branch || "فرع غير محدد"}
+                {branchName}
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -112,14 +124,16 @@ function DepartmentDetails() {
             <Pencil className="ml-2 size-4" />
             تعديل
           </Button>
-          <Button
+          <ConfirmButton
             variant="outline"
             className="text-destructive"
-            onClick={remove}
+            title="حذف القسم؟"
+            description={`سيتم حذف قسم ${department.name} وسيبقى موظفوه بدون قسم.`}
+            onConfirm={remove}
           >
             <Trash2 className="ml-2 size-4" />
             حذف
-          </Button>
+          </ConfirmButton>
         </div>
       </header>
       <section className="grid gap-4 sm:grid-cols-2">
@@ -205,22 +219,39 @@ function EmployeeRow({ employee, assets }: { employee: any; assets: any[] }) {
     </div>
   );
 }
-function DepartmentEdit({ open, onOpenChange, department, branches = [], saved }: any) {
+function DepartmentEdit({
+  open,
+  onOpenChange,
+  department,
+  branches = [],
+  saved,
+}: any) {
   const [name, setName] = useState("");
-  const [branch, setBranch] = useState("");
+  const [branchId, setBranchId] = useState("");
   const [notes, setNotes] = useState("");
   useEffect(() => {
     if (open) {
       setName(department.name);
-      setBranch(department.branch || "");
+      setBranchId(
+        department.branch_id ||
+          branches.find((branch: any) => branch.name === department.branch)
+            ?.id ||
+          "",
+      );
       setNotes(department.notes || "");
     }
-  }, [open, department]);
+  }, [open, department, branches]);
   const save = async () => {
     if (!name.trim()) return toast.error("اسم القسم مطلوب");
     const result = await supabase
       .from("departments")
-      .update({ name: name.trim(), branch: branch.trim(), notes: notes || null })
+      .update({
+        name: name.trim(),
+        branch_id: branchId || null,
+        branch:
+          branches.find((branch: any) => branch.id === branchId)?.name || "",
+        notes: notes || null,
+      })
       .eq("id", department.id);
     if (result.error) return toast.error(result.error.message);
     saved();
@@ -241,11 +272,24 @@ function DepartmentEdit({ open, onOpenChange, department, branches = [], saved }
             />
           </Field>
           <Field label="الفرع">
-            <Input
-              value={branch}
-              onChange={(event) => setBranch(event.target.value)}
-              placeholder="مثال: فرع الرياض"
-            />
+            <Select
+              value={branchId || "__none__"}
+              onValueChange={(value) =>
+                setBranchId(value === "__none__" ? "" : value)
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="اختر الفرع" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">فرع غير محدد</SelectItem>
+                {branches.map((branch: any) => (
+                  <SelectItem key={branch.id} value={branch.id}>
+                    {branch.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Field>
           <Field label="الوصف">
             <Textarea

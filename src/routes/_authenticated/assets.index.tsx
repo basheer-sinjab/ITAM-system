@@ -54,7 +54,8 @@ function AssetsPage() {
   });
   const { data: departments = [] } = useQuery({
     queryKey: ["departments"],
-    queryFn: async () => (await supabase.from("departments").select("*").order("name")).data ?? [],
+    queryFn: async () =>
+      (await supabase.from("departments").select("*").order("name")).data ?? [],
   });
   const filtered = assets.filter(
     (asset: any) =>
@@ -65,23 +66,39 @@ function AssetsPage() {
           .includes(search.toLowerCase()),
       ),
   );
-  const assignedAssets = assets.filter((asset: any) => asset.assigned_employee_id).length;
-  const activeAssets = assets.filter((asset: any) => asset.status === "active").length;
+  const assignedAssets = assets.filter(
+    (asset: any) => asset.assigned_employee_id,
+  ).length;
+  const activeAssets = assets.filter(
+    (asset: any) => asset.status === "active",
+  ).length;
   return (
     <div className="mx-auto max-w-7xl space-y-6">
       <ManagementHeader
         icon={Monitor}
         title="الأصول"
         description={`${filtered.length} أصل معروض من أصل ${assets.length}`}
-        action={<Button className="gap-2" onClick={() => setOpen(true)}>
-          <Plus className="size-4" />
-          إضافة أصل
-        </Button>}
+        action={
+          <Button className="gap-2" onClick={() => setOpen(true)}>
+            <Plus className="size-4" />
+            إضافة أصل
+          </Button>
+        }
       />
       <section className="grid gap-3 sm:grid-cols-3">
         <MetricCard icon={Boxes} label="إجمالي الأصول" value={assets.length} />
-        <MetricCard icon={UserRound} label="أصول معيّنة" value={assignedAssets} tone="emerald" />
-        <MetricCard icon={Monitor} label="أصول نشطة" value={activeAssets} tone="amber" />
+        <MetricCard
+          icon={UserRound}
+          label="أصول معيّنة"
+          value={assignedAssets}
+          tone="emerald"
+        />
+        <MetricCard
+          icon={Monitor}
+          label="أصول نشطة"
+          value={activeAssets}
+          tone="amber"
+        />
       </section>
       <div className="surface-panel grid gap-3 p-4 md:grid-cols-2">
         <div className="relative">
@@ -121,13 +138,41 @@ function AssetsPage() {
               className="h-40 w-full"
             />
             <div className="space-y-2 p-4">
-              <div className="flex items-start justify-between gap-2"><p className="font-semibold">{asset.name}</p><span className="rounded-md bg-primary/10 px-2 py-1 text-xs text-primary">{asset.asset_type}</span></div>
+              <div className="flex items-start justify-between gap-2">
+                <p className="font-semibold">{asset.name}</p>
+                <span className="rounded-md bg-primary/10 px-2 py-1 text-xs text-primary">
+                  {asset.asset_type}
+                </span>
+              </div>
               <p className="text-sm text-muted-foreground">
                 {asset.manufacturer || "الشركة غير محددة"}
               </p>
-              <p className="text-xs text-muted-foreground">{asset.assigned_employee_id ? `معين لـ (${employees.find((employee: any) => employee.id === asset.assigned_employee_id)?.full_name ?? "موظف"})` : "غير معين"}</p>
-              <p className="text-xs text-muted-foreground">القسم: {departments.find((department: any) => department.id === asset.department_id)?.name ?? "غير محدد"}</p>
-              <div className="flex items-center justify-between border-t pt-2 text-xs text-muted-foreground"><span className="font-mono">{asset.asset_id}</span><span className="flex items-center gap-1.5"><span className={`size-2.5 rounded-full ${asset.status === "active" ? "bg-emerald-500" : asset.status === "maintenance" ? "bg-amber-500" : asset.status === "retired" ? "bg-slate-400" : "bg-rose-500"}`} />{asset.status === "active" ? "نشط" : asset.status === "maintenance" ? "صيانة" : asset.status === "retired" ? "متقاعد" : "غير نشط"}</span></div>
+              <p className="text-xs text-muted-foreground">
+                {asset.assigned_employee_id
+                  ? `معين لـ (${employees.find((employee: any) => employee.id === asset.assigned_employee_id)?.full_name ?? "موظف"})`
+                  : "غير معين"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                القسم:{" "}
+                {departments.find(
+                  (department: any) => department.id === asset.department_id,
+                )?.name ?? "غير محدد"}
+              </p>
+              <div className="flex items-center justify-between border-t pt-2 text-xs text-muted-foreground">
+                <span className="font-mono">{asset.asset_id}</span>
+                <span className="flex items-center gap-1.5">
+                  <span
+                    className={`size-2.5 rounded-full ${asset.status === "active" ? "bg-emerald-500" : asset.status === "maintenance" ? "bg-amber-500" : asset.status === "retired" ? "bg-slate-400" : "bg-rose-500"}`}
+                  />
+                  {asset.status === "active"
+                    ? "نشط"
+                    : asset.status === "maintenance"
+                      ? "صيانة"
+                      : asset.status === "retired"
+                        ? "متقاعد"
+                        : "غير نشط"}
+                </span>
+              </div>
             </div>
           </Link>
         ))}
@@ -147,7 +192,7 @@ export function AssetForm({
   open,
   onOpenChange,
   employees,
-  departments,
+  departments = [],
   asset,
   onSaved,
 }: any) {
@@ -159,9 +204,10 @@ export function AssetForm({
     model: "",
     serial_number: "",
     status: "active",
-    location: "",
     department_id: NONE,
     assigned_employee_id: NONE,
+    purchase_date: "",
+    warranty_expiry: "",
     notes: "",
   });
   const [file, setFile] = useState<File | null>(null);
@@ -181,9 +227,10 @@ export function AssetForm({
               model: "",
               serial_number: "",
               status: "active",
-              location: "",
               department_id: NONE,
               assigned_employee_id: NONE,
+              purchase_date: "",
+              warranty_expiry: "",
               notes: "",
             },
       );
@@ -198,12 +245,15 @@ export function AssetForm({
         : (asset?.image_url ?? null);
       const assigned_employee_id =
         form.assigned_employee_id === NONE ? null : form.assigned_employee_id;
-      const department_id = form.department_id === NONE ? null : form.department_id;
+      const department_id =
+        form.department_id === NONE ? null : form.department_id;
       const payload = {
         ...form,
         name: form.name.trim(),
         department_id,
         assigned_employee_id,
+        purchase_date: form.purchase_date || null,
+        warranty_expiry: form.warranty_expiry || null,
         image_url,
         asset_id: form.asset_id || undefined,
       };
@@ -221,12 +271,10 @@ export function AssetForm({
               .update({ return_date: new Date().toISOString().slice(0, 10) })
               .eq("id", current.data.id);
           if (assigned_employee_id)
-            await supabase
-              .from("assignment_history")
-              .insert({
-                asset_id: asset.id,
-                employee_id: assigned_employee_id,
-              });
+            await supabase.from("assignment_history").insert({
+              asset_id: asset.id,
+              employee_id: assigned_employee_id,
+            });
         }
         const result = await supabase
           .from("assets")
@@ -261,7 +309,6 @@ export function AssetForm({
             ["الشركة المصنّعة", "manufacturer"],
             ["الموديل", "model"],
             ["الرقم التسلسلي", "serial_number"],
-            ["الموقع", "location"],
           ].map(([label, key]) => (
             <div key={key} className="space-y-2">
               <Label>{label}</Label>
@@ -273,8 +320,13 @@ export function AssetForm({
           ))}
           <div className="space-y-2">
             <Label>الحالة</Label>
-            <Select value={form.status || "active"} onValueChange={(v) => set("status", v)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select
+              value={form.status || "active"}
+              onValueChange={(v) => set("status", v)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="active">نشط</SelectItem>
                 <SelectItem value="inactive">غير نشط</SelectItem>
@@ -322,13 +374,38 @@ export function AssetForm({
           </div>
           <div className="space-y-2">
             <Label>القسم</Label>
-            <Select value={form.department_id || NONE} onValueChange={(v) => set("department_id", v)}>
-              <SelectTrigger><SelectValue placeholder="اختر القسم" /></SelectTrigger>
+            <Select
+              value={form.department_id || NONE}
+              onValueChange={(v) => set("department_id", v)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="اختر القسم" />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value={NONE}>غير محدد</SelectItem>
-                {departments.map((department: any) => <SelectItem key={department.id} value={department.id}>{department.name}</SelectItem>)}
+                {departments.map((department: any) => (
+                  <SelectItem key={department.id} value={department.id}>
+                    {department.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>تاريخ الشراء</Label>
+            <Input
+              type="date"
+              value={form.purchase_date || ""}
+              onChange={(event) => set("purchase_date", event.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>انتهاء الضمان</Label>
+            <Input
+              type="date"
+              value={form.warranty_expiry || ""}
+              onChange={(event) => set("warranty_expiry", event.target.value)}
+            />
           </div>
           <div className="space-y-2 sm:col-span-2">
             <Label>الصورة</Label>

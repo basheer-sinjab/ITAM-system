@@ -5,6 +5,8 @@ import { CircleDot, Pencil, Plus, Search, Trash2, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
+import { ConfirmButton } from "@/components/ConfirmButton";
+import { inventoryAdjustment } from "@/lib/data-rules.mjs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,6 +32,48 @@ export const Route = createFileRoute("/_authenticated/maintenance")({
 
 function assetLabel(asset: any) {
   return `${asset.name} - ${asset.asset_id || asset.serial_number || asset.id}`;
+}
+
+function movementItems(items: any[] = []) {
+  return items.map((item) => ({
+    item_id: item.item_id || item.id,
+    quantity: Number(item.quantity) || 0,
+  }));
+}
+
+async function reconcileInventory(
+  inventory: any[],
+  previousItems: any[],
+  nextItems: any[],
+  maintenanceId: string | null,
+) {
+  for (const adjustment of inventoryAdjustment(
+    movementItems(previousItems),
+    movementItems(nextItems),
+  )) {
+    const item = inventory.find((entry: any) => entry.id === adjustment.itemId);
+    if (!item) continue;
+    const nextQuantity = Number(item.quantity) + adjustment.quantityChange;
+    if (nextQuantity < 0)
+      throw new Error(`الكمية المتوفرة من ${item.name} لا تكفي`);
+    const update = await supabase
+      .from("inventory_items")
+      .update({ quantity: nextQuantity })
+      .eq("id", item.id);
+    if (update.error) throw update.error;
+    const movement = await supabase.from("inventory_movements").insert({
+      item_id: item.id,
+      movement_type: adjustment.quantityChange > 0 ? "return" : "use",
+      quantity: Math.abs(adjustment.quantityChange),
+      note:
+        adjustment.quantityChange > 0
+          ? "إرجاع بعد تعديل أو حذف سجل صيانة"
+          : "استخدام في سجل صيانة",
+      maintenance_id: maintenanceId,
+    });
+    if (movement.error) throw movement.error;
+    item.quantity = nextQuantity;
+  }
 }
 
 function Maintenance() {
@@ -58,21 +102,56 @@ function Maintenance() {
   });
   const { data: technicians = [] } = useQuery({
     queryKey: ["technicians"],
-    queryFn: async () => (await supabase.from("technicians").select("*").order("name")).data ?? [],
+    queryFn: async () =>
+      (await supabase.from("technicians").select("*").order("name")).data ?? [],
   });
-  const openRecords = records.filter((record: any) => record.status === "Open").length;
+  const openRecords = records.filter(
+    (record: any) => record.status === "Open",
+  ).length;
   const visibleRecords = records.filter((maintenanceRecord: any) => {
-    const asset = assets.find((item: any) => item.id === maintenanceRecord.asset_id);
+    const asset = assets.find(
+      (item: any) => item.id === maintenanceRecord.asset_id,
+    );
     const search = maintenanceSearch.trim().toLowerCase();
-    const matchesSearch = !search || [asset?.name, asset?.asset_id, maintenanceRecord.technician, maintenanceRecord.maintenance_type, maintenanceRecord.resolution, maintenanceRecord.maintenance_date].some((value) => String(value ?? "").toLowerCase().includes(search));
-    const matchesStatus = activeStatus === "all" || maintenanceRecord.status === activeStatus;
+    const matchesSearch =
+      !search ||
+      [
+        asset?.name,
+        asset?.asset_id,
+        maintenanceRecord.technician,
+        maintenanceRecord.maintenance_type,
+        maintenanceRecord.resolution,
+        maintenanceRecord.maintenance_date,
+      ].some((value) =>
+        String(value ?? "")
+          .toLowerCase()
+          .includes(search),
+      );
+    const matchesStatus =
+      activeStatus === "all" || maintenanceRecord.status === activeStatus;
     return matchesSearch && matchesStatus;
   });
   const removeRecord = async (maintenanceRecord: any) => {
-    if (!window.confirm("هل أنت متأكد من حذف سجل الصيانة؟")) return;
-    const { error } = await supabase.from("asset_maintenance").delete().eq("id", maintenanceRecord.id);
+    const { error } = await supabase
+      .from("asset_maintenance")
+      .delete()
+      .eq("id", maintenanceRecord.id);
     if (error) return toast.error(error.message);
-    await qc.invalidateQueries({ queryKey: ["asset-maintenance"] });
+    try {
+      await reconcileInventory(
+        inventory,
+        maintenanceRecord.used_items || [],
+        [],
+        null,
+      );
+    } catch (reconcileError) {
+      toast.error(
+        reconcileError instanceof Error
+          ? reconcileError.message
+          : "تعذر إرجاع الكميات",
+      );
+    }
+    await qc.invalidateQueries();
     toast.success("تم حذف سجل الصيانة");
   };
   return (
@@ -81,19 +160,57 @@ function Maintenance() {
         icon={Wrench}
         title="سجلات الصيانة"
         description="الصيانة الوقائية والتصحيحية للأصول"
-        action={<Button onClick={() => setRecord({})}>
-          <Plus className="ml-2 size-4" />
-          إضافة سجل
-        </Button>}
+        action={
+          <Button onClick={() => setRecord({})}>
+            <Plus className="ml-2 size-4" />
+            إضافة سجل
+          </Button>
+        }
       />
       <section className="grid gap-3 sm:grid-cols-2">
-        <MetricCard icon={Wrench} label="إجمالي السجلات" value={records.length} />
-        <MetricCard icon={CircleDot} label="صيانة مفتوحة" value={openRecords} tone="amber" />
+        <MetricCard
+          icon={Wrench}
+          label="إجمالي السجلات"
+          value={records.length}
+        />
+        <MetricCard
+          icon={CircleDot}
+          label="صيانة مفتوحة"
+          value={openRecords}
+          tone="amber"
+        />
       </section>
       <div className="flex flex-col gap-3 rounded-lg border bg-muted/30 p-3 sm:flex-row-reverse sm:items-center sm:justify-between">
-        <div className="relative w-full sm:max-w-sm"><Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input value={maintenanceSearch} onChange={(event) => setMaintenanceSearch(event.target.value)} placeholder="ابحث في الصيانة أو الجهاز أو الفني" className="bg-background pr-9" /></div>
+        <div className="relative w-full sm:max-w-sm">
+          <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={maintenanceSearch}
+            onChange={(event) => setMaintenanceSearch(event.target.value)}
+            placeholder="ابحث في الصيانة أو الجهاز أو الفني"
+            className="bg-background pr-9"
+          />
+        </div>
         <div className="flex flex-wrap gap-2">
-          {[['all', 'الكل'], ['Open', 'مفتوحة'], ['Closed', 'مغلقة']].map(([value, label]) => <Button key={value} variant={activeStatus === value ? "default" : "ghost"} onClick={() => setActiveStatus(value)}>{label}<span className="mr-2 text-xs opacity-70">({value === "all" ? records.length : records.filter((item: any) => item.status === value).length})</span></Button>)}
+          {[
+            ["all", "الكل"],
+            ["Open", "مفتوحة"],
+            ["Closed", "مغلقة"],
+          ].map(([value, label]) => (
+            <Button
+              key={value}
+              variant={activeStatus === value ? "default" : "ghost"}
+              onClick={() => setActiveStatus(value)}
+            >
+              {label}
+              <span className="mr-2 text-xs opacity-70">
+                (
+                {value === "all"
+                  ? records.length
+                  : records.filter((item: any) => item.status === value).length}
+                )
+              </span>
+            </Button>
+          ))}
         </div>
       </div>
       <div className="surface-panel overflow-hidden">
@@ -145,7 +262,17 @@ function Maintenance() {
                     ? "وقائية"
                     : "تصحيحية"}
                 </td>
-                <td className="p-4"><span className={maintenanceRecord.status === "Closed" ? "rounded-md bg-emerald-500/10 px-2 py-1 text-xs text-emerald-700" : "rounded-md bg-amber-500/10 px-2 py-1 text-xs text-amber-700"}>{maintenanceRecord.status === "Closed" ? "مغلقة" : "مفتوحة"}</span></td>
+                <td className="p-4">
+                  <span
+                    className={
+                      maintenanceRecord.status === "Closed"
+                        ? "rounded-md bg-emerald-500/10 px-2 py-1 text-xs text-emerald-700"
+                        : "rounded-md bg-amber-500/10 px-2 py-1 text-xs text-amber-700"
+                    }
+                  >
+                    {maintenanceRecord.status === "Closed" ? "مغلقة" : "مفتوحة"}
+                  </span>
+                </td>
                 <td className="p-4">{maintenanceRecord.technician || "—"}</td>
                 <td className="max-w-64 p-4">
                   {maintenanceRecord.resolution || "—"}
@@ -163,20 +290,26 @@ function Maintenance() {
                   >
                     <Pencil className="size-4" />
                   </Button>
-                  <Button
+                  <ConfirmButton
                     size="icon"
                     variant="ghost"
                     aria-label="حذف السجل"
-                    onClick={() => removeRecord(maintenanceRecord)}
+                    title="حذف سجل الصيانة؟"
+                    description="سيتم حذف السجل وإرجاع المواد المستخدمة إلى المخزون."
+                    onConfirm={() => removeRecord(maintenanceRecord)}
                   >
                     <Trash2 className="size-4 text-destructive" />
-                  </Button>
+                  </ConfirmButton>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        {!visibleRecords.length && <p className="p-8 text-center text-sm text-muted-foreground">لا توجد صيانات مطابقة.</p>}
+        {!visibleRecords.length && (
+          <p className="p-8 text-center text-sm text-muted-foreground">
+            لا توجد صيانات مطابقة.
+          </p>
+        )}
       </div>
       {record && (
         <MaintenanceForm
@@ -192,7 +325,14 @@ function Maintenance() {
     </div>
   );
 }
-function MaintenanceForm({ record, assets, inventory, technicians = [], close, saved }: any) {
+function MaintenanceForm({
+  record,
+  assets,
+  inventory,
+  technicians = [],
+  close,
+  saved,
+}: any) {
   const [inventorySearch, setInventorySearch] = useState("");
   const [form, setForm] = useState<any>({
     asset_id: "",
@@ -204,6 +344,21 @@ function MaintenanceForm({ record, assets, inventory, technicians = [], close, s
   });
   const set = (key: string, value: any) => setForm({ ...form, [key]: value });
   const save = async () => {
+    if (!form.asset_id) return toast.error("اختر الأصل");
+    const adjustments = inventoryAdjustment(
+      movementItems(record.used_items || []),
+      movementItems(form.used_items || []),
+    );
+    const insufficient = adjustments.find((adjustment: any) => {
+      const item = inventory.find(
+        (entry: any) => entry.id === adjustment.itemId,
+      );
+      return item && Number(item.quantity) + adjustment.quantityChange < 0;
+    });
+    if (insufficient)
+      return toast.error(
+        `الكمية المتوفرة من ${inventory.find((item: any) => item.id === insufficient.itemId)?.name} لا تكفي`,
+      );
     const payload = { ...form, cost: Number(form.cost || 0) };
     const result = form.id
       ? await supabase
@@ -212,32 +367,39 @@ function MaintenanceForm({ record, assets, inventory, technicians = [], close, s
           .eq("id", form.id)
       : await supabase.from("asset_maintenance").insert(payload);
     if (result.error) return toast.error(result.error.message);
-    if (!form.id) {
-      for (const used of form.used_items) {
-        const item = inventory.find((entry: any) => entry.id === used.id);
-        if (item)
-          await supabase
-            .from("inventory_items")
-            .update({
-              quantity: Math.max(
-                0,
-                Number(item.quantity) - Number(used.quantity),
-              ),
-            })
-            .eq("id", item.id);
-      }
+    const savedRecord = Array.isArray(result.data)
+      ? result.data[0]
+      : result.data;
+    try {
+      await reconcileInventory(
+        inventory,
+        record.used_items || [],
+        form.used_items || [],
+        form.id || savedRecord?.id,
+      );
+    } catch (error) {
+      return toast.error(
+        error instanceof Error ? error.message : "تعذر تحديث المخزون",
+      );
     }
     saved();
     toast.success(form.id ? "تم تعديل سجل الصيانة" : "تمت إضافة سجل الصيانة");
     close();
   };
   const remove = async () => {
-    if (!form.id || !confirm("حذف سجل الصيانة؟")) return;
+    if (!form.id) return;
     const result = await supabase
       .from("asset_maintenance")
       .delete()
       .eq("id", form.id);
     if (result.error) return toast.error(result.error.message);
+    try {
+      await reconcileInventory(inventory, record.used_items || [], [], null);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "تعذر إرجاع الكميات",
+      );
+    }
     saved();
     toast.success("تم حذف سجل الصيانة");
     close();
@@ -251,9 +413,13 @@ function MaintenanceForm({ record, assets, inventory, technicians = [], close, s
       if (!normalizedSearch) return false;
       return [item.name, item.category, item.location]
         .filter(Boolean)
-        .some((value) => String(value).toLocaleLowerCase().includes(normalizedSearch));
+        .some((value) =>
+          String(value).toLocaleLowerCase().includes(normalizedSearch),
+        );
     })
-    .filter((item: any) => !form.used_items.some((used: any) => used.id === item.id))
+    .filter(
+      (item: any) => !form.used_items.some((used: any) => used.id === item.id),
+    )
     .slice(0, 8);
   const inventorySearchResults = [...selectedInventory, ...matchingInventory];
   return (
@@ -304,9 +470,23 @@ function MaintenanceForm({ record, assets, inventory, technicians = [], close, s
           ))}
           <div className="space-y-2">
             <Label>الفني</Label>
-            <Select value={form.technician || "__none__"} onValueChange={(value) => set("technician", value === "__none__" ? "" : value)}>
-              <SelectTrigger><SelectValue placeholder="اختر الفني" /></SelectTrigger>
-              <SelectContent><SelectItem value="__none__">غير محدد</SelectItem>{technicians.map((technician: any) => <SelectItem key={technician.id} value={technician.name}>{technician.name}</SelectItem>)}</SelectContent>
+            <Select
+              value={form.technician || "__none__"}
+              onValueChange={(value) =>
+                set("technician", value === "__none__" ? "" : value)
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="اختر الفني" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">غير محدد</SelectItem>
+                {technicians.map((technician: any) => (
+                  <SelectItem key={technician.id} value={technician.name}>
+                    {technician.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
@@ -350,9 +530,14 @@ function MaintenanceForm({ record, assets, inventory, technicians = [], close, s
                 onChange={(event) => setInventorySearch(event.target.value)}
               />
             </div>
-            <p className="text-xs text-muted-foreground">اكتب للبحث في {inventory.length} صنفًا. تظهر أول 8 نتائج مطابقة.</p>
+            <p className="text-xs text-muted-foreground">
+              اكتب للبحث في {inventory.length} صنفًا. تظهر أول 8 نتائج مطابقة.
+            </p>
             {inventorySearchResults.map((item: any) => (
-              <div key={item.id} className="mb-2 flex items-center gap-2 rounded-md border p-2">
+              <div
+                key={item.id}
+                className="mb-2 flex items-center gap-2 rounded-md border p-2"
+              >
                 <span className="flex-1 text-sm">
                   {item.name} ({item.quantity})
                 </span>
@@ -377,11 +562,17 @@ function MaintenanceForm({ record, assets, inventory, technicians = [], close, s
                 />
               </div>
             ))}
-            {inventorySearch && matchingInventory.length === 0 && selectedInventory.length === 0 && (
-              <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">لا توجد أصناف مطابقة للبحث.</p>
-            )}
+            {inventorySearch &&
+              matchingInventory.length === 0 &&
+              selectedInventory.length === 0 && (
+                <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
+                  لا توجد أصناف مطابقة للبحث.
+                </p>
+              )}
             {!inventorySearch && selectedInventory.length === 0 && (
-              <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">ابدأ بكتابة اسم الصنف لاختياره.</p>
+              <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
+                ابدأ بكتابة اسم الصنف لاختياره.
+              </p>
             )}
           </div>
           {[
@@ -400,14 +591,16 @@ function MaintenanceForm({ record, assets, inventory, technicians = [], close, s
         </div>
         <DialogFooter>
           {form.id && (
-            <Button
+            <ConfirmButton
               variant="outline"
               className="text-destructive"
-              onClick={remove}
+              title="حذف سجل الصيانة؟"
+              description="سيتم حذف السجل وإرجاع المواد المستخدمة إلى المخزون."
+              onConfirm={remove}
             >
               <Trash2 className="ml-2 size-4" />
               حذف
-            </Button>
+            </ConfirmButton>
           )}
           <Button variant="outline" onClick={close}>
             إلغاء
