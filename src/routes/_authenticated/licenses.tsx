@@ -180,7 +180,7 @@ function Licenses() {
                 </div>
                 <div className="mt-5">
                   <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground"><span>استخدام المقاعد</span><span>{Math.round(usagePercent)}%</span></div>
-                  <div className="h-2 overflow-hidden rounded-full bg-muted"><div className={usagePercent >= 100 ? "h-full bg-destructive" : "h-full bg-primary"} style={{ width: `${usagePercent}%` }} /></div>
+                  <div className="h-2 overflow-hidden rounded-full bg-muted"><div className="h-full bg-primary" style={{ width: `${usagePercent}%` }} /></div>
                 </div>
                 <p className="mt-4 text-xs text-muted-foreground">
                   ينتهي: {license.expiration_date || "غير محدد"}

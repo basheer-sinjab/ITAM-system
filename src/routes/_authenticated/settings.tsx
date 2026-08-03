@@ -12,13 +12,13 @@ import { toast } from "sonner";
 import { createLocalBackup, restoreLocalBackup } from "@/lib/local-backup";
 import { ManagementHeader } from "@/components/ManagementVisuals";
 
-type LookupTable = "branches" | "departments" | "responsible_persons" | "parts";
+type LookupTable = "branches" | "technicians";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
       { title: "الإعدادات — PrintersFloss" },
-      { name: "description", content: "إدارة الفروع والأقسام والأشخاص المسؤولين وقطع الغيار وتنبيهات النظام." },
+      { name: "description", content: "إدارة الفروع والفنيين والأشخاص المسؤولين وقطع الغيار وتنبيهات النظام." },
       { property: "og:title", content: "الإعدادات — PrintersFloss" },
       { property: "og:description", content: "ضبط القوائم الأساسية وتنبيهات المخزون والضمان." },
     ],
@@ -32,11 +32,9 @@ function SettingsPage() {
       <ManagementHeader icon={Settings2} title="الإعدادات" description="القوائم الأساسية وتنبيهات النظام والنسخ الاحتياطي" />
 
       <Tabs defaultValue="branches" dir="rtl" className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-3 xl:grid-cols-6">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-4">
           <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="branches">الفروع</TabsTrigger>
-          <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="departments">الأقسام</TabsTrigger>
-          <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="persons">الأشخاص المسؤولون</TabsTrigger>
-          <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="parts">قطع الغيار</TabsTrigger>
+          <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="technicians">الفنيون</TabsTrigger>
           <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="alerts">التنبيهات</TabsTrigger>
           <TabsTrigger className="h-auto min-h-9 whitespace-normal text-center leading-5" value="backup">النسخ الاحتياطي</TabsTrigger>
         </TabsList>
@@ -44,14 +42,8 @@ function SettingsPage() {
         <TabsContent value="branches" className="mt-4">
           <LookupManager table="branches" title="الفروع" />
         </TabsContent>
-        <TabsContent value="departments" className="mt-4">
-          <LookupManager table="departments" title="الأقسام" />
-        </TabsContent>
-        <TabsContent value="persons" className="mt-4">
-          <LookupManager table="responsible_persons" title="الأشخاص المسؤولون" />
-        </TabsContent>
-        <TabsContent value="parts" className="mt-4">
-          <LookupManager table="parts" title="قطع الغيار" />
+        <TabsContent value="technicians" className="mt-4">
+          <LookupManager table="technicians" title="الفنيون" />
         </TabsContent>
         <TabsContent value="alerts" className="mt-4">
           <AlertSettings />

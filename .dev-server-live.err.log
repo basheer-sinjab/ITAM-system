@@ -1,5 +1,5 @@
 [33mThe plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the [1mresolve.tsconfigPaths[22m option. You can remove the plugin and set [1mresolve.tsconfigPaths: true[22m in your Vite config instead.[39m
-[2m٥:٤٦:٣٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[2m٩:٥٩:٠٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -23,7 +23,7 @@ https://react.dev/link/hydration-mismatch
                   <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
                     <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
                       <MatchImpl matchId="__root__/">
-                        <MatchView router={{...}} matchId="__root__/" resetKey={1785768394799} ...>
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1785783543974} ...>
                           <RootShell>
                             <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
                               <head>
@@ -31,4 +31,898 @@ https://react.dev/link/hydration-mismatch
                                 data-tsd-source="/src/routes/__root.tsx:110:7"
 -                               className="clickup-chrome-ext_installed"
                               >
+
+[2m٩:٥٩:٤٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m٩:٥٩:٤٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m٩:٥٩:٤٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m٩:٥٩:٤٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m٩:٥٩:٤٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٩:٥٩:٤٢ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:١٠:٢٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1785784201024} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m١٠:١١:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:١١:٤٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:١١:٤٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:١١:٤٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:١٢:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:١٢:٠٤ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٢:٤٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1785786164975} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m١٠:٤٢:٤٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٤٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٤٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٤٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٤٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:٤٢:٤٥ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:٤٢:٤٧ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:٤٢:٤٧ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:٤٢:٤٧ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٤٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:٤٢:٤٧ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٢:٥٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1785786177793} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m١٠:٤٢:٥٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٥٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٢:٥٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٥٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٢:٥٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:٤٢:٥٨ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٣:١١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1785786191555} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m١٠:٤٣:١٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٣:١٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٣:١٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٣:١٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٣:١٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:٤٣:١٥ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٣:١٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٣:١٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٣:١٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٣:١٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٣:١٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:٤٣:١٧ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٣:١٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٣:١٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٣:١٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٣:١٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٣:١٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:٤٣:١٧ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٣:١٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٣:١٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7955:181)
+[2m١٠:٤٣:١٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٣:١٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+[2m١٠:٤٣:١٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mTypeError: Cannot read properties of undefined (reading 'map')
+    at AssetForm (http://127.0.0.1:8080/src/routes/_authenticated/assets.index.tsx?t=1785783608722:393:32)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:12864:12)
+    at renderWithHooks (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:4211:19)
+    at updateFunctionComponent (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:5567:16)
+    at beginWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:6138:20)
+    at runWithFiberInDEV (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:850:66)
+    at performUnitOfWork (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8427:92)
+    at workLoopSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8323:37)
+    at renderRootSync (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:8307:6)
+    at performWorkOnRoot (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=acf0590a:7992:27)
+
+The above error occurred in the <AssetForm> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m١٠:٤٣:١٨ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m١٠:٤٥:١٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m١٠:٤٥:١٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m١٠:٤٥:٣٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m١٠:٤٥:٣٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m١٠:٤٥:٣٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m١٠:٤٥:٣٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m١٠:٥٠:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m١٠:٥٠:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m١٠:٥٠:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m١٠:٥٠:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
 

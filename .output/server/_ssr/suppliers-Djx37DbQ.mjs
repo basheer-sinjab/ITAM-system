@@ -3,7 +3,7 @@ import { r as supabase } from "./client-Beq9QKFo.mjs";
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { i as useQueryClient, n as useQuery, t as useMutation } from "../_libs/tanstack__react-query.mjs";
-import { c as Trash2, g as Pencil, m as Plus } from "../_libs/lucide-react.mjs";
+import { _ as Pencil, c as Trash2, h as Plus } from "../_libs/lucide-react.mjs";
 import { n as Input, r as Label, t as Button } from "./label-D6rma-RY.mjs";
 import { a as DialogTitle, i as DialogHeader, n as DialogContent, o as Textarea, r as DialogFooter, t as Dialog } from "./textarea-DLR0hsWQ.mjs";
 import { n as toast } from "../_libs/sonner.mjs";

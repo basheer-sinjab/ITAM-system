@@ -4,7 +4,7 @@ import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { _ as Link, v as useNavigate } from "../_libs/@tanstack/react-router+[...].mjs";
 import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { i as useQueryClient, n as useQuery } from "../_libs/tanstack__react-query.mjs";
-import { P as ArrowRight, S as KeyRound, a as UserRound, c as Trash2, g as Pencil, m as Plus, y as Monitor } from "../_libs/lucide-react.mjs";
+import { C as KeyRound, F as ArrowRight, _ as Pencil, a as UserRound, b as Monitor, c as Trash2, h as Plus } from "../_libs/lucide-react.mjs";
 import { n as Input, r as Label, t as Button } from "./label-D6rma-RY.mjs";
 import { a as DialogTitle, i as DialogHeader, n as DialogContent, o as Textarea, r as DialogFooter, t as Dialog } from "./textarea-DLR0hsWQ.mjs";
 import { n as toast } from "../_libs/sonner.mjs";

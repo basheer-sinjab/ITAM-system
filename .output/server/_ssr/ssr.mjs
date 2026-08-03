@@ -150,14 +150,19 @@ var ENTITIES = {
 			"serial_number",
 			"status",
 			"location",
+			"department_id",
 			"assigned_employee_id",
 			"image_url",
 			"notes",
 			"created_at",
 			"updated_at"
 		],
-		sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, image_url TEXT, notes TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
-		indexes: ["CREATE INDEX IF NOT EXISTS idx_assets_employee ON assets(assigned_employee_id)", "CREATE INDEX IF NOT EXISTS idx_assets_status ON assets(status)"]
+		sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, image_url TEXT, notes TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
+		indexes: [
+			"CREATE INDEX IF NOT EXISTS idx_assets_employee ON assets(assigned_employee_id)",
+			"CREATE INDEX IF NOT EXISTS idx_assets_department ON assets(department_id)",
+			"CREATE INDEX IF NOT EXISTS idx_assets_status ON assets(status)"
+		]
 	},
 	assignment_history: {
 		columns: [
@@ -265,16 +270,19 @@ function migrateInventory(database) {
 	const columns = database.prepare("PRAGMA table_info(inventory_items)").all();
 	if (columns.length && !columns.some((column) => column.name === "color")) database.exec("ALTER TABLE inventory_items ADD COLUMN color TEXT");
 }
+function migrateAssets(database) {
+	const columns = database.prepare("PRAGMA table_info(assets)").all();
+	if (columns.length && !columns.some((column) => column.name === "department_id")) database.exec("ALTER TABLE assets ADD COLUMN department_id TEXT REFERENCES departments(id) ON DELETE SET NULL");
+}
 async function db() {
 	if (!ready) ready = mkdir(dirname(DATABASE_PATH), { recursive: true }).then(() => {
 		const database = new DatabaseSync(DATABASE_PATH);
 		migrateDepartments(database);
 		database.exec("PRAGMA foreign_keys = ON");
-		for (const entity of Object.values(ENTITIES)) {
-			database.exec(entity.sql);
-			entity.indexes?.forEach((index) => database.exec(index));
-		}
+		for (const entity of Object.values(ENTITIES)) database.exec(entity.sql);
 		migrateInventory(database);
+		migrateAssets(database);
+		for (const entity of Object.values(ENTITIES)) entity.indexes?.forEach((index) => database.exec(index));
 		return database;
 	});
 	return ready;
@@ -472,7 +480,7 @@ async function handleLocalImageRequest(request) {
 }
 var serverEntryPromise;
 async function getServerEntry() {
-	if (!serverEntryPromise) serverEntryPromise = import("./server-BlZ1U-OG.mjs").then((m) => m.default ?? m);
+	if (!serverEntryPromise) serverEntryPromise = import("./server-BFxwmhWW.mjs").then((m) => m.default ?? m);
 	return serverEntryPromise;
 }
 async function normalizeCatastrophicSsrResponse(response) {

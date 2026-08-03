@@ -52,6 +52,10 @@ function AssetsPage() {
       (await supabase.from("employees").select("*").order("full_name")).data ??
       [],
   });
+  const { data: departments = [] } = useQuery({
+    queryKey: ["departments"],
+    queryFn: async () => (await supabase.from("departments").select("*").order("name")).data ?? [],
+  });
   const filtered = assets.filter(
     (asset: any) =>
       (type === "__all__" || asset.asset_type === type) &&
@@ -121,7 +125,9 @@ function AssetsPage() {
               <p className="text-sm text-muted-foreground">
                 {asset.manufacturer || "الشركة غير محددة"}
               </p>
-              <div className="flex items-center justify-between border-t pt-2 text-xs text-muted-foreground"><span className="font-mono">{asset.asset_id}</span><span>{asset.assigned_employee_id ? "مُعيّن" : "غير مُعيّن"}</span></div>
+              <p className="text-xs text-muted-foreground">{asset.assigned_employee_id ? `معين لـ (${employees.find((employee: any) => employee.id === asset.assigned_employee_id)?.full_name ?? "موظف"})` : "غير معين"}</p>
+              <p className="text-xs text-muted-foreground">القسم: {departments.find((department: any) => department.id === asset.department_id)?.name ?? "غير محدد"}</p>
+              <div className="flex items-center justify-between border-t pt-2 text-xs text-muted-foreground"><span className="font-mono">{asset.asset_id}</span><span className="flex items-center gap-1.5"><span className={`size-2.5 rounded-full ${asset.status === "active" ? "bg-emerald-500" : asset.status === "maintenance" ? "bg-amber-500" : asset.status === "retired" ? "bg-slate-400" : "bg-rose-500"}`} />{asset.status === "active" ? "نشط" : asset.status === "maintenance" ? "صيانة" : asset.status === "retired" ? "متقاعد" : "غير نشط"}</span></div>
             </div>
           </Link>
         ))}
@@ -130,6 +136,7 @@ function AssetsPage() {
         open={open}
         onOpenChange={setOpen}
         employees={employees}
+        departments={departments}
         onSaved={() => queryClient.invalidateQueries()}
       />
     </div>
@@ -140,6 +147,7 @@ export function AssetForm({
   open,
   onOpenChange,
   employees,
+  departments,
   asset,
   onSaved,
 }: any) {
@@ -152,6 +160,7 @@ export function AssetForm({
     serial_number: "",
     status: "active",
     location: "",
+    department_id: NONE,
     assigned_employee_id: NONE,
     notes: "",
   });
@@ -162,6 +171,7 @@ export function AssetForm({
         asset
           ? {
               ...asset,
+              department_id: asset.department_id || NONE,
               assigned_employee_id: asset.assigned_employee_id || NONE,
             }
           : {
@@ -172,6 +182,7 @@ export function AssetForm({
               serial_number: "",
               status: "active",
               location: "",
+              department_id: NONE,
               assigned_employee_id: NONE,
               notes: "",
             },
@@ -187,9 +198,11 @@ export function AssetForm({
         : (asset?.image_url ?? null);
       const assigned_employee_id =
         form.assigned_employee_id === NONE ? null : form.assigned_employee_id;
+      const department_id = form.department_id === NONE ? null : form.department_id;
       const payload = {
         ...form,
         name: form.name.trim(),
+        department_id,
         assigned_employee_id,
         image_url,
         asset_id: form.asset_id || undefined,
@@ -249,7 +262,6 @@ export function AssetForm({
             ["الموديل", "model"],
             ["الرقم التسلسلي", "serial_number"],
             ["الموقع", "location"],
-            ["الحالة", "status"],
           ].map(([label, key]) => (
             <div key={key} className="space-y-2">
               <Label>{label}</Label>
@@ -259,6 +271,18 @@ export function AssetForm({
               />
             </div>
           ))}
+          <div className="space-y-2">
+            <Label>الحالة</Label>
+            <Select value={form.status || "active"} onValueChange={(v) => set("status", v)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="active">نشط</SelectItem>
+                <SelectItem value="inactive">غير نشط</SelectItem>
+                <SelectItem value="maintenance">تحت الصيانة</SelectItem>
+                <SelectItem value="retired">متقاعد</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-2">
             <Label>نوع الأصل</Label>
             <Select
@@ -293,6 +317,16 @@ export function AssetForm({
                     {employee.full_name}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>القسم</Label>
+            <Select value={form.department_id || NONE} onValueChange={(v) => set("department_id", v)}>
+              <SelectTrigger><SelectValue placeholder="اختر القسم" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value={NONE}>غير محدد</SelectItem>
+                {departments.map((department: any) => <SelectItem key={department.id} value={department.id}>{department.name}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>

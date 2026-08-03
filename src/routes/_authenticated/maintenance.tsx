@@ -35,6 +35,8 @@ function assetLabel(asset: any) {
 function Maintenance() {
   const qc = useQueryClient();
   const [record, setRecord] = useState<any>();
+  const [maintenanceSearch, setMaintenanceSearch] = useState("");
+  const [activeStatus, setActiveStatus] = useState("all");
   const { data: records = [] } = useQuery({
     queryKey: ["asset-maintenance"],
     queryFn: async () =>
@@ -59,6 +61,20 @@ function Maintenance() {
     queryFn: async () => (await supabase.from("technicians").select("*").order("name")).data ?? [],
   });
   const openRecords = records.filter((record: any) => record.status === "Open").length;
+  const visibleRecords = records.filter((maintenanceRecord: any) => {
+    const asset = assets.find((item: any) => item.id === maintenanceRecord.asset_id);
+    const search = maintenanceSearch.trim().toLowerCase();
+    const matchesSearch = !search || [asset?.name, asset?.asset_id, maintenanceRecord.technician, maintenanceRecord.maintenance_type, maintenanceRecord.resolution, maintenanceRecord.maintenance_date].some((value) => String(value ?? "").toLowerCase().includes(search));
+    const matchesStatus = activeStatus === "all" || maintenanceRecord.status === activeStatus;
+    return matchesSearch && matchesStatus;
+  });
+  const removeRecord = async (maintenanceRecord: any) => {
+    if (!window.confirm("هل أنت متأكد من حذف سجل الصيانة؟")) return;
+    const { error } = await supabase.from("asset_maintenance").delete().eq("id", maintenanceRecord.id);
+    if (error) return toast.error(error.message);
+    await qc.invalidateQueries({ queryKey: ["asset-maintenance"] });
+    toast.success("تم حذف سجل الصيانة");
+  };
   return (
     <div className="mx-auto max-w-7xl space-y-6">
       <ManagementHeader
@@ -74,6 +90,12 @@ function Maintenance() {
         <MetricCard icon={Wrench} label="إجمالي السجلات" value={records.length} />
         <MetricCard icon={CircleDot} label="صيانة مفتوحة" value={openRecords} tone="amber" />
       </section>
+      <div className="flex flex-col gap-3 rounded-lg border bg-muted/30 p-3 sm:flex-row-reverse sm:items-center sm:justify-between">
+        <div className="relative w-full sm:max-w-sm"><Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input value={maintenanceSearch} onChange={(event) => setMaintenanceSearch(event.target.value)} placeholder="ابحث في الصيانة أو الجهاز أو الفني" className="bg-background pr-9" /></div>
+        <div className="flex flex-wrap gap-2">
+          {[['all', 'الكل'], ['Open', 'مفتوحة'], ['Closed', 'مغلقة']].map(([value, label]) => <Button key={value} variant={activeStatus === value ? "default" : "ghost"} onClick={() => setActiveStatus(value)}>{label}<span className="mr-2 text-xs opacity-70">({value === "all" ? records.length : records.filter((item: any) => item.status === value).length})</span></Button>)}
+        </div>
+      </div>
       <div className="surface-panel overflow-hidden">
         <table className="w-full text-sm">
           <thead>
@@ -95,11 +117,10 @@ function Maintenance() {
             </tr>
           </thead>
           <tbody>
-            {records.map((maintenanceRecord: any) => (
+            {visibleRecords.map((maintenanceRecord: any) => (
               <tr
                 key={maintenanceRecord.id}
-                className="cursor-pointer border-b transition-colors hover:bg-muted/50"
-                onClick={() => setRecord(maintenanceRecord)}
+                className="border-b transition-colors hover:bg-muted/50"
               >
                 <td className="p-4">
                   {(() => {
@@ -142,11 +163,20 @@ function Maintenance() {
                   >
                     <Pencil className="size-4" />
                   </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    aria-label="حذف السجل"
+                    onClick={() => removeRecord(maintenanceRecord)}
+                  >
+                    <Trash2 className="size-4 text-destructive" />
+                  </Button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        {!visibleRecords.length && <p className="p-8 text-center text-sm text-muted-foreground">لا توجد صيانات مطابقة.</p>}
       </div>
       {record && (
         <MaintenanceForm

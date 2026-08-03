@@ -105,7 +105,11 @@ function Inventory() {
                   <Button
                     size="icon"
                     variant="ghost"
-                    onClick={() => remove.mutate(item.id)}
+                    onClick={() => {
+                      if (window.confirm(`هل أنت متأكد من حذف المنتج "${item.name}" من المخزون؟`)) {
+                        remove.mutate(item.id);
+                      }
+                    }}
                   >
                     <Trash2 className="size-4 text-destructive" />
                   </Button>

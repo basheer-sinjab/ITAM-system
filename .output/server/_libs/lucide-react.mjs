@@ -670,6 +670,21 @@ var Settings2 = createLucideIcon("settings-2", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var Settings = createLucideIcon("settings", [["path", {
+	d: "M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915",
+	key: "1i5ecw"
+}], ["circle", {
+	cx: "12",
+	cy: "12",
+	r: "3",
+	key: "1v7zrd"
+}]]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var ShieldCheck = createLucideIcon("shield-check", [["path", {
 	d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
 	key: "oel41y"
@@ -842,4 +857,4 @@ var X = createLucideIcon("x", [["path", {
 	key: "d8bk6v"
 }]]);
 //#endregion
-export { Check as A, Download as C, CircleCheck as D, CircleDot as E, ArrowLeft as F, ArrowLeftRight as I, Building2 as M, Boxes as N, ChevronUp as O, ArrowRight as P, KeyRound as S, ClipboardCheck as T, Package as _, UserRound as a, Mail as b, Trash2 as c, Settings2 as d, Search as f, Pencil as g, Phone as h, UsersRound as i, CalendarClock as j, ChevronDown as k, Star as l, Plus as m, Wrench as n, Upload as o, Printer as p, Users as r, TriangleAlert as s, X as t, ShieldCheck as u, PackagePlus as v, Clock3 as w, LayoutDashboard as x, Monitor as y };
+export { ChevronDown as A, KeyRound as C, CircleDot as D, ClipboardCheck as E, ArrowRight as F, ArrowLeft as I, ArrowLeftRight as L, CalendarClock as M, Building2 as N, CircleCheck as O, Boxes as P, LayoutDashboard as S, Clock3 as T, Pencil as _, UserRound as a, Monitor as b, Trash2 as c, Settings as d, Settings2 as f, Phone as g, Plus as h, UsersRound as i, Check as j, ChevronUp as k, Star as l, Printer as m, Wrench as n, Upload as o, Search as p, Users as r, TriangleAlert as s, X as t, ShieldCheck as u, Package as v, Download as w, Mail as x, PackagePlus as y };

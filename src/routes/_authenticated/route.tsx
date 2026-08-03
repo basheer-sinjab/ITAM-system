@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, Link } from "@tanstack/react-router";
-import { LayoutDashboard, Monitor, Wrench, Package, KeyRound, Users } from "lucide-react";
+import { LayoutDashboard, Monitor, Wrench, Package, KeyRound, Users, Settings } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -15,6 +15,10 @@ const NAV = [
   { to: "/people-departments", label: "الأشخاص والأقسام", icon: Users, exact: false },
 ] as const;
 
+const SECONDARY_NAV = [
+  { to: "/settings", label: "الإعدادات", icon: Settings, exact: true },
+] as const;
+
 function AppLayout() {
   return (
     <div className="flex min-h-screen bg-background">
@@ -25,6 +29,9 @@ function AppLayout() {
         </div>
         <nav className="flex-1 space-y-1 px-4">
           {NAV.map((item) => <Link key={item.to} to={item.to} activeOptions={{ exact: item.exact }} className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[status=active]:bg-sidebar-primary data-[status=active]:text-sidebar-primary-foreground data-[status=active]:shadow-sm"><item.icon className="size-[18px]" />{item.label}</Link>)}
+        </nav>
+        <nav className="border-t border-sidebar-border/70 px-4 py-4">
+          {SECONDARY_NAV.map((item) => <Link key={item.to} to={item.to} activeOptions={{ exact: item.exact }} className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[status=active]:bg-sidebar-primary data-[status=active]:text-sidebar-primary-foreground data-[status=active]:shadow-sm"><item.icon className="size-[18px]" />{item.label}</Link>)}
         </nav>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">

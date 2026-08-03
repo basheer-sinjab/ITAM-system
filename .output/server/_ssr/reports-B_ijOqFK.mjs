@@ -4,7 +4,7 @@ import { a as TONER_COLORS, c as formatDate, n as MAINTENANCE_TYPES, r as PRINTE
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { n as useQuery } from "../_libs/tanstack__react-query.mjs";
-import { p as Printer } from "../_libs/lucide-react.mjs";
+import { m as Printer } from "../_libs/lucide-react.mjs";
 import { r as Label, t as Button } from "./label-D6rma-RY.mjs";
 import { a as SelectValue, i as SelectTrigger, n as SelectContent, r as SelectItem, t as Select } from "./select-IPXSUyW3.mjs";
 import { t as DateInput } from "./DateInput-BadVguHX.mjs";

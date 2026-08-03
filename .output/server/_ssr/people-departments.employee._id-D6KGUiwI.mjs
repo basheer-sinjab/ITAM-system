@@ -4,7 +4,7 @@ import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { _ as Link, v as useNavigate } from "../_libs/@tanstack/react-router+[...].mjs";
 import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { i as useQueryClient, n as useQuery } from "../_libs/tanstack__react-query.mjs";
-import { P as ArrowRight, S as KeyRound, b as Mail, c as Trash2, g as Pencil, h as Phone, y as Monitor } from "../_libs/lucide-react.mjs";
+import { C as KeyRound, F as ArrowRight, _ as Pencil, b as Monitor, c as Trash2, g as Phone, x as Mail } from "../_libs/lucide-react.mjs";
 import { n as Input, r as Label, t as Button } from "./label-D6rma-RY.mjs";
 import { a as DialogTitle, i as DialogHeader, n as DialogContent, o as Textarea, r as DialogFooter, t as Dialog } from "./textarea-DLR0hsWQ.mjs";
 import { a as SelectValue, i as SelectTrigger, n as SelectContent, r as SelectItem, t as Select } from "./select-IPXSUyW3.mjs";

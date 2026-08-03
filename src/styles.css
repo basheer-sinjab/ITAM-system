@@ -173,93 +173,80 @@
 
 @keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-.printer-animation {
-  position: relative;
-  width: 11rem;
-  height: 8.5rem;
-  flex: 0 0 auto;
+.dashboard-device-scene {
+  width: 100%;
+  min-width: 0;
+  height: 15rem;
+  color: #fff;
+  isolation: isolate;
 }
 
-.printer-animation__body {
-  position: absolute;
-  z-index: 2;
-  top: 2.7rem;
-  right: 0;
-  left: 0;
-  height: 4.2rem;
-  border: 2px solid rgb(255 255 255 / 0.92);
-  border-radius: 0.75rem;
-  background: rgb(255 255 255 / 0.1);
-  box-shadow: inset 0 -0.7rem 0 rgb(0 0 0 / 0.1);
-}
-
-.printer-animation__indicator {
-  position: absolute;
-  top: 0.8rem;
-  right: 1rem;
-  width: 0.42rem;
-  height: 0.42rem;
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 0 0.6rem rgb(255 255 255 / 0.85);
-  animation: printer-pulse 1.6s ease-in-out infinite;
-}
-
-.printer-animation__slot {
-  position: absolute;
-  top: 1.45rem;
-  right: 1.1rem;
-  left: 1.1rem;
-  height: 0.42rem;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.85);
-}
-
-.printer-animation__paper {
-  position: absolute;
-  z-index: 1;
-  top: 0.2rem;
-  right: 1.45rem;
-  left: 1.45rem;
-  height: 4rem;
-  padding: 0.8rem 0.7rem;
-  border-radius: 0.35rem;
-  background: #fff;
-  animation: printer-paper-feed 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-}
-
-.printer-animation__paper span {
+.dashboard-device-scene svg {
   display: block;
-  height: 0.18rem;
-  margin-bottom: 0.38rem;
-  border-radius: 999px;
-  background: rgb(0 84 157 / 0.4);
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
 
-.printer-animation__paper span:nth-child(2) { width: 76%; }
-.printer-animation__paper span:nth-child(3) { width: 56%; }
-
-.printer-animation__output {
-  position: absolute;
-  z-index: 3;
-  right: 1.25rem;
-  bottom: 0.3rem;
-  left: 1.25rem;
-  height: 1.35rem;
-  border: 2px solid rgb(255 255 255 / 0.92);
-  border-radius: 0.3rem;
-  background: rgb(255 255 255 / 0.16);
+.device-scene__ambient circle:first-child,
+.device-scene__ambient circle:nth-child(2) {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.08);
+  stroke-width: 1;
+  stroke-dasharray: 5 10;
+  transform-origin: 310px 157px;
+  animation: ambient-orbit 28s linear infinite;
 }
+.device-scene__ambient circle:nth-child(2) { animation-direction: reverse; animation-duration: 22s; }
+.device-scene__ambient circle:nth-child(n+3) { fill: rgb(255 255 255 / 0.45); animation: ambient-twinkle 3s ease-in-out infinite; }
+.device-scene__ambient circle:nth-child(4) { animation-delay: 1s; }
+.device-scene__ambient circle:nth-child(5) { animation-delay: 2s; }
+.device-scene__shadow { fill: rgb(0 24 48 / 0.3); }
+.device-frame { fill: url(#itam-glass); stroke: rgb(255 255 255 / 0.88); stroke-width: 3; }
+.monitor-screen { fill: url(#itam-screen); }
+.monitor-ui rect:first-child { fill: #0c83bd; }
+.monitor-ui__soft { fill: rgb(12 131 189 / 0.25); }
+.monitor-ui__card { fill: rgb(12 131 189 / 0.1); stroke: rgb(12 131 189 / 0.22); }
+.monitor-ui__chart { fill: none; stroke: #0c83bd; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 60; animation: monitor-chart 3.6s ease-in-out infinite; }
+.monitor-ui__chart--two { animation-delay: .25s; }
+.monitor-ui__chart--three { animation-delay: .5s; }
+.monitor-neck { fill: rgb(255 255 255 / 0.14); stroke: rgb(255 255 255 / 0.75); stroke-width: 3; }
+.monitor-base, .printer-lid { fill: rgb(255 255 255 / 0.18); stroke: rgb(255 255 255 / 0.75); stroke-width: 3; }
+.tower-vent { fill: rgb(255 255 255 / 0.5); }
+.tower-vent--short { opacity: .55; }
+.tower-button { fill: rgb(255 255 255 / 0.08); stroke: rgb(255 255 255 / 0.52); stroke-width: 2; }
+.device-led { fill: #fff; filter: url(#itam-glow); animation: led-pulse 1.8s ease-in-out infinite; }
+.printer-frame { fill: rgb(255 255 255 / 0.15); }
+.printer-input-paper { fill: #f8fdff; stroke: rgb(255 255 255 / 0.85); stroke-width: 2; }
+.printer-input-paper path + path { fill: none; stroke: #54add5; stroke-width: 3; stroke-linecap: round; }
+.printer-control { fill: rgb(0 49 79 / 0.25); }
+.printer-slot { fill: rgb(0 35 62 / 0.46); }
+.printer-output-paper { animation: printer-feed 3.8s cubic-bezier(.45, 0, .2, 1) infinite; }
+.printer-output-paper rect { fill: #fff; }
+.printer-output-paper path { fill: none; stroke: #54add5; stroke-width: 3; stroke-linecap: round; }
+.printer-tray { fill: rgb(255 255 255 / 0.12); stroke: rgb(255 255 255 / 0.6); stroke-width: 2; }
+.device-scene__wifi { stroke: #fff; stroke-width: 4; }
+.wifi-wave { opacity: .18; animation: wifi-broadcast 2.4s ease-out infinite; }
+.wifi-wave--middle { animation-delay: .25s; }
+.wifi-wave--outer { animation-delay: .5s; }
+.wifi-core { fill: #fff; stroke: none; filter: url(#itam-glow); animation: led-pulse 1.4s ease-in-out infinite; }
+.connection-line { stroke: rgb(255 255 255 / 0.2); stroke-width: 2; stroke-dasharray: 4 7; }
+.data-packet { color: #fff; filter: url(#itam-glow); }
 
-@keyframes printer-paper-feed {
-  0%, 18% { transform: translateY(0); }
-  48%, 68% { transform: translateY(4.6rem); }
-  82%, 100% { transform: translateY(0); }
+@keyframes printer-feed {
+  0%, 15% { transform: translateY(-48px); opacity: 0; }
+  27% { opacity: 1; }
+  65% { transform: translateY(12px); opacity: 1; }
+  86%, 100% { transform: translateY(39px); opacity: 0; }
 }
+@keyframes monitor-chart { 0%, 18% { stroke-dashoffset: 60; opacity: .35; } 56%, 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes wifi-broadcast { 0%, 100% { opacity: .12; } 35%, 58% { opacity: 1; } 80% { opacity: .25; } }
+@keyframes led-pulse { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
+@keyframes ambient-orbit { to { transform: rotate(360deg); } }
+@keyframes ambient-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: .85; } }
 
-@keyframes printer-pulse {
-  0%, 100% { opacity: 0.45; }
-  50% { opacity: 1; }
+@media (min-width: 640px) {
+  .dashboard-device-scene { height: 17rem; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -267,8 +254,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .printer-animation__paper,
-  .printer-animation__indicator { animation: none; }
+  .dashboard-device-scene * { animation: none !important; }
 }
 
 @media print {
