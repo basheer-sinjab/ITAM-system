@@ -4,7 +4,7 @@ import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { _ as Link, v as useNavigate } from "../_libs/@tanstack/react-router+[...].mjs";
 import { N as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { i as useQueryClient, n as useQuery } from "../_libs/tanstack__react-query.mjs";
-import { S as Mail, _ as Pencil, b as Monitor, c as Trash2, g as Phone, w as KeyRound, z as ArrowRight } from "../_libs/lucide-react.mjs";
+import { C as Monitor, D as KeyRound, T as Mail, U as ArrowRight, b as Pencil, u as Trash2, y as Phone } from "../_libs/lucide-react.mjs";
 import { n as Input, t as Button } from "./input-Dby3FvDq.mjs";
 import { t as Label } from "./label-DF0aFIxM.mjs";
 import { a as DialogTitle, i as DialogHeader, n as DialogContent, r as DialogFooter, t as Dialog } from "./dialog-B8OAifVF.mjs";
@@ -12,8 +12,8 @@ import { t as Textarea } from "./textarea-DVSIcTTN.mjs";
 import { a as SelectValue, i as SelectTrigger, n as SelectContent, r as SelectItem, t as Select } from "./select-DL8gVTZ5.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
 import { t as ConfirmButton } from "./ConfirmButton-BpxDIdWE.mjs";
-import { t as Route } from "./people-departments.employee._id-DKDL6fvg.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/people-departments.employee._id-m3S2lOja.js
+import { t as Route } from "./people-departments.employee._id-PFNEmrm7.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/people-departments.employee._id-3_Lnwgfq.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function EmployeeDetails() {
@@ -58,6 +58,12 @@ function EmployeeDetails() {
 	const departmentLabel = department ? `${department.name} - ${branchName || "فرع غير محدد"}` : "بدون قسم";
 	const assignedLicenses = assignments.map((assignment) => licenses.find((license) => license.id === assignment.license_id)).filter(Boolean);
 	const remove = async () => {
+		const historyResult = await supabase.from("assignment_history").update({
+			return_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+			return_condition: "good",
+			return_notes: "تم إرجاع الأصل عند حذف الموظف"
+		}).eq("employee_id", id).eq("return_date", null);
+		if (historyResult.error) return toast.error(historyResult.error.message);
 		const licensesResult = await supabase.from("license_assignments").delete().eq("employee_id", id);
 		if (licensesResult.error) return toast.error(licensesResult.error.message);
 		const assetsResult = await supabase.from("assets").update({ assigned_employee_id: null }).eq("assigned_employee_id", id);

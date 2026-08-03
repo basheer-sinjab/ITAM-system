@@ -5,7 +5,7 @@ import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { _ as Link } from "../_libs/@tanstack/react-router+[...].mjs";
 import { N as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { n as useQuery } from "../_libs/tanstack__react-query.mjs";
-import { h as Plus, l as Star, p as Search } from "../_libs/lucide-react.mjs";
+import { d as Star, h as Search, v as Plus } from "../_libs/lucide-react.mjs";
 import { n as Input, t as Button } from "./input-Dby3FvDq.mjs";
 import { a as SelectValue, i as SelectTrigger, n as SelectContent, r as SelectItem, t as Select } from "./select-DL8gVTZ5.mjs";
 import { t as PrinterImage } from "./PrinterImage-CBPRXgNz.mjs";

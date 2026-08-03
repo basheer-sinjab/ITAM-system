@@ -3,7 +3,7 @@ import { r as supabase } from "./client-Du3ze5ZY.mjs";
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { N as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { i as useQueryClient, n as useQuery } from "../_libs/tanstack__react-query.mjs";
-import { _ as Pencil, c as Trash2, h as Plus, j as CircleDot, n as Wrench, p as Search } from "../_libs/lucide-react.mjs";
+import { F as CircleDot, b as Pencil, h as Search, n as Wrench, u as Trash2, v as Plus } from "../_libs/lucide-react.mjs";
 import { n as Input, t as Button } from "./input-Dby3FvDq.mjs";
 import { t as Label } from "./label-DF0aFIxM.mjs";
 import { a as DialogTitle, i as DialogHeader, n as DialogContent, r as DialogFooter, t as Dialog } from "./dialog-B8OAifVF.mjs";

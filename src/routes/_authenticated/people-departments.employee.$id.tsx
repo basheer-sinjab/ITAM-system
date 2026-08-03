@@ -98,6 +98,16 @@ function EmployeeDetails() {
     )
     .filter(Boolean);
   const remove = async () => {
+    const historyResult = await supabase
+      .from("assignment_history")
+      .update({
+        return_date: new Date().toISOString().slice(0, 10),
+        return_condition: "good",
+        return_notes: "تم إرجاع الأصل عند حذف الموظف",
+      })
+      .eq("employee_id", id)
+      .eq("return_date", null);
+    if (historyResult.error) return toast.error(historyResult.error.message);
     const licensesResult = await supabase
       .from("license_assignments")
       .delete()

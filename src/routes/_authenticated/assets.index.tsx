@@ -180,7 +180,6 @@ function AssetsPage() {
       <AssetForm
         open={open}
         onOpenChange={setOpen}
-        employees={employees}
         departments={departments}
         onSaved={() => queryClient.invalidateQueries()}
       />
@@ -191,7 +190,6 @@ function AssetsPage() {
 export function AssetForm({
   open,
   onOpenChange,
-  employees,
   departments = [],
   asset,
   onSaved,
@@ -205,7 +203,6 @@ export function AssetForm({
     serial_number: "",
     status: "active",
     department_id: NONE,
-    assigned_employee_id: NONE,
     purchase_date: "",
     warranty_expiry: "",
     notes: "",
@@ -218,7 +215,6 @@ export function AssetForm({
           ? {
               ...asset,
               department_id: asset.department_id || NONE,
-              assigned_employee_id: asset.assigned_employee_id || NONE,
             }
           : {
               name: "",
@@ -228,7 +224,6 @@ export function AssetForm({
               serial_number: "",
               status: "active",
               department_id: NONE,
-              assigned_employee_id: NONE,
               purchase_date: "",
               warranty_expiry: "",
               notes: "",
@@ -243,39 +238,18 @@ export function AssetForm({
       const image_url = file
         ? await uploadPrinterImage(file)
         : (asset?.image_url ?? null);
-      const assigned_employee_id =
-        form.assigned_employee_id === NONE ? null : form.assigned_employee_id;
       const department_id =
         form.department_id === NONE ? null : form.department_id;
       const payload = {
         ...form,
         name: form.name.trim(),
         department_id,
-        assigned_employee_id,
         purchase_date: form.purchase_date || null,
         warranty_expiry: form.warranty_expiry || null,
         image_url,
         asset_id: form.asset_id || undefined,
       };
       if (asset) {
-        if (asset.assigned_employee_id !== assigned_employee_id) {
-          const current = await supabase
-            .from("assignment_history")
-            .select("*")
-            .eq("asset_id", asset.id)
-            .eq("return_date", null)
-            .maybeSingle();
-          if (current.data)
-            await supabase
-              .from("assignment_history")
-              .update({ return_date: new Date().toISOString().slice(0, 10) })
-              .eq("id", current.data.id);
-          if (assigned_employee_id)
-            await supabase.from("assignment_history").insert({
-              asset_id: asset.id,
-              employee_id: assigned_employee_id,
-            });
-        }
         const result = await supabase
           .from("assets")
           .update(payload)
@@ -348,25 +322,6 @@ export function AssetForm({
                 {ASSET_TYPES.map((item) => (
                   <SelectItem key={item} value={item}>
                     {item}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label>الموظف المعيّن</Label>
-            <Select
-              value={form.assigned_employee_id}
-              onValueChange={(v) => set("assigned_employee_id", v)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={NONE}>غير معيّن</SelectItem>
-                {employees.map((employee: any) => (
-                  <SelectItem key={employee.id} value={employee.id}>
-                    {employee.full_name}
                   </SelectItem>
                 ))}
               </SelectContent>

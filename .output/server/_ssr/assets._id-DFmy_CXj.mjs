@@ -11,13 +11,13 @@ import { a as DialogTitle, i as DialogHeader, n as DialogContent, r as DialogFoo
 import { t as Textarea } from "./textarea-DVSIcTTN.mjs";
 import { a as SelectValue, i as SelectTrigger, n as SelectContent, r as SelectItem, t as Select } from "./select-DL8gVTZ5.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/assets._id-BpYDt3-a.js
+//#region node_modules/.nitro/vite/services/ssr/assets/assets._id-DFmy_CXj.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
-var $$splitComponentImporter$1 = () => import("./assets.index-CXe_PTnr.mjs");
+var $$splitComponentImporter$1 = () => import("./assets.index-CRcjKdDs.mjs");
 var NONE = "__none__";
 var Route$1 = createFileRoute("/_authenticated/assets/")({ component: lazyRouteComponent($$splitComponentImporter$1, "component") });
-function AssetForm({ open, onOpenChange, employees, departments = [], asset, onSaved }) {
+function AssetForm({ open, onOpenChange, departments = [], asset, onSaved }) {
 	const queryClient = useQueryClient();
 	const [form, setForm] = (0, import_react.useState)({
 		name: "",
@@ -27,7 +27,6 @@ function AssetForm({ open, onOpenChange, employees, departments = [], asset, onS
 		serial_number: "",
 		status: "active",
 		department_id: NONE,
-		assigned_employee_id: NONE,
 		purchase_date: "",
 		warranty_expiry: "",
 		notes: ""
@@ -37,8 +36,7 @@ function AssetForm({ open, onOpenChange, employees, departments = [], asset, onS
 		if (open) {
 			setForm(asset ? {
 				...asset,
-				department_id: asset.department_id || NONE,
-				assigned_employee_id: asset.assigned_employee_id || NONE
+				department_id: asset.department_id || NONE
 			} : {
 				name: "",
 				asset_type: "Printer",
@@ -47,7 +45,6 @@ function AssetForm({ open, onOpenChange, employees, departments = [], asset, onS
 				serial_number: "",
 				status: "active",
 				department_id: NONE,
-				assigned_employee_id: NONE,
 				purchase_date: "",
 				warranty_expiry: "",
 				notes: ""
@@ -59,27 +56,17 @@ function AssetForm({ open, onOpenChange, employees, departments = [], asset, onS
 		mutationFn: async () => {
 			if (!form.name.trim()) throw new Error("اسم الأصل مطلوب");
 			const image_url = file ? await uploadPrinterImage(file) : asset?.image_url ?? null;
-			const assigned_employee_id = form.assigned_employee_id === NONE ? null : form.assigned_employee_id;
 			const department_id = form.department_id === NONE ? null : form.department_id;
 			const payload = {
 				...form,
 				name: form.name.trim(),
 				department_id,
-				assigned_employee_id,
 				purchase_date: form.purchase_date || null,
 				warranty_expiry: form.warranty_expiry || null,
 				image_url,
 				asset_id: form.asset_id || void 0
 			};
 			if (asset) {
-				if (asset.assigned_employee_id !== assigned_employee_id) {
-					const current = await supabase.from("assignment_history").select("*").eq("asset_id", asset.id).eq("return_date", null).maybeSingle();
-					if (current.data) await supabase.from("assignment_history").update({ return_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10) }).eq("id", current.data.id);
-					if (assigned_employee_id) await supabase.from("assignment_history").insert({
-						asset_id: asset.id,
-						employee_id: assigned_employee_id
-					});
-				}
 				const result = await supabase.from("assets").update(payload).eq("id", asset.id);
 				if (result.error) throw result.error;
 			} else {
@@ -160,20 +147,6 @@ function AssetForm({ open, onOpenChange, employees, departments = [], asset, onS
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							className: "space-y-2",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, { children: "الموظف المعيّن" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-								value: form.assigned_employee_id,
-								onValueChange: (v) => set("assigned_employee_id", v),
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {}) }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectContent, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									value: NONE,
-									children: "غير معيّن"
-								}), employees.map((employee) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									value: employee.id,
-									children: employee.full_name
-								}, employee.id))] })]
-							})]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							className: "space-y-2",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, { children: "القسم" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
 								value: form.department_id || NONE,
 								onValueChange: (v) => set("department_id", v),
@@ -232,7 +205,7 @@ function AssetForm({ open, onOpenChange, employees, departments = [], asset, onS
 		})
 	});
 }
-var $$splitComponentImporter = () => import("./assets._id-DjCDH3Dv.mjs");
+var $$splitComponentImporter = () => import("./assets._id-BmFgdshw.mjs");
 var Route = createFileRoute("/_authenticated/assets/$id")({ component: lazyRouteComponent($$splitComponentImporter, "component") });
 //#endregion
 export { Route as n, Route$1 as r, AssetForm as t };

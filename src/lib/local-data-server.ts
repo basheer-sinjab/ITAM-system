@@ -87,12 +87,20 @@ const ENTITIES: Record<string, Entity> = {
       "id",
       "asset_id",
       "employee_id",
+      "employee_name",
+      "employee_number",
+      "employee_email",
+      "employee_phone",
+      "department_name",
+      "branch_name",
       "assignment_date",
       "return_date",
+      "return_condition",
       "notes",
+      "return_notes",
       "created_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS assignment_history (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, assignment_date TEXT NOT NULL, return_date TEXT, notes TEXT, created_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS assignment_history (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, employee_name TEXT, employee_number TEXT, employee_email TEXT, employee_phone TEXT, department_name TEXT, branch_name TEXT, assignment_date TEXT NOT NULL, return_date TEXT, return_condition TEXT, notes TEXT, return_notes TEXT, created_at TEXT NOT NULL)",
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_assignment_asset ON assignment_history(asset_id)",
       "CREATE INDEX IF NOT EXISTS idx_assignment_employee ON assignment_history(employee_id)",
@@ -299,6 +307,26 @@ function migrateSystemFields(database: DatabaseSync) {
     !licenseColumns.some((column) => column.name === "contract_number")
   )
     database.exec("ALTER TABLE licenses ADD COLUMN contract_number TEXT");
+
+  const assignmentColumns = database
+    .prepare("PRAGMA table_info(assignment_history)")
+    .all() as Array<{ name: string }>;
+  for (const column of [
+    "employee_name",
+    "employee_number",
+    "employee_email",
+    "employee_phone",
+    "department_name",
+    "branch_name",
+    "return_condition",
+    "return_notes",
+  ]) {
+    if (!assignmentColumns.some((entry) => entry.name === column))
+      database.exec(`ALTER TABLE assignment_history ADD COLUMN ${column} TEXT`);
+  }
+  database.exec(
+    "UPDATE assignment_history SET employee_name = COALESCE(employee_name, (SELECT full_name FROM employees WHERE employees.id = assignment_history.employee_id)), employee_number = COALESCE(employee_number, (SELECT employee_number FROM employees WHERE employees.id = assignment_history.employee_id)), employee_email = COALESCE(employee_email, (SELECT email FROM employees WHERE employees.id = assignment_history.employee_id)), employee_phone = COALESCE(employee_phone, (SELECT phone FROM employees WHERE employees.id = assignment_history.employee_id)), department_name = COALESCE(department_name, (SELECT departments.name FROM employees JOIN departments ON departments.id = employees.department_id WHERE employees.id = assignment_history.employee_id)), branch_name = COALESCE(branch_name, (SELECT COALESCE(branches.name, departments.branch) FROM employees JOIN departments ON departments.id = employees.department_id LEFT JOIN branches ON branches.id = departments.branch_id WHERE employees.id = assignment_history.employee_id))",
+  );
 }
 async function db() {
   if (!ready)

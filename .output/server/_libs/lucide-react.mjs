@@ -115,6 +115,16 @@ var createLucideIcon = (iconName, iconNode) => {
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var Activity = createLucideIcon("activity", [["path", {
+	d: "M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2",
+	key: "169zse"
+}]]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var ArrowLeftRight = createLucideIcon("arrow-left-right", [
 	["path", {
 		d: "M8 3 4 7l4 4",
@@ -339,6 +349,28 @@ var CircleDot = createLucideIcon("circle-dot", [["circle", {
 	r: "1",
 	key: "41hilf"
 }]]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var CirclePlus = createLucideIcon("circle-plus", [
+	["circle", {
+		cx: "12",
+		cy: "12",
+		r: "10",
+		key: "1mglay"
+	}],
+	["path", {
+		d: "M8 12h8",
+		key: "1wcyev"
+	}],
+	["path", {
+		d: "M12 8v8",
+		key: "napkw2"
+	}]
+]);
 /**
 * @license lucide-react v0.575.0 - ISC
 *
@@ -717,6 +749,19 @@ var Printer = createLucideIcon("printer", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var RotateCcw = createLucideIcon("rotate-ccw", [["path", {
+	d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8",
+	key: "1357e3"
+}], ["path", {
+	d: "M3 3v5h5",
+	key: "1xhq8a"
+}]]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var Search = createLucideIcon("search", [["path", {
 	d: "m21 21-4.34-4.34",
 	key: "14j7rj"
@@ -866,6 +911,60 @@ var Upload = createLucideIcon("upload", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var UserCheck = createLucideIcon("user-check", [
+	["path", {
+		d: "m16 11 2 2 4-4",
+		key: "9rsbq5"
+	}],
+	["path", {
+		d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2",
+		key: "1yyitq"
+	}],
+	["circle", {
+		cx: "9",
+		cy: "7",
+		r: "4",
+		key: "nufk8"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var UserPlus = createLucideIcon("user-plus", [
+	["path", {
+		d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2",
+		key: "1yyitq"
+	}],
+	["circle", {
+		cx: "9",
+		cy: "7",
+		r: "4",
+		key: "nufk8"
+	}],
+	["line", {
+		x1: "19",
+		x2: "19",
+		y1: "8",
+		y2: "14",
+		key: "1bvyxn"
+	}],
+	["line", {
+		x1: "22",
+		x2: "16",
+		y1: "11",
+		y2: "11",
+		key: "1shjgl"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var UserRound = createLucideIcon("user-round", [["circle", {
 	cx: "12",
 	cy: "8",
@@ -947,4 +1046,4 @@ var X = createLucideIcon("x", [["path", {
 	key: "d8bk6v"
 }]]);
 //#endregion
-export { ClipboardCheck as A, ArrowLeft as B, LayoutDashboard as C, FileChartColumnIncreasing as D, FileSpreadsheet as E, Check as F, CalendarClock as I, Building2 as L, CircleCheck as M, ChevronUp as N, Download as O, ChevronDown as P, Boxes as R, Mail as S, History as T, ArrowLeftRight as V, Pencil as _, UserRound as a, Monitor as b, Trash2 as c, Settings as d, Settings2 as f, Phone as g, Plus as h, UsersRound as i, CircleDot as j, Clock3 as k, Star as l, Printer as m, Wrench as n, Upload as o, Search as p, Users as r, TriangleAlert as s, X as t, ShieldCheck as u, Package as v, KeyRound as w, Minus as x, PackagePlus as y, ArrowRight as z };
+export { FileChartColumnIncreasing as A, CalendarClock as B, Monitor as C, KeyRound as D, LayoutDashboard as E, CircleDot as F, ArrowLeftRight as G, Boxes as H, CircleCheck as I, Activity as K, ChevronUp as L, Clock3 as M, ClipboardCheck as N, History as O, CirclePlus as P, ChevronDown as R, PackagePlus as S, Mail as T, ArrowRight as U, Building2 as V, ArrowLeft as W, Printer as _, UserRound as a, Pencil as b, Upload as c, Star as d, ShieldCheck as f, RotateCcw as g, Search as h, UsersRound as i, Download as j, FileSpreadsheet as k, TriangleAlert as l, Settings2 as m, Wrench as n, UserPlus as o, Settings as p, Users as r, UserCheck as s, X as t, Trash2 as u, Plus as v, Minus as w, Package as x, Phone as y, Check as z };

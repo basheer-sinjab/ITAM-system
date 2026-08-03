@@ -1,10 +1,10 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-FEh2w4J-.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-I2P-Okxb.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "E:/ITAM System/src/routes/__root.tsx",
 		children: ["/_authenticated"],
 		preloads: [
-			"/assets/index-D0NaDPi5.js",
+			"/assets/index-Bbz29YiQ.js",
 			"/assets/createLucideIcon-_JN9-1Rk.js",
 			"/assets/useStore-CFiixifm.js",
 			"/assets/Match-BETYzDhS.js",
@@ -17,7 +17,7 @@ var tsrStartManifest = () => ({ routes: {
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-D0NaDPi5.js"
+			src: "/assets/index-Bbz29YiQ.js"
 		} }]
 	},
 	"/_authenticated": {
@@ -38,7 +38,7 @@ var tsrStartManifest = () => ({ routes: {
 			"/_authenticated/printers/"
 		],
 		preloads: [
-			"/assets/route-BJe-VCB7.js",
+			"/assets/route-M85Txyk7.js",
 			"/assets/useQuery-Dx4ha4Jj.js",
 			"/assets/file-chart-column-increasing-DWxxotqY.js",
 			"/assets/key-round-DO_yOuS-.js",
@@ -54,7 +54,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/inventory.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/inventory-B_A0-LLR.js",
+			"/assets/inventory-DcYzQcz9.js",
 			"/assets/boxes--n-qqcDf.js",
 			"/assets/history-kNlxHOhg.js",
 			"/assets/trash-2-BJun65R3.js",
@@ -69,7 +69,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/licenses.tsx",
 		children: ["/_authenticated/licenses/$id"],
 		preloads: [
-			"/assets/licenses-sVTxdjTw.js",
+			"/assets/licenses-CbJpn5Y_.js",
 			"/assets/circle-check-5f1sgB6R.js",
 			"/assets/plus-CWoXvATm.js",
 			"/assets/triangle-alert-DiTUdzCr.js",
@@ -80,7 +80,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/maintenance.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/maintenance-ChFixuD9.js",
+			"/assets/maintenance-CWJokmQV.js",
 			"/assets/trash-2-BJun65R3.js",
 			"/assets/plus-CWoXvATm.js",
 			"/assets/ConfirmButton-B5Siv3MW.js",
@@ -92,7 +92,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/people-departments.tsx",
 		children: ["/_authenticated/people-departments/$id", "/_authenticated/people-departments/employee/$id"],
 		preloads: [
-			"/assets/people-departments-BROuO6Qt.js",
+			"/assets/people-departments-DG0FzqpR.js",
 			"/assets/plus-CWoXvATm.js",
 			"/assets/users-round-DpJQ-Ade.js",
 			"/assets/ManagementVisuals-CI-UG4Ii.js",
@@ -103,7 +103,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/reports.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/reports-oUdX-bHc.js",
+			"/assets/reports-TdOnu_Nb.js",
 			"/assets/printer-UeEQhnjv.js",
 			"/assets/ManagementVisuals-CI-UG4Ii.js",
 			"/assets/table-hhYsXjAY.js"
@@ -113,7 +113,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/settings.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/settings-BKCsqSfJ.js",
+			"/assets/settings-yx94ljip.js",
 			"/assets/history-kNlxHOhg.js",
 			"/assets/trash-2-BJun65R3.js",
 			"/assets/plus-CWoXvATm.js",
@@ -126,7 +126,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/suppliers.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/suppliers-D1yTyfZZ.js",
+			"/assets/suppliers-DRLKzQqB.js",
 			"/assets/trash-2-BJun65R3.js",
 			"/assets/plus-CWoXvATm.js",
 			"/assets/table-hhYsXjAY.js"
@@ -136,7 +136,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/toners.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/toners-1W006Y13.js",
+			"/assets/toners-BRxtTAG6.js",
 			"/assets/trash-2-BJun65R3.js",
 			"/assets/plus-CWoXvATm.js",
 			"/assets/table-hhYsXjAY.js",
@@ -147,9 +147,10 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/index.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/_authenticated-CjdDFuVT.js",
+			"/assets/_authenticated-QmCR6fHV.js",
 			"/assets/circle-check-5f1sgB6R.js",
 			"/assets/boxes--n-qqcDf.js",
+			"/assets/clock-3-D2cWu0X8.js",
 			"/assets/plus-CWoXvATm.js",
 			"/assets/triangle-alert-DiTUdzCr.js"
 		]
@@ -158,19 +159,20 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/assets.$id.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/assets._id-BccRZMnm.js",
+			"/assets/assets._id-CPXF5UsF.js",
 			"/assets/arrow-right-DAEJhZzY.js",
+			"/assets/clock-3-D2cWu0X8.js",
 			"/assets/trash-2-BJun65R3.js",
 			"/assets/printer-UeEQhnjv.js",
 			"/assets/ConfirmButton-B5Siv3MW.js",
-			"/assets/PrinterImage-B5TQVM50.js"
+			"/assets/PrinterImage-CH5Ts8Is.js"
 		]
 	},
 	"/_authenticated/licenses/$id": {
 		filePath: "E:/ITAM System/src/routes/_authenticated/licenses.$id.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/licenses._id-byb0bmwM.js",
+			"/assets/licenses._id-B2n6iWeh.js",
 			"/assets/arrow-right-DAEJhZzY.js",
 			"/assets/trash-2-BJun65R3.js",
 			"/assets/ConfirmButton-B5Siv3MW.js",
@@ -181,7 +183,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/people-departments.$id.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/people-departments._id-BVhz7Flg.js",
+			"/assets/people-departments._id-BPSYATy6.js",
 			"/assets/arrow-right-DAEJhZzY.js",
 			"/assets/phone-6aX-Hmt5.js",
 			"/assets/trash-2-BJun65R3.js",
@@ -192,13 +194,13 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/printers.$id.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/printers._id-CEobyAPy.js",
+			"/assets/printers._id-D9d1hPiY.js",
 			"/assets/arrow-right-DAEJhZzY.js",
 			"/assets/trash-2-BJun65R3.js",
 			"/assets/plus-CWoXvATm.js",
-			"/assets/PrinterFormDialog-B4OoOawS.js",
+			"/assets/PrinterFormDialog-CZz6MAc0.js",
 			"/assets/ConfirmButton-B5Siv3MW.js",
-			"/assets/PrinterImage-B5TQVM50.js",
+			"/assets/PrinterImage-CH5Ts8Is.js",
 			"/assets/table-hhYsXjAY.js",
 			"/assets/tabs-ByAI6yNJ.js",
 			"/assets/DateInput-DqBWF7wP.js"
@@ -208,10 +210,10 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/assets.index.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/assets.index-B8UYfsKM.js",
+			"/assets/assets.index-Dhmq4z0A.js",
 			"/assets/boxes--n-qqcDf.js",
 			"/assets/plus-CWoXvATm.js",
-			"/assets/PrinterImage-B5TQVM50.js",
+			"/assets/PrinterImage-CH5Ts8Is.js",
 			"/assets/ManagementVisuals-CI-UG4Ii.js"
 		]
 	},
@@ -219,10 +221,10 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/printers.index.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/printers.index-CR9WXi-8.js",
+			"/assets/printers.index-Cov6tzZN.js",
 			"/assets/plus-CWoXvATm.js",
-			"/assets/PrinterFormDialog-B4OoOawS.js",
-			"/assets/PrinterImage-B5TQVM50.js",
+			"/assets/PrinterFormDialog-CZz6MAc0.js",
+			"/assets/PrinterImage-CH5Ts8Is.js",
 			"/assets/DateInput-DqBWF7wP.js"
 		]
 	},
@@ -230,7 +232,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "E:/ITAM System/src/routes/_authenticated/people-departments.employee.$id.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/people-departments.employee._id-ULJKQPQ-.js",
+			"/assets/people-departments.employee._id-C9LHMblb.js",
 			"/assets/arrow-right-DAEJhZzY.js",
 			"/assets/phone-6aX-Hmt5.js",
 			"/assets/trash-2-BJun65R3.js",

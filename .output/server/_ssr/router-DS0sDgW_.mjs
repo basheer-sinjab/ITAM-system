@@ -5,13 +5,13 @@ import { N as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { r as QueryClientProvider } from "../_libs/tanstack__react-query.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-import { n as Route$11, r as Route$1$1 } from "./assets._id-BpYDt3-a.mjs";
+import { n as Route$11, r as Route$1$1 } from "./assets._id-DFmy_CXj.mjs";
 import { t as Route$12 } from "./licenses._id-CcZfH59U.mjs";
 import { t as Route$13 } from "./people-departments-BcPSZNvT.mjs";
 import { t as Route$14 } from "./people-departments._id-DqmKplcE.mjs";
-import { t as Route$15 } from "./people-departments.employee._id-DKDL6fvg.mjs";
+import { t as Route$15 } from "./people-departments.employee._id-PFNEmrm7.mjs";
 import { t as Route$16 } from "./printers._id-Dd3PQ7r0.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-CZHooIut.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-DS0sDgW_.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var Toaster$1 = ({ ...props }) => {
@@ -26,7 +26,7 @@ var Toaster$1 = ({ ...props }) => {
 		...props
 	});
 };
-var styles_default = "/assets/styles-DRck04AW.css";
+var styles_default = "/assets/styles-Deg_lX8A.css";
 function reportLovableError(error, context = {}) {
 	if (typeof window === "undefined") return;
 	window.__lovableEvents?.captureException?.(error, {

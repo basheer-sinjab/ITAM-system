@@ -4,7 +4,7 @@ import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
 import { _ as Link, p as Outlet, v as useNavigate } from "../_libs/@tanstack/react-router+[...].mjs";
 import { N as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { n as useQuery } from "../_libs/tanstack__react-query.mjs";
-import { C as LayoutDashboard, D as FileChartColumnIncreasing, a as UserRound, b as Monitor, d as Settings, n as Wrench, p as Search, r as Users, v as Package, w as KeyRound } from "../_libs/lucide-react.mjs";
+import { A as FileChartColumnIncreasing, C as Monitor, D as KeyRound, E as LayoutDashboard, a as UserRound, h as Search, n as Wrench, p as Settings, r as Users, x as Package } from "../_libs/lucide-react.mjs";
 import { n as Input, t as Button } from "./input-Dby3FvDq.mjs";
 import { a as DialogTitle, i as DialogHeader, n as DialogContent, t as Dialog } from "./dialog-B8OAifVF.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/route-DBbEd653.js

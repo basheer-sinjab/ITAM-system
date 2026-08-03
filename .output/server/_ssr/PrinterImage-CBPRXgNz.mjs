@@ -1,7 +1,7 @@
 import { l as resolveImage } from "./pms-DLuiFJ6_.mjs";
 import { N as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { n as useQuery } from "../_libs/tanstack__react-query.mjs";
-import { m as Printer } from "../_libs/lucide-react.mjs";
+import { _ as Printer } from "../_libs/lucide-react.mjs";
 import { i as cn } from "./input-Dby3FvDq.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/PrinterImage-CBPRXgNz.js
 var import_jsx_runtime = require_jsx_runtime();
