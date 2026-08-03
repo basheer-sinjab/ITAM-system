@@ -9,7 +9,7 @@ type Row = Record<string, any>;
 type Result = { data: any; error: Error | null };
 
 const TABLES = [
-  "departments", "employees", "assets", "assignment_history", "inventory_items",
+  "branches", "technicians", "departments", "employees", "assets", "assignment_history", "inventory_items",
   "asset_maintenance", "licenses", "license_assignments", "app_settings",
 ] as const;
 type TableName = (typeof TABLES)[number];

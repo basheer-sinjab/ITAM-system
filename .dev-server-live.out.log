@@ -1,0 +1,23 @@
+
+> dev
+> vite dev --host 0.0.0.0 --port 5173
+
+
+  [32m[1mVITE[22m v8.2.0[39m  [2mready in [0m[1m2064[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://172.21.64.1:[1m5173[22m/[39m   [2mvEthernet (WSL (Hyp…[22m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://17.17.21.146:[1m5173[22m/[39m  [2m‏‏شبكة Wi-Fi[22m
+[2m٥:٤٢:٥٤ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m connected.
+[2m٥:٤٥:٠٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/licenses.tsx, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/people-departments.tsx?tsr-split=component[22m
+[2m٥:٤٥:٠٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/integrations/supabase/client.ts[22m
+[2m٥:٤٥:٠٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٥:٤٥:١١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٥:٤٥:١١ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/local-data-server.ts[22m
+[2m٥:٤٥:١١ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٥:٤٥:٢٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.tsx, /src/routes/_authenticated/people-departments.tsx?tsr-split=component[22m
+[2m٥:٤٥:٢٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.tsx[22m
+[2m٥:٤٦:١٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/maintenance.tsx[22m
+[2m٥:٤٦:١٦ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/maintenance.tsx[22m
+[2m٥:٤٦:٢٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/maintenance.tsx[22m
+[2m٥:٤٦:٢٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/maintenance.tsx[22m

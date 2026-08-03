@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { CircleDot, Pencil, Plus, Trash2, Wrench } from "lucide-react";
+import { CircleDot, Pencil, Plus, Search, Trash2, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
@@ -53,6 +53,10 @@ function Maintenance() {
     queryKey: ["inventory"],
     queryFn: async () =>
       (await supabase.from("inventory_items").select("*")).data ?? [],
+  });
+  const { data: technicians = [] } = useQuery({
+    queryKey: ["technicians"],
+    queryFn: async () => (await supabase.from("technicians").select("*").order("name")).data ?? [],
   });
   const openRecords = records.filter((record: any) => record.status === "Open").length;
   return (
@@ -150,6 +154,7 @@ function Maintenance() {
           record={record}
           assets={assets}
           inventory={inventory}
+          technicians={technicians}
           close={() => setRecord(undefined)}
           saved={() => qc.invalidateQueries()}
         />
@@ -157,7 +162,8 @@ function Maintenance() {
     </div>
   );
 }
-function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
+function MaintenanceForm({ record, assets, inventory, technicians = [], close, saved }: any) {
+  const [inventorySearch, setInventorySearch] = useState("");
   const [form, setForm] = useState<any>({
     asset_id: "",
     maintenance_date: new Date().toISOString().slice(0, 10),
@@ -206,9 +212,23 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
     toast.success("تم حذف سجل الصيانة");
     close();
   };
+  const normalizedSearch = inventorySearch.trim().toLocaleLowerCase();
+  const selectedInventory = inventory.filter((item: any) =>
+    form.used_items.some((used: any) => used.id === item.id),
+  );
+  const matchingInventory = inventory
+    .filter((item: any) => {
+      if (!normalizedSearch) return false;
+      return [item.name, item.category, item.location]
+        .filter(Boolean)
+        .some((value) => String(value).toLocaleLowerCase().includes(normalizedSearch));
+    })
+    .filter((item: any) => !form.used_items.some((used: any) => used.id === item.id))
+    .slice(0, 8);
+  const inventorySearchResults = [...selectedInventory, ...matchingInventory];
   return (
     <Dialog open onOpenChange={close}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {form.id ? "تعديل سجل الصيانة" : "إضافة سجل صيانة"}
@@ -235,7 +255,6 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
           </div>
           {[
             ["تاريخ الصيانة", "maintenance_date"],
-            ["الفني", "technician"],
             ["التكلفة", "cost"],
           ].map(([label, key]) => (
             <div key={key} className="space-y-2">
@@ -253,6 +272,13 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
               />
             </div>
           ))}
+          <div className="space-y-2">
+            <Label>الفني</Label>
+            <Select value={form.technician || "__none__"} onValueChange={(value) => set("technician", value === "__none__" ? "" : value)}>
+              <SelectTrigger><SelectValue placeholder="اختر الفني" /></SelectTrigger>
+              <SelectContent><SelectItem value="__none__">غير محدد</SelectItem>{technicians.map((technician: any) => <SelectItem key={technician.id} value={technician.name}>{technician.name}</SelectItem>)}</SelectContent>
+            </Select>
+          </div>
           <div className="space-y-2">
             <Label>نوع الصيانة</Label>
             <Select
@@ -285,8 +311,18 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
           </div>
           <div className="space-y-2 sm:col-span-2">
             <Label>العناصر المستخدمة</Label>
-            {inventory.map((item: any) => (
-              <div key={item.id} className="mb-2 flex gap-2">
+            <div className="relative">
+              <Search className="pointer-events-none absolute right-3 top-2.5 size-4 text-muted-foreground" />
+              <Input
+                className="pr-9"
+                placeholder="ابحث باسم الصنف أو التصنيف أو الموقع..."
+                value={inventorySearch}
+                onChange={(event) => setInventorySearch(event.target.value)}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">اكتب للبحث في {inventory.length} صنفًا. تظهر أول 8 نتائج مطابقة.</p>
+            {inventorySearchResults.map((item: any) => (
+              <div key={item.id} className="mb-2 flex items-center gap-2 rounded-md border p-2">
                 <span className="flex-1 text-sm">
                   {item.name} ({item.quantity})
                 </span>
@@ -311,6 +347,12 @@ function MaintenanceForm({ record, assets, inventory, close, saved }: any) {
                 />
               </div>
             ))}
+            {inventorySearch && matchingInventory.length === 0 && selectedInventory.length === 0 && (
+              <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">لا توجد أصناف مطابقة للبحث.</p>
+            )}
+            {!inventorySearch && selectedInventory.length === 0 && (
+              <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">ابدأ بكتابة اسم الصنف لاختياره.</p>
+            )}
           </div>
           {[
             ["وصف المشكلة", "problem_description"],

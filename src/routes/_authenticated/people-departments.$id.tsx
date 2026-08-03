@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -59,6 +60,10 @@ function DepartmentDetails() {
     queryKey: ["assets"],
     queryFn: async () => (await supabase.from("assets").select("*")).data ?? [],
   });
+  const { data: branches = [] } = useQuery({
+    queryKey: ["branches"],
+    queryFn: async () => (await supabase.from("branches").select("*").order("name")).data ?? [],
+  });
   if (isLoading) return <p className="text-muted-foreground">جارٍ التحميل…</p>;
   if (!department)
     return <p className="text-muted-foreground">القسم غير موجود.</p>;
@@ -79,7 +84,7 @@ function DepartmentDetails() {
     if (result.error) return toast.error(result.error.message);
     queryClient.invalidateQueries();
     toast.success("تم حذف القسم");
-    navigate({ to: "/people-departments" });
+    navigate({ to: "/people-departments", search: { tab: "departments" } });
   };
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -151,6 +156,7 @@ function DepartmentDetails() {
         open={editOpen}
         onOpenChange={setEditOpen}
         department={department}
+        branches={branches}
         saved={() => queryClient.invalidateQueries()}
       />
     </div>
@@ -199,7 +205,7 @@ function EmployeeRow({ employee, assets }: { employee: any; assets: any[] }) {
     </div>
   );
 }
-function DepartmentEdit({ open, onOpenChange, department, saved }: any) {
+function DepartmentEdit({ open, onOpenChange, department, branches = [], saved }: any) {
   const [name, setName] = useState("");
   const [branch, setBranch] = useState("");
   const [notes, setNotes] = useState("");

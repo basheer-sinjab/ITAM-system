@@ -97,6 +97,23 @@ function renderErrorPage() {
 }
 var DATABASE_PATH = join(process.env.INIT_CWD ?? process.cwd(), "data", "itam.db");
 var ENTITIES = {
+	branches: {
+		columns: [
+			"id",
+			"name",
+			"notes",
+			"created_at"
+		],
+		sql: "CREATE TABLE IF NOT EXISTS branches (id TEXT PRIMARY KEY, name TEXT NOT NULL, notes TEXT, created_at TEXT NOT NULL)"
+	},
+	technicians: {
+		columns: [
+			"id",
+			"name",
+			"created_at"
+		],
+		sql: "CREATE TABLE IF NOT EXISTS technicians (id TEXT PRIMARY KEY, name TEXT NOT NULL, created_at TEXT NOT NULL)"
+	},
 	departments: {
 		columns: [
 			"id",
@@ -160,13 +177,14 @@ var ENTITIES = {
 			"id",
 			"name",
 			"category",
+			"color",
 			"quantity",
 			"minimum_quantity",
 			"location",
 			"notes",
 			"created_at"
 		],
-		sql: "CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'Consumable', quantity REAL NOT NULL DEFAULT 0 CHECK(quantity >= 0), minimum_quantity REAL NOT NULL DEFAULT 1 CHECK(minimum_quantity >= 0), location TEXT, notes TEXT, created_at TEXT NOT NULL)"
+		sql: "CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'Consumable', color TEXT, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity >= 0), minimum_quantity REAL NOT NULL DEFAULT 1 CHECK(minimum_quantity >= 0), location TEXT, notes TEXT, created_at TEXT NOT NULL)"
 	},
 	asset_maintenance: {
 		columns: [
@@ -243,6 +261,10 @@ function migrateDepartments(database) {
 	database.exec("ALTER TABLE departments_next RENAME TO departments");
 	database.exec("PRAGMA foreign_keys = ON");
 }
+function migrateInventory(database) {
+	const columns = database.prepare("PRAGMA table_info(inventory_items)").all();
+	if (columns.length && !columns.some((column) => column.name === "color")) database.exec("ALTER TABLE inventory_items ADD COLUMN color TEXT");
+}
 async function db() {
 	if (!ready) ready = mkdir(dirname(DATABASE_PATH), { recursive: true }).then(() => {
 		const database = new DatabaseSync(DATABASE_PATH);
@@ -252,6 +274,7 @@ async function db() {
 			database.exec(entity.sql);
 			entity.indexes?.forEach((index) => database.exec(index));
 		}
+		migrateInventory(database);
 		return database;
 	});
 	return ready;
@@ -449,7 +472,7 @@ async function handleLocalImageRequest(request) {
 }
 var serverEntryPromise;
 async function getServerEntry() {
-	if (!serverEntryPromise) serverEntryPromise = import("./server-B69P_hJS.mjs").then((m) => m.default ?? m);
+	if (!serverEntryPromise) serverEntryPromise = import("./server-BlZ1U-OG.mjs").then((m) => m.default ?? m);
 	return serverEntryPromise;
 }
 async function normalizeCatastrophicSsrResponse(response) {

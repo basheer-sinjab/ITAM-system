@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/people-departments")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -59,6 +60,8 @@ function PeopleDepartments() {
   const [employeeOpen, setEmployeeOpen] = useState(false);
   const [departmentOpen, setDepartmentOpen] = useState(false);
   const [employeeSearch, setEmployeeSearch] = useState("");
+  const [newBranch, setNewBranch] = useState("");
+  const [newTechnician, setNewTechnician] = useState("");
   const { data: employees = [] } = useQuery({
     queryKey: ["employees"],
     queryFn: async () =>
@@ -69,6 +72,14 @@ function PeopleDepartments() {
     queryKey: ["departments"],
     queryFn: async () =>
       (await supabase.from("departments").select("*").order("branch")).data ?? [],
+  });
+  const { data: branches = [] } = useQuery({
+    queryKey: ["branches"],
+    queryFn: async () => (await supabase.from("branches").select("*").order("name")).data ?? [],
+  });
+  const { data: technicians = [] } = useQuery({
+    queryKey: ["technicians"],
+    queryFn: async () => (await supabase.from("technicians").select("*").order("name")).data ?? [],
   });
   const { data: assets = [] } = useQuery({
     queryKey: ["assets"],
@@ -90,6 +101,8 @@ function PeopleDepartments() {
       )
     );
   });
+  const employeeDepartment = (employee: any) => departments.find((department: any) => department.id === employee.department_id);
+  const groupedEmployees = [...filteredEmployees].sort((a: any, b: any) => String(employeeDepartment(a)?.name ?? "").localeCompare(String(employeeDepartment(b)?.name ?? "")));
   return (
     <div className="mx-auto max-w-7xl space-y-6">
       <ManagementHeader icon={UsersRound} title="الأشخاص والأقسام" description="إدارة الموظفين والأقسام والتراخيص المعيّنة" />
@@ -101,6 +114,8 @@ function PeopleDepartments() {
         <TabsList>
           <TabsTrigger value="employees">الموظفون</TabsTrigger>
           <TabsTrigger value="departments">الأقسام</TabsTrigger>
+          <TabsTrigger value="branches">الفروع</TabsTrigger>
+          <TabsTrigger value="technicians">الفنيون</TabsTrigger>
         </TabsList>
         <TabsContent value="employees" className="space-y-4">
           <div className="surface-panel flex flex-col gap-3 p-3 sm:flex-row-reverse sm:items-center sm:justify-between">
@@ -110,8 +125,16 @@ function PeopleDepartments() {
               إضافة موظف
             </Button>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {filteredEmployees.map((employee: any) => (
+          <div className="space-y-3">
+            {departments.map((department: any) => {
+              const departmentEmployees = groupedEmployees.filter((employee: any) => employee.department_id === department.id);
+              return <details key={department.id} open className="surface-panel overflow-hidden group">
+                <summary className="flex cursor-pointer list-none items-center justify-between border-b p-4 font-semibold marker:hidden">
+                  <span className="flex items-center gap-2"><Building2 className="size-4 text-primary" />{department.name}<span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{departmentEmployees.length}</span></span>
+                  <span className="text-xs text-muted-foreground transition-transform group-open:rotate-180">⌄</span>
+                </summary>
+                <div className="grid gap-4 p-4 md:grid-cols-2">
+                  {departmentEmployees.map((employee: any) => (
               <Link
                 key={employee.id}
                 to="/people-departments/employee/$id"
@@ -122,9 +145,13 @@ function PeopleDepartments() {
                 <p className="text-sm text-muted-foreground">
                   {employee.email || "—"} · {employee.phone || "—"}
                 </p>
-                <p className="mt-3 text-sm">التراخيص: {licenseAssignments.filter((assignment: any) => assignment.employee_id === employee.id).length}</p>
-              </Link>
-            ))}
+                <p className="mt-2 text-xs font-medium text-primary">{employeeDepartment(employee)?.name || "قسم غير محدد"}</p><p className="mt-3 text-sm">التراخيص: {licenseAssignments.filter((assignment: any) => assignment.employee_id === employee.id).length}</p>
+              </Link>))}
+                  {!departmentEmployees.length && <p className="p-2 text-sm text-muted-foreground">لا يوجد موظفون في هذا القسم.</p>}
+                </div>
+              </details>;
+            })}
+            {groupedEmployees.filter((employee: any) => !employee.department_id).length > 0 && <details open className="surface-panel overflow-hidden group"><summary className="flex cursor-pointer list-none items-center justify-between border-b p-4 font-semibold marker:hidden">موظفون بدون قسم<span className="text-xs text-muted-foreground">⌄</span></summary><div className="grid gap-4 p-4 md:grid-cols-2">{groupedEmployees.filter((employee: any) => !employee.department_id).map((employee: any) => <Link key={employee.id} to="/people-departments/employee/$id" params={{ id: employee.id }} className="surface-panel interactive-card p-5 hover:interactive-card-hover"><h2 className="font-semibold">{employee.full_name}</h2><p className="text-sm text-muted-foreground">{employee.email || "—"} · {employee.phone || "—"}</p></Link>)}</div></details>}
           </div>
           {filteredEmployees.length === 0 && (
             <p className="text-sm text-muted-foreground">
@@ -139,8 +166,9 @@ function PeopleDepartments() {
               إضافة قسم
             </Button>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {departments.map((department: any) => {
+          <div className="space-y-4">
+            {branches.map((branch: any) => <details key={branch.id} open className="surface-panel overflow-hidden group"><summary className="flex cursor-pointer list-none items-center justify-between border-b p-5 marker:hidden"><span className="flex items-center gap-3 text-lg font-semibold"><Building2 className="size-5 text-primary" />{branch.name}<span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{departments.filter((department: any) => department.branch === branch.name).length} أقسام</span></span><span className="text-muted-foreground transition-transform group-open:rotate-180">⌄</span></summary><div className="grid gap-4 p-4 md:grid-cols-2">
+            {departments.filter((department: any) => department.branch === branch.name).map((department: any) => {
               const people = employees.filter(
                 (employee: any) => employee.department_id === department.id,
               );
@@ -165,8 +193,17 @@ function PeopleDepartments() {
                   </p>
                 </Link>
               );
-            })}
+            })}</div></details>)}
+            {departments.filter((department: any) => !department.branch || !branches.some((branch: any) => branch.name === department.branch)).length > 0 && <details open className="surface-panel overflow-hidden group"><summary className="flex cursor-pointer list-none items-center justify-between border-b p-5 marker:hidden"><span className="font-semibold">أقسام بدون فرع</span><span className="text-muted-foreground">⌄</span></summary><div className="grid gap-4 p-4 md:grid-cols-2">{departments.filter((department: any) => !department.branch || !branches.some((branch: any) => branch.name === department.branch)).map((department: any) => { const people = employees.filter((employee: any) => employee.department_id === department.id); return <Link key={department.id} to="/people-departments/$id" params={{ id: department.id }} className="surface-panel interactive-card p-5 hover:interactive-card-hover"><h2 className="font-semibold">{department.name}</h2><p className="mt-3 text-sm">الموظفون: {people.length}</p></Link>; })}</div></details>}
           </div>
+        </TabsContent>
+        <TabsContent value="branches" className="space-y-4">
+          <div className="surface-panel flex flex-col gap-2 p-3 sm:flex-row"><Input value={newBranch} onChange={(event) => setNewBranch(event.target.value)} placeholder="اسم الفرع الجديد" /><Button onClick={async () => { if (!newBranch.trim()) return toast.error("اسم الفرع مطلوب"); const result = await supabase.from("branches").insert({ name: newBranch.trim() }); if (result.error) return toast.error(result.error.message); setNewBranch(""); queryClient.invalidateQueries({ queryKey: ["branches"] }); toast.success("تمت إضافة الفرع"); }}><Plus className="ml-2 size-4" />إضافة فرع</Button></div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{branches.map((branch: any) => <div key={branch.id} className="surface-panel p-5"><h2 className="font-semibold">{branch.name}</h2><p className="mt-2 text-sm text-muted-foreground">الأقسام: {departments.filter((department: any) => department.branch === branch.name).length}</p></div>)}</div>
+        </TabsContent>
+        <TabsContent value="technicians" className="space-y-4">
+          <div className="surface-panel flex flex-col gap-2 p-3 sm:flex-row"><Input value={newTechnician} onChange={(event) => setNewTechnician(event.target.value)} placeholder="اسم الفني الجديد" /><Button onClick={async () => { if (!newTechnician.trim()) return toast.error("اسم الفني مطلوب"); const result = await supabase.from("technicians").insert({ name: newTechnician.trim() }); if (result.error) return toast.error(result.error.message); setNewTechnician(""); queryClient.invalidateQueries({ queryKey: ["technicians"] }); toast.success("تمت إضافة الفني"); }}><Plus className="ml-2 size-4" />إضافة فني</Button></div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{technicians.map((technician: any) => <div key={technician.id} className="surface-panel flex items-center gap-3 p-4"><UsersRound className="size-5 text-primary" /><span className="font-medium">{technician.name}</span></div>)}</div>
         </TabsContent>
       </Tabs>
       {employeeOpen && (
@@ -178,6 +215,7 @@ function PeopleDepartments() {
       )}
       {departmentOpen && (
         <DepartmentForm
+          branches={branches}
           close={() => setDepartmentOpen(false)}
           saved={() => queryClient.invalidateQueries()}
         />
@@ -259,7 +297,7 @@ function EmployeeForm({ departments, close, saved }: any) {
     </Dialog>
   );
 }
-function DepartmentForm({ close, saved }: any) {
+function DepartmentForm({ close, saved, branches = [] }: any) {
   const [name, setName] = useState("");
   const [branch, setBranch] = useState("");
   const [notes, setNotes] = useState("");
@@ -277,11 +315,10 @@ function DepartmentForm({ close, saved }: any) {
             />
           </Field>
           <Field label="الفرع">
-            <Input
-              value={branch}
-              onChange={(event) => setBranch(event.target.value)}
-              placeholder="مثال: فرع الرياض"
-            />
+            <Select value={branch || "__none__"} onValueChange={(value) => setBranch(value === "__none__" ? "" : value)}>
+              <SelectTrigger><SelectValue placeholder="اختر الفرع" /></SelectTrigger>
+              <SelectContent><SelectItem value="__none__">فرع غير محدد</SelectItem>{branches.map((item: any) => <SelectItem key={item.id} value={item.name}>{item.name}</SelectItem>)}</SelectContent>
+            </Select>
           </Field>
           <Field label="الوصف">
             <Textarea
