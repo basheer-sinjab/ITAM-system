@@ -1373,10 +1373,12 @@ async function runHardwareAction(request: HardwareAction) {
 type WorkflowAction =
   | { action: "archive-asset"; assetId: string }
   | { action: "restore-asset"; assetId: string }
+  | { action: "delete-asset"; assetId: string }
   | {
       action: "assign-asset";
       assetId: string;
       employeeId: string;
+      departmentId?: string | null;
       assignmentDate: string;
       notes?: string;
     }
@@ -1675,9 +1677,14 @@ async function runWorkflowAction(request: WorkflowAction) {
       )
         throw new Error("تاريخ التسليم الجديد لا يمكن أن يسبق التعيين الحالي");
 
-      const department = person.department_id
-        ? recordFor(database, "departments", String(person.department_id))
+      const departmentId =
+        String(request.departmentId ?? person.department_id ?? "").trim() ||
+        null;
+      const department = departmentId
+        ? recordFor(database, "departments", departmentId)
         : undefined;
+      if (departmentId && !department)
+        throw new Error("القسم المحدد غير موجود");
       const branch = department?.branch_id
         ? recordFor(database, "branches", String(department.branch_id))
         : undefined;
@@ -1726,7 +1733,7 @@ async function runWorkflowAction(request: WorkflowAction) {
         )
         .run(
           String(person.id),
-          person.department_id ? String(person.department_id) : null,
+          department?.id ? String(department.id) : null,
           deliveryLocation,
           now,
           request.assetId,
@@ -1865,6 +1872,21 @@ async function runWorkflowAction(request: WorkflowAction) {
       logActivity(database, "assets", request.assetId, "restore", {});
       database.exec("COMMIT");
       return { ...asset, archived_at: null, status: "active" };
+    }
+
+    if (request.action === "delete-asset") {
+      const asset = recordFor(database, "assets", request.assetId);
+      if (!asset) throw new Error("الأصل غير موجود");
+      if (!asset.archived_at)
+        throw new Error("يجب أرشفة الأصل قبل حذفه نهائيًا");
+      database
+        .prepare(
+          "DELETE FROM activity_log WHERE (entity_type = 'assets' AND entity_id = ?) OR (entity_type = 'asset_maintenance' AND entity_id IN (SELECT id FROM asset_maintenance WHERE asset_id = ?))",
+        )
+        .run(request.assetId, request.assetId);
+      database.prepare("DELETE FROM assets WHERE id = ?").run(request.assetId);
+      database.exec("COMMIT");
+      return { id: request.assetId };
     }
 
     if (request.action === "save-maintenance") {

@@ -53,6 +53,13 @@ const CATEGORIES = [
   { value: "Toner", label: "أحبار" },
   { value: "Spare Part", label: "قطع وأدوات" },
 ];
+const TONER_COLORS = [
+  { value: "cyan", label: "Cyan", swatch: "#06b6d4" },
+  { value: "magenta", label: "Magenta", swatch: "#d946ef" },
+  { value: "black", label: "Black", swatch: "#171717" },
+  { value: "yellow", label: "Yellow", swatch: "#facc15" },
+] as const;
+const TONER_COLOR_VALUES = TONER_COLORS.map((color) => color.value);
 const movementLabel: Record<string, string> = {
   add: "إضافة كمية",
   use: "استخدام",
@@ -318,16 +325,22 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
     color: "",
   });
   useEffect(() => {
-    if (item) setForm({ ...item });
+    if (item)
+      setForm({
+        ...item,
+        color: TONER_COLOR_VALUES.includes(item.color) ? item.color : "",
+      });
   }, [item]);
   const set = (key: string, value: any) =>
     setForm((current: any) => ({ ...current, [key]: value }));
   const save = async () => {
     if (!form.name?.trim()) return toast.error("اسم العنصر مطلوب");
+    if (form.category === "Toner" && !TONER_COLOR_VALUES.includes(form.color))
+      return toast.error("اختر لون الحبر");
     const payload = {
       name: form.name.trim(),
       category: form.category,
-      color: form.color || null,
+      color: form.category === "Toner" ? form.color : null,
       location: form.location?.trim() || IT_WAREHOUSE,
       notes: form.notes || null,
     };
@@ -375,7 +388,10 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
           <Field label="النوع">
             <Select
               value={form.category}
-              onValueChange={(value) => set("category", value)}
+              onValueChange={(value) => {
+                set("category", value);
+                if (value !== "Toner") set("color", "");
+              }}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -400,12 +416,28 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
             </Field>
           )}
           {form.category === "Toner" && (
-            <Field label="اللون">
-              <Input
+            <Field label="لون الحبر">
+              <Select
                 value={form.color || ""}
-                onChange={(event) => set("color", event.target.value)}
-                placeholder="أسود، سماوي…"
-              />
+                onValueChange={(value) => set("color", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر لون الحبر" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TONER_COLORS.map((color) => (
+                    <SelectItem key={color.value} value={color.value}>
+                      <span className="flex items-center gap-2">
+                        <span
+                          className="size-3.5 rounded-full border border-black/15"
+                          style={{ backgroundColor: color.swatch }}
+                        />
+                        <span>{color.label}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </Field>
           )}
           <Field label="مكان الحفظ">

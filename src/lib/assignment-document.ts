@@ -112,10 +112,10 @@ export function buildAssignmentDocument({
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>نموذج تسليم ${escapeHtml(asset.asset_id)}</title>
   <style>
-    @page{size:A4;margin:9mm}
+    @page{size:A4;margin:0}
     :root{--blue:#0b5cab;--blue-2:#2563eb;--ink:#14213d;--muted:#64748b;--line:#dbe4ef;--soft:#f4f8fd}
     *{box-sizing:border-box}
-    body{margin:0;background:#e8eef6;color:var(--ink);font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-size:10.5px;line-height:1.55}
+    body{margin:0;background:#e8eef6;color:var(--ink);font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-size:10.5px;line-height:1.55;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .toolbar{display:flex;justify-content:center;padding:14px}
     .toolbar button{border:0;border-radius:10px;background:var(--blue);color:white;cursor:pointer;font:700 13px Tahoma;padding:10px 24px}
     .sheet{position:relative;width:210mm;min-height:277mm;margin:0 auto 24px;overflow:hidden;background:white;border-radius:18px;box-shadow:0 20px 55px rgba(15,42,75,.16);padding:16mm 15mm 11mm}
@@ -162,7 +162,21 @@ export function buildAssignmentDocument({
     .signature-line{position:absolute;right:12px;left:12px;bottom:13px;border-top:1px solid #9fb1c5;padding-top:4px;text-align:center;color:var(--muted);font-size:8px}
     .footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;border-top:1px solid var(--line);padding-top:7px;color:var(--muted);font-size:8px}
     .footer strong{color:var(--blue)}
-    @media print{body{background:white}.toolbar{display:none}.sheet{width:auto;min-height:auto;margin:0;border-radius:0;box-shadow:none;padding:0}.sheet:before{top:-9mm;right:-9mm;left:-9mm}.section{break-inside:avoid}}
+    @media print{
+      html,body{width:210mm;min-height:297mm;background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      *,*:before,*:after{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      .toolbar{display:none}
+      .sheet{display:flex;flex-direction:column;width:210mm;min-height:297mm;margin:0;overflow:visible;border-radius:0;box-shadow:none;padding:14mm 15mm 10mm}
+      .sheet:before{top:0;right:0;left:0;height:7px}
+      .header{padding-bottom:16px}
+      .hero{margin:20px 0}
+      .section{margin-top:18px;break-inside:avoid}
+      .info-card{min-height:55px;padding:10px 11px}
+      .acknowledgement{padding:14px 16px}
+      .signatures{gap:36px;margin-top:auto;min-height:44mm;padding-top:18mm}
+      .signature{min-height:88px;padding:12px 14px}
+      .footer{margin-top:12mm;padding-top:9px}
+    }
   </style>
 </head>
 <body>

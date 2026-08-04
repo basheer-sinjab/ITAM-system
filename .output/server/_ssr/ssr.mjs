@@ -1104,7 +1104,9 @@ async function runWorkflowAction(request) {
 			if (!/^\d{4}-\d{2}-\d{2}$/.test(assignmentDate)) throw new Error("حدد تاريخ تسليم صحيح");
 			const latestOpen = database.prepare("SELECT assignment_date FROM assignment_history WHERE asset_id = ? AND return_date IS NULL ORDER BY assignment_date DESC LIMIT 1").get(request.assetId);
 			if (latestOpen?.assignment_date && assignmentDate < latestOpen.assignment_date) throw new Error("تاريخ التسليم الجديد لا يمكن أن يسبق التعيين الحالي");
-			const department = person.department_id ? recordFor(database, "departments", String(person.department_id)) : void 0;
+			const departmentId = String(request.departmentId ?? person.department_id ?? "").trim() || null;
+			const department = departmentId ? recordFor(database, "departments", departmentId) : void 0;
+			if (departmentId && !department) throw new Error("القسم المحدد غير موجود");
 			const branch = department?.branch_id ? recordFor(database, "branches", String(department.branch_id)) : void 0;
 			const branchName = String(branch?.name || department?.branch || "").trim();
 			const deliveryLocation = employeeAssetLocation(department?.name, branchName, person.full_name);
@@ -1129,7 +1131,7 @@ async function runWorkflowAction(request) {
 				created_at: now
 			};
 			save(database, "assignment_history", assignment, false);
-			database.prepare("UPDATE assets SET assigned_employee_id = ?, department_id = ?, location = ?, status = 'active', updated_at = ? WHERE id = ?").run(String(person.id), person.department_id ? String(person.department_id) : null, deliveryLocation, now, request.assetId);
+			database.prepare("UPDATE assets SET assigned_employee_id = ?, department_id = ?, location = ?, status = 'active', updated_at = ? WHERE id = ?").run(String(person.id), department?.id ? String(department.id) : null, deliveryLocation, now, request.assetId);
 			logActivity(database, "assets", asset.id, "assignment", {
 				assignment_id: assignment.id,
 				employee_name: person.full_name,
@@ -1219,6 +1221,15 @@ async function runWorkflowAction(request) {
 				archived_at: null,
 				status: "active"
 			};
+		}
+		if (request.action === "delete-asset") {
+			const asset = recordFor(database, "assets", request.assetId);
+			if (!asset) throw new Error("الأصل غير موجود");
+			if (!asset.archived_at) throw new Error("يجب أرشفة الأصل قبل حذفه نهائيًا");
+			database.prepare("DELETE FROM activity_log WHERE (entity_type = 'assets' AND entity_id = ?) OR (entity_type = 'asset_maintenance' AND entity_id IN (SELECT id FROM asset_maintenance WHERE asset_id = ?))").run(request.assetId, request.assetId);
+			database.prepare("DELETE FROM assets WHERE id = ?").run(request.assetId);
+			database.exec("COMMIT");
+			return { id: request.assetId };
 		}
 		if (request.action === "save-maintenance") {
 			const input = request.record;
@@ -1477,7 +1488,7 @@ async function handleLocalImageRequest(request) {
 }
 var serverEntryPromise;
 async function getServerEntry() {
-	if (!serverEntryPromise) serverEntryPromise = import("./server-0ZqouC_N.mjs").then((m) => m.default ?? m);
+	if (!serverEntryPromise) serverEntryPromise = import("./server-Cf9mNewI.mjs").then((m) => m.default ?? m);
 	return serverEntryPromise;
 }
 async function normalizeCatastrophicSsrResponse(response) {

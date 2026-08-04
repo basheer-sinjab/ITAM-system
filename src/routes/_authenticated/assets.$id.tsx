@@ -11,6 +11,7 @@ import {
   Pencil,
   Printer,
   RotateCcw,
+  Trash2,
   UserCheck,
   UserPlus,
   Warehouse,
@@ -160,6 +161,16 @@ function AssetDetails() {
     },
     onError: (error: Error) => toast.error(error.message),
   });
+  const deleteMutation = useMutation({
+    mutationFn: () =>
+      runWorkflowAction({ action: "delete-asset", assetId: id }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries();
+      toast.success("تم حذف الأصل وسجل الخط الزمني نهائيًا");
+      navigate({ to: "/assets" });
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
 
   if (!asset) return <p className="text-muted-foreground">جارٍ التحميل…</p>;
 
@@ -174,6 +185,9 @@ function AssetDetails() {
       item.id === department?.branch_id ||
       (!department?.branch_id && item.name === department?.branch),
   );
+  const departmentLabel = [branch?.name || department?.branch, department?.name]
+    .filter(Boolean)
+    .join(" - ");
   const currentAssignment =
     history.find(
       (record: any) =>
@@ -287,13 +301,28 @@ function AssetDetails() {
             </Button>
           )}
           {asset.archived_at ? (
-            <Button
-              variant="outline"
-              onClick={() => archiveMutation.mutate("restore-asset")}
-            >
-              <ArchiveRestore className="ml-2 size-4" />
-              استعادة من الأرشيف
-            </Button>
+            <>
+              <Button
+                variant="outline"
+                onClick={() => archiveMutation.mutate("restore-asset")}
+              >
+                <ArchiveRestore className="ml-2 size-4" />
+                استعادة من الأرشيف
+              </Button>
+              <ConfirmButton
+                variant="destructive"
+                disabled={deleteMutation.isPending}
+                title="حذف الأصل نهائيًا؟"
+                description={`سيتم حذف ${asset.name} وجميع سجلاته المرتبطة، بما فيها الخط الزمني والتعيينات والصيانة. لا يمكن التراجع عن هذا الإجراء.`}
+                confirmLabel="حذف نهائي"
+                onConfirm={() =>
+                  deleteMutation.mutateAsync().then(() => undefined)
+                }
+              >
+                <Trash2 className="ml-2 size-4" />
+                حذف الأصل
+              </ConfirmButton>
+            </>
           ) : (
             <ConfirmButton
               variant="outline"
@@ -365,8 +394,7 @@ function AssetDetails() {
                 ? STATUS_LABELS.archived
                 : STATUS_LABELS[asset.status] || asset.status,
             ],
-            ["القسم", department?.name],
-            ["الموقع", asset.location || IT_WAREHOUSE],
+            ["القسم", departmentLabel],
             ["معيّن لـ", currentEmployee?.full_name],
             ["تاريخ الشراء", formatDate(asset.purchase_date)],
             ["انتهاء الضمان", formatDate(asset.warranty_expiry)],
@@ -452,7 +480,9 @@ function AssetDetails() {
 }
 
 function CheckoutDialog({ asset, employees, departments, close, saved }: any) {
+  const NO_DEPARTMENT = "__none__";
   const [employeeId, setEmployeeId] = useState("");
+  const [departmentId, setDepartmentId] = useState(NO_DEPARTMENT);
   const [assignmentDate, setAssignmentDate] = useState(
     new Date().toISOString().slice(0, 10),
   );
@@ -468,6 +498,7 @@ function CheckoutDialog({ asset, employees, departments, close, saved }: any) {
         action: "assign-asset",
         assetId: asset.id,
         employeeId: person.id,
+        departmentId: departmentId === NO_DEPARTMENT ? undefined : departmentId,
         assignmentDate,
         notes: notes.trim() || undefined,
       });
@@ -488,7 +519,16 @@ function CheckoutDialog({ asset, employees, departments, close, saved }: any) {
         </DialogHeader>
         <div className="space-y-4">
           <Field label="الموظف المستلم">
-            <Select value={employeeId} onValueChange={setEmployeeId}>
+            <Select
+              value={employeeId}
+              onValueChange={(value) => {
+                setEmployeeId(value);
+                const selected = employees.find(
+                  (item: any) => item.id === value,
+                );
+                setDepartmentId(selected?.department_id || NO_DEPARTMENT);
+              }}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="اختر الموظف" />
               </SelectTrigger>
@@ -508,6 +548,24 @@ function CheckoutDialog({ asset, employees, departments, close, saved }: any) {
                   })}
               </SelectContent>
             </Select>
+          </Field>
+          <Field label="القسم">
+            <Select value={departmentId} onValueChange={setDepartmentId}>
+              <SelectTrigger>
+                <SelectValue placeholder="اختر القسم" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={NO_DEPARTMENT}>غير محدد</SelectItem>
+                {departments.map((department: any) => (
+                  <SelectItem key={department.id} value={department.id}>
+                    {department.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              يُحدد تلقائيًا من قسم الموظف ويمكن تغييره قبل الحفظ.
+            </p>
           </Field>
           <Field label="تاريخ التسليم">
             <Input
@@ -634,18 +692,31 @@ function buildTimeline(
       description: `تم تسجيل ${asset.name} برقم ${asset.asset_id} وإضافته إلى عهدة ${creationLocation}.`,
     },
   ];
+  const assignmentActivityIds = new Set(
+    activity
+      .filter((entry: any) => entry.action === "assignment")
+      .map((entry: any) => String(entry.details?.assignment_id || ""))
+      .filter(Boolean),
+  );
+  const returnActivityIds = new Set(
+    activity
+      .filter((entry: any) => entry.action === "return")
+      .map((entry: any) => String(entry.details?.assignment_id || ""))
+      .filter(Boolean),
+  );
   for (const record of history) {
     const personName =
       record.employee_name || employee(record.employee_id)?.full_name || "موظف";
-    events.push({
-      id: `assignment-${record.id}`,
-      type: "assignment",
-      date: record.assignment_date,
-      title: `تم تسليم الأصل إلى ${personName}`,
-      description: `${record.asset_snapshot?.source_location || IT_WAREHOUSE} ← ${record.asset_snapshot?.delivery_location || [record.department_name, record.branch_name].filter(Boolean).join(" - ") || personName}${record.notes ? ` · ${record.notes}` : ""}`,
-      record,
-    });
-    if (record.return_date)
+    if (!assignmentActivityIds.has(String(record.id)))
+      events.push({
+        id: `assignment-${record.id}`,
+        type: "assignment",
+        date: record.assignment_date,
+        title: `تم تسليم الأصل إلى ${personName}`,
+        description: `${record.asset_snapshot?.source_location || IT_WAREHOUSE} ← ${record.asset_snapshot?.delivery_location || [record.department_name, record.branch_name].filter(Boolean).join(" - ") || personName}${record.notes ? ` · ${record.notes}` : ""}`,
+        record,
+      });
+    if (record.return_date && !returnActivityIds.has(String(record.id)))
       events.push({
         id: `return-${record.id}`,
         type: "return",
@@ -683,7 +754,50 @@ function buildTimeline(
         title: "تم تحديث موقع الأصل",
         description: `${locationChange.from || IT_WAREHOUSE} ← ${locationChange.to || IT_WAREHOUSE}`,
       });
-    else if (entry.action === "toner_install")
+    else if (entry.action === "assignment") {
+      const details = entry.details || {};
+      const assignmentId = String(details.assignment_id || "");
+      const record = history.find(
+        (item: any) => String(item.id) === assignmentId,
+      );
+      const personName =
+        details.employee_name || record?.employee_name || "موظف";
+      const fromLocation =
+        details.from_location ||
+        record?.asset_snapshot?.source_location ||
+        IT_WAREHOUSE;
+      const toLocation =
+        details.to_location ||
+        record?.asset_snapshot?.delivery_location ||
+        personName;
+      events.push({
+        id: `activity-assignment-${entry.id}`,
+        type: "assignment",
+        date: entry.created_at,
+        title: `تم تسليم الأصل إلى ${personName}`,
+        description: `من ${fromLocation} إلى ${toLocation}${record?.notes ? ` · ${record.notes}` : ""}`,
+        record,
+      });
+    } else if (entry.action === "return") {
+      const details = entry.details || {};
+      const assignmentId = String(details.assignment_id || "");
+      const record = history.find(
+        (item: any) => String(item.id) === assignmentId,
+      );
+      const personName =
+        details.employee_name || record?.employee_name || "الموظف";
+      const fromLocation = details.from_location || personName;
+      const toLocation = details.to_location || IT_WAREHOUSE;
+      const condition = details.condition || record?.return_condition;
+      const notes = details.notes || record?.return_notes;
+      events.push({
+        id: `activity-return-${entry.id}`,
+        type: "return",
+        date: entry.created_at,
+        title: `تم إرجاع الأصل من ${personName}`,
+        description: `${RETURN_CONDITIONS[condition] || "تم الإرجاع"} · من ${fromLocation} إلى ${toLocation}${notes ? ` · ${notes}` : ""}`,
+      });
+    } else if (entry.action === "toner_install")
       events.push({
         id: `toner-${entry.id}`,
         type: "toner",
