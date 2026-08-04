@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Boxes, Monitor, Plus, Search, UserRound } from "lucide-react";
+import { Boxes, MapPin, Monitor, Plus, Search, UserRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ import {
 import { PrinterImage } from "@/components/PrinterImage";
 import { ScopeColorBadges } from "@/components/ScopeColorBadges";
 import { ASSET_TYPES, uploadPrinterImage } from "@/lib/pms";
+import { IT_WAREHOUSE } from "@/lib/locations";
 import { toast } from "sonner";
 
 const NONE = "__none__";
@@ -71,7 +72,13 @@ function AssetsPage() {
         ? Boolean(asset.archived_at)
         : !asset.archived_at) &&
       (type === "__all__" || asset.asset_type === type) &&
-      [asset.name, asset.asset_id, asset.serial_number, asset.model].some((v) =>
+      [
+        asset.name,
+        asset.asset_id,
+        asset.serial_number,
+        asset.model,
+        asset.location,
+      ].some((v) =>
         String(v ?? "")
           .toLowerCase()
           .includes(search.toLowerCase()),
@@ -186,7 +193,11 @@ function AssetsPage() {
                 <p className="text-xs text-muted-foreground">
                   {asset.assigned_employee_id
                     ? `معين لـ (${employees.find((employee: any) => employee.id === asset.assigned_employee_id)?.full_name ?? "موظف"})`
-                    : "غير معين"}
+                    : `متوفر في ${asset.location || IT_WAREHOUSE}`}
+                </p>
+                <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <MapPin className="size-3.5 text-primary" />
+                  {asset.location || IT_WAREHOUSE}
                 </p>
                 {department ? (
                   <ScopeColorBadges department={department} branch={branch} />
@@ -247,6 +258,7 @@ export function AssetForm({
     model: "",
     serial_number: "",
     status: "active",
+    location: IT_WAREHOUSE,
     department_id: NONE,
     purchase_date: "",
     warranty_expiry: "",
@@ -268,6 +280,7 @@ export function AssetForm({
               model: "",
               serial_number: "",
               status: "active",
+              location: IT_WAREHOUSE,
               department_id: NONE,
               purchase_date: "",
               warranty_expiry: "",
@@ -292,6 +305,7 @@ export function AssetForm({
         manufacturer: form.manufacturer?.trim() || null,
         model: form.model?.trim() || null,
         serial_number: form.serial_number?.trim() || null,
+        location: form.location?.trim() || IT_WAREHOUSE,
         department_id,
         purchase_date: form.purchase_date || null,
         warranty_expiry: form.warranty_expiry || null,
@@ -431,6 +445,19 @@ export function AssetForm({
                 ))}
               </SelectContent>
             </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>الموقع</Label>
+            <Input
+              value={form.location || ""}
+              onChange={(event) => set("location", event.target.value)}
+              placeholder={IT_WAREHOUSE}
+            />
+            {!asset && (
+              <p className="text-xs text-muted-foreground">
+                الموقع الافتراضي لأي أصل جديد هو {IT_WAREHOUSE}.
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label>تاريخ الشراء</Label>

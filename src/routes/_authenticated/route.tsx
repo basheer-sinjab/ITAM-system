@@ -1,5 +1,7 @@
 import { createFileRoute, Outlet, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import {
+  ChevronUp,
   LayoutDashboard,
   Monitor,
   Wrench,
@@ -9,8 +11,17 @@ import {
   Settings,
   FileBarChart,
   LogOut,
+  UserCircle2,
 } from "lucide-react";
 import { GlobalSearch } from "@/components/GlobalSearch";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -37,6 +48,17 @@ const SECONDARY_NAV = [
 ] as const;
 
 function AppLayout() {
+  const [username, setUsername] = useState("Basheer");
+
+  useEffect(() => {
+    fetch("/api/auth/status", { cache: "no-store" })
+      .then((response) => response.json())
+      .then((state) => {
+        if (state.username) setUsername(state.username);
+      })
+      .catch(() => undefined);
+  }, []);
+
   const logout = async () => {
     await fetch("/api/auth/logout", {
       method: "POST",
@@ -45,6 +67,7 @@ function AppLayout() {
     });
     window.location.replace("/login");
   };
+
   return (
     <div className="flex min-h-screen bg-background">
       <aside className="no-print sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-l border-sidebar-border/70 bg-sidebar text-sidebar-foreground lg:flex">
@@ -83,14 +106,39 @@ function AppLayout() {
               {item.label}
             </Link>
           ))}
-          <button
-            type="button"
-            onClick={() => void logout()}
-            className="mt-1 flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-          >
-            <LogOut className="size-[18px]" />
-            تسجيل الخروج
-          </button>
+          <DropdownMenu dir="rtl">
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="mt-1 flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/80 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+              >
+                <span className="flex size-[18px] items-center justify-center rounded-full bg-sidebar-primary/15 text-sidebar-primary">
+                  <UserCircle2 className="size-[18px]" />
+                </span>
+                <span className="min-w-0 flex-1 truncate text-right">
+                  {username}
+                </span>
+                <ChevronUp className="size-4 shrink-0 opacity-60" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="top"
+              align="start"
+              className="w-52"
+            >
+              <DropdownMenuLabel className="text-right">
+                الحساب
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="cursor-pointer text-destructive focus:text-destructive"
+                onSelect={() => void logout()}
+              >
+                <LogOut className="size-4" />
+                تسجيل الخروج
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">

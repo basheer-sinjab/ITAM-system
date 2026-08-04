@@ -6,13 +6,14 @@ import {
   Archive,
   ArchiveRestore,
   ArrowRight,
-  CirclePlus,
   Clock3,
+  MapPin,
   Pencil,
   Printer,
   RotateCcw,
   UserCheck,
   UserPlus,
+  Warehouse,
   Wrench,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -41,6 +42,8 @@ import {
 import { formatDate } from "@/lib/pms";
 import { ScopeColorBadges } from "@/components/ScopeColorBadges";
 import { AssetHardwareTabs } from "@/components/asset/AssetHardwareTabs";
+import { buildAssignmentDocument } from "@/lib/assignment-document";
+import { IT_WAREHOUSE } from "@/lib/locations";
 
 export const Route = createFileRoute("/_authenticated/assets/$id")({
   component: AssetDetails,
@@ -61,9 +64,9 @@ const RETURN_CONDITIONS: Record<string, string> = {
 
 function escapeHtml(value: unknown) {
   return String(value ?? "—").replace(
-    /[&<>\"]/g,
+    /[&<>"]/g,
     (character) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '\"': "&quot;" })[character] ??
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[character] ??
       character,
   );
 }
@@ -132,6 +135,17 @@ function AssetDetails() {
           .order("created_at", { ascending: false })
       ).data ?? [],
   });
+  const { data: pcSpecs } = useQuery({
+    queryKey: ["pc-specs", id],
+    queryFn: async () =>
+      (
+        await supabase
+          .from("pc_specs")
+          .select("*")
+          .eq("asset_id", id)
+          .maybeSingle()
+      ).data,
+  });
   const archiveMutation = useMutation({
     mutationFn: (action: "archive-asset" | "restore-asset") =>
       runWorkflowAction({ action, assetId: id }),
@@ -168,7 +182,7 @@ function AssetDetails() {
     ) || history.find((record: any) => !record.return_date);
   const refresh = async () => queryClient.invalidateQueries();
 
-  const printAssignment = (record: any) => {
+  const legacyPrintAssignment = (record: any) => {
     const livePerson = employee(record.employee_id);
     const liveDepartment = departments.find(
       (item: any) => item.id === livePerson?.department_id,
@@ -190,6 +204,43 @@ function AssetDetails() {
       `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>نموذج تسليم أصل - ${escapeHtml(asset.asset_id)}</title><style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{margin:0;color:#17212b;font-family:Tahoma,Arial,sans-serif;font-size:12px;line-height:1.6}.document{border:1px solid #d6dde3;padding:28px}.header{display:flex;align-items:flex-start;justify-content:space-between;border-bottom:3px solid #0f766e;padding-bottom:18px}.brand{color:#0f766e;font-size:20px;font-weight:700}.subtitle{color:#5b6975;font-size:12px}.document-title{text-align:left}.document-title h1{margin:0;color:#17212b;font-size:22px}.document-number{color:#5b6975;font-family:monospace;margin-top:4px}.notice{background:#eef8f7;border-right:4px solid #0f766e;margin:22px 0;padding:12px 14px}.section{margin-top:22px}.section-title{border-bottom:1px solid #d6dde3;color:#0f766e;font-size:15px;font-weight:700;margin:0 0 10px;padding-bottom:7px}.grid{display:grid;grid-template-columns:repeat(2,1fr);border:1px solid #d6dde3}.field{border-left:1px solid #d6dde3;border-bottom:1px solid #d6dde3;padding:9px 11px;min-height:54px}.field:nth-child(2n){border-left:0}.label{color:#64748b;display:block;font-size:10px;margin-bottom:3px}.value{font-weight:700}.acknowledgement{border:1px solid #d6dde3;background:#fafcfc;margin-top:10px;padding:14px;text-align:justify}.signatures{display:grid;grid-template-columns:repeat(2,1fr);gap:48px;margin-top:52px}.signature{border-top:1px solid #64748b;padding-top:7px;text-align:center}.footer{border-top:1px solid #d6dde3;color:#64748b;font-size:10px;margin-top:30px;padding-top:9px;text-align:center}@media print{.document{border:0;padding:0}}</style></head><body><main class="document"><header class="header"><div><div class="brand">نظام إدارة الأصول التقنية</div><div class="subtitle">إدارة تقنية المعلومات</div></div><div class="document-title"><h1>نموذج تسليم واستلام أصل</h1><div class="document-number">رقم النموذج: ${escapeHtml(record.id)}</div></div></header><div class="notice">يوثق هذا النموذج تسليم الأصل الموضح أدناه إلى الموظف، ويُعد مرجعاً لسجل الأصول والتعيينات.</div><section class="section"><h2 class="section-title">بيانات الموظف</h2><div class="grid"><div class="field"><span class="label">الاسم الكامل</span><span class="value">${escapeHtml(person.full_name)}</span></div><div class="field"><span class="label">رقم الموظف</span><span class="value">${escapeHtml(person.employee_number)}</span></div><div class="field"><span class="label">القسم</span><span class="value">${escapeHtml(departmentName)}</span></div><div class="field"><span class="label">الفرع</span><span class="value">${escapeHtml(branchName)}</span></div><div class="field"><span class="label">البريد الإلكتروني</span><span class="value">${escapeHtml(person.email)}</span></div><div class="field"><span class="label">رقم الهاتف</span><span class="value">${escapeHtml(person.phone)}</span></div></div></section><section class="section"><h2 class="section-title">بيانات الأصل</h2><div class="grid"><div class="field"><span class="label">اسم الأصل</span><span class="value">${escapeHtml(asset.name)}</span></div><div class="field"><span class="label">رقم الأصل</span><span class="value">${escapeHtml(asset.asset_id)}</span></div><div class="field"><span class="label">النوع</span><span class="value">${escapeHtml(asset.asset_type)}</span></div><div class="field"><span class="label">المصنّع والموديل</span><span class="value">${escapeHtml([asset.manufacturer, asset.model].filter(Boolean).join(" - "))}</span></div><div class="field"><span class="label">الرقم التسلسلي</span><span class="value">${escapeHtml(asset.serial_number)}</span></div><div class="field"><span class="label">تاريخ التعيين</span><span class="value">${escapeHtml(formatDate(record.assignment_date))}</span></div></div></section><section class="section"><h2 class="section-title">إقرار الاستلام</h2><div class="acknowledgement">أقر أنا ${escapeHtml(person.full_name)} بأنني استلمت الأصل الموضح أعلاه بحالة صالحة للاستخدام، وأتعهد بالمحافظة عليه واستخدامه لأغراض العمل فقط وإعادته عند الطلب أو عند انتهاء العلاقة الوظيفية. ${record.notes ? `ملاحظات التسليم: ${escapeHtml(record.notes)}` : ""}</div></section><section class="signatures"><div class="signature">توقيع الموظف المستلم<br><br>الاسم: ${escapeHtml(person.full_name)}<br>التاريخ: ________________</div><div class="signature">توقيع ممثل تقنية المعلومات<br><br>الاسم: ________________<br>التاريخ: ________________</div></section><footer class="footer">تم إنشاء هذا النموذج من نظام إدارة الأصول التقنية</footer></main><script>window.print()</script></body></html>`,
     );
     page?.document.close();
+  };
+
+  const printAssignment = (record: any) => {
+    const livePerson = employee(record.employee_id);
+    const liveDepartment = departments.find(
+      (item: any) => item.id === livePerson?.department_id,
+    );
+    const person = {
+      full_name: record.employee_name || livePerson?.full_name,
+      employee_number: record.employee_number || livePerson?.employee_number,
+      email: record.employee_email || livePerson?.email,
+      phone: record.employee_phone || livePerson?.phone,
+    };
+    const departmentName = record.department_name || liveDepartment?.name;
+    const branchName =
+      record.branch_name ||
+      branches.find((branch: any) => branch.id === liveDepartment?.branch_id)
+        ?.name ||
+      liveDepartment?.branch;
+    const snapshot = record.asset_snapshot || {};
+    const page = window.open("", "_blank");
+    if (!page) return toast.error("اسمح بفتح نافذة الطباعة من المتصفح");
+    page.document.write(
+      buildAssignmentDocument({
+        asset: { ...asset, ...snapshot },
+        record,
+        person,
+        departmentName,
+        branchName,
+        specs: snapshot.specs || pcSpecs,
+        logoUrl: new URL(
+          "/printersfloss-header-logo.png",
+          window.location.origin,
+        ).href,
+      }),
+    );
+    page.document.close();
   };
 
   const timeline = buildTimeline(
@@ -288,7 +339,7 @@ function AssetDetails() {
               onClick={() => printAssignment(currentAssignment)}
             >
               <Printer className="ml-2 size-4" />
-              طباعة نموذج التعيين
+              طباعة نموذج التسليم
             </Button>
           )}
         </section>
@@ -315,6 +366,7 @@ function AssetDetails() {
                 : STATUS_LABELS[asset.status] || asset.status,
             ],
             ["القسم", department?.name],
+            ["الموقع", asset.location || IT_WAREHOUSE],
             ["معيّن لـ", currentEmployee?.full_name],
             ["تاريخ الشراء", formatDate(asset.purchase_date)],
             ["انتهاء الضمان", formatDate(asset.warranty_expiry)],
@@ -351,8 +403,6 @@ function AssetDetails() {
           asset={asset}
           employees={employees}
           departments={departments}
-          branches={branches}
-          openHistory={history.filter((record: any) => !record.return_date)}
           close={() => setCheckoutOpen(false)}
           saved={async (record: any) => {
             await refresh();
@@ -364,17 +414,6 @@ function AssetDetails() {
         <ReturnDialog
           asset={asset}
           employee={currentEmployee}
-          department={departments.find(
-            (item: any) => item.id === currentEmployee.department_id,
-          )}
-          branch={branches.find(
-            (item: any) =>
-              item.id ===
-              departments.find(
-                (department: any) =>
-                  department.id === currentEmployee.department_id,
-              )?.branch_id,
-          )}
           assignment={currentAssignment}
           close={() => setReturnOpen(false)}
           saved={refresh}
@@ -402,7 +441,7 @@ function AssetDetails() {
               </Button>
               <Button onClick={() => printAssignment(completedAssignment)}>
                 <Printer className="ml-2 size-4" />
-                طباعة نموذج التعيين
+                طباعة نموذج التسليم
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -412,15 +451,7 @@ function AssetDetails() {
   );
 }
 
-function CheckoutDialog({
-  asset,
-  employees,
-  departments,
-  branches,
-  openHistory,
-  close,
-  saved,
-}: any) {
+function CheckoutDialog({ asset, employees, departments, close, saved }: any) {
   const [employeeId, setEmployeeId] = useState("");
   const [assignmentDate, setAssignmentDate] = useState(
     new Date().toISOString().slice(0, 10),
@@ -432,58 +463,22 @@ function CheckoutDialog({
     if (!person) return toast.error("اختر الموظف المستلم");
     if (!assignmentDate) return toast.error("حدد تاريخ التسليم");
     setSaving(true);
-    const department = departments.find(
-      (item: any) => item.id === person.department_id,
-    );
-    const branch =
-      branches.find((item: any) => item.id === department?.branch_id)?.name ||
-      department?.branch;
-    for (const previous of openHistory) {
-      await supabase
-        .from("assignment_history")
-        .update({
-          return_date: assignmentDate,
-          return_condition: "good",
-          return_notes: "إغلاق تلقائي قبل تسليم جديد",
-        })
-        .eq("id", previous.id);
-    }
-    const assignment = await supabase.from("assignment_history").insert({
-      asset_id: asset.id,
-      employee_id: person.id,
-      employee_name: person.full_name,
-      employee_number: person.employee_number || null,
-      employee_email: person.email || null,
-      employee_phone: person.phone || null,
-      department_name: department?.name || null,
-      branch_name: branch || null,
-      assignment_date: assignmentDate,
-      notes: notes.trim() || null,
-    });
-    if (assignment.error) {
+    try {
+      const created = await runWorkflowAction({
+        action: "assign-asset",
+        assetId: asset.id,
+        employeeId: person.id,
+        assignmentDate,
+        notes: notes.trim() || undefined,
+      });
       setSaving(false);
-      return toast.error(assignment.error.message);
-    }
-    const created = Array.isArray(assignment.data)
-      ? assignment.data[0]
-      : assignment.data;
-    const update = await supabase
-      .from("assets")
-      .update({
-        assigned_employee_id: person.id,
-        department_id: person.department_id || asset.department_id || null,
-        status: "active",
-      })
-      .eq("id", asset.id);
-    if (update.error) {
-      if (created)
-        await supabase.from("assignment_history").delete().eq("id", created.id);
+      toast.success("تم تسليم الأصل وحفظ نموذج التسليم");
+      close();
+      await saved(created);
+    } catch (error) {
       setSaving(false);
-      return toast.error(update.error.message);
+      toast.error(error instanceof Error ? error.message : "تعذر تسليم الأصل");
     }
-    toast.success("تم تسليم الأصل وحفظ نموذج التعيين");
-    close();
-    await saved(created);
   };
   return (
     <Dialog open onOpenChange={close}>
@@ -541,15 +536,7 @@ function CheckoutDialog({
   );
 }
 
-function ReturnDialog({
-  asset,
-  employee,
-  department,
-  branch,
-  assignment,
-  close,
-  saved,
-}: any) {
+function ReturnDialog({ asset, employee, assignment, close, saved }: any) {
   const [returnDate, setReturnDate] = useState(
     new Date().toISOString().slice(0, 10),
   );
@@ -561,55 +548,22 @@ function ReturnDialog({
     if (assignment?.assignment_date && returnDate < assignment.assignment_date)
       return toast.error("تاريخ الإرجاع لا يمكن أن يسبق تاريخ التسليم");
     setSaving(true);
-    let record = assignment;
-    if (!record) {
-      const fallback = await supabase.from("assignment_history").insert({
-        asset_id: asset.id,
-        employee_id: employee.id,
-        employee_name: employee.full_name,
-        employee_number: employee.employee_number || null,
-        employee_email: employee.email || null,
-        employee_phone: employee.phone || null,
-        department_name: department?.name || null,
-        branch_name: branch?.name || department?.branch || null,
-        assignment_date: asset.updated_at?.slice(0, 10) || returnDate,
-        notes: "تم إنشاء السجل تلقائيًا عند إرجاع الأصل",
+    try {
+      await runWorkflowAction({
+        action: "return-asset",
+        assetId: asset.id,
+        returnDate,
+        condition,
+        notes: notes.trim() || undefined,
       });
-      if (fallback.error) {
-        setSaving(false);
-        return toast.error(fallback.error.message);
-      }
-      record = Array.isArray(fallback.data) ? fallback.data[0] : fallback.data;
-    }
-    const historyUpdate = await supabase
-      .from("assignment_history")
-      .update({
-        return_date: returnDate,
-        return_condition: condition,
-        return_notes: notes.trim() || null,
-      })
-      .eq("id", record.id);
-    if (historyUpdate.error) {
       setSaving(false);
-      return toast.error(historyUpdate.error.message);
-    }
-    const status =
-      condition === "maintenance"
-        ? "maintenance"
-        : condition === "damaged"
-          ? "inactive"
-          : "active";
-    const assetUpdate = await supabase
-      .from("assets")
-      .update({ assigned_employee_id: null, status })
-      .eq("id", asset.id);
-    if (assetUpdate.error) {
+      toast.success(`تم إرجاع الأصل إلى ${IT_WAREHOUSE}`);
+      close();
+      await saved();
+    } catch (error) {
       setSaving(false);
-      return toast.error(assetUpdate.error.message);
+      toast.error(error instanceof Error ? error.message : "تعذر إرجاع الأصل");
     }
-    toast.success("تم إرجاع الأصل وحفظ العملية في الخط الزمني");
-    close();
-    await saved();
   };
   return (
     <Dialog open onOpenChange={close}>
@@ -668,13 +622,16 @@ function buildTimeline(
   activity: any[],
   employee: (id?: string | null) => any,
 ) {
+  const creationLocation =
+    activity.find((entry: any) => entry.action === "create")?.details?.current
+      ?.location || IT_WAREHOUSE;
   const events: any[] = [
     {
       id: `created-${asset.id}`,
       type: "created",
       date: asset.created_at,
-      title: "تمت إضافة الأصل",
-      description: `تم تسجيل ${asset.name} برقم ${asset.asset_id}.`,
+      title: `تم استلام الأصل في ${creationLocation}`,
+      description: `تم تسجيل ${asset.name} برقم ${asset.asset_id} وإضافته إلى عهدة ${creationLocation}.`,
     },
   ];
   for (const record of history) {
@@ -685,7 +642,7 @@ function buildTimeline(
       type: "assignment",
       date: record.assignment_date,
       title: `تم تسليم الأصل إلى ${personName}`,
-      description: record.notes || "تم حفظ نموذج التعيين.",
+      description: `${record.asset_snapshot?.source_location || IT_WAREHOUSE} ← ${record.asset_snapshot?.delivery_location || [record.department_name, record.branch_name].filter(Boolean).join(" - ") || personName}${record.notes ? ` · ${record.notes}` : ""}`,
       record,
     });
     if (record.return_date)
@@ -694,7 +651,7 @@ function buildTimeline(
         type: "return",
         date: record.return_date,
         title: `تم إرجاع الأصل من ${personName}`,
-        description: `${RETURN_CONDITIONS[record.return_condition] || "تم الإرجاع"}${record.return_notes ? ` · ${record.return_notes}` : ""}`,
+        description: `${RETURN_CONDITIONS[record.return_condition] || "تم الإرجاع"} · أُعيد إلى ${IT_WAREHOUSE}${record.return_notes ? ` · ${record.return_notes}` : ""}`,
       });
   }
   for (const record of maintenance)
@@ -709,6 +666,7 @@ function buildTimeline(
     });
   for (const entry of activity) {
     const change = entry.details?.changes?.status;
+    const locationChange = entry.details?.changes?.location;
     if (change)
       events.push({
         id: `status-${entry.id}`,
@@ -716,6 +674,14 @@ function buildTimeline(
         date: entry.created_at,
         title: "تم تغيير حالة الأصل",
         description: `${STATUS_LABELS[change.from] || change.from || "غير محدد"} ← ${STATUS_LABELS[change.to] || change.to || "غير محدد"}`,
+      });
+    else if (locationChange)
+      events.push({
+        id: `location-${entry.id}`,
+        type: "location",
+        date: entry.created_at,
+        title: "تم تحديث موقع الأصل",
+        description: `${locationChange.from || IT_WAREHOUSE} ← ${locationChange.to || IT_WAREHOUSE}`,
       });
     else if (entry.action === "toner_install")
       events.push({
@@ -762,9 +728,10 @@ function buildTimeline(
 
 function Timeline({ events, printAssignment }: any) {
   const icons: Record<string, React.ElementType> = {
-    created: CirclePlus,
+    created: Warehouse,
     assignment: UserCheck,
     return: RotateCcw,
+    location: MapPin,
     maintenance: Wrench,
     status: Activity,
     toner: Printer,
@@ -818,7 +785,7 @@ function Timeline({ events, printAssignment }: any) {
                     onClick={() => printAssignment(event.record)}
                   >
                     <Printer className="ml-2 size-4" />
-                    طباعة نموذج التعيين
+                    طباعة نموذج التسليم
                   </Button>
                 )}
               </div>

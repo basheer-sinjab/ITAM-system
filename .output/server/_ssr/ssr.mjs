@@ -116,6 +116,13 @@ async function readJsonBody(request, maxBytes = 2e6) {
 	if (new TextEncoder().encode(text).byteLength > maxBytes) throw new Error("حجم الطلب أكبر من المسموح");
 	return JSON.parse(text);
 }
+var IT_WAREHOUSE = "المستودع IT";
+function employeeAssetLocation(departmentName, branchName, employeeName) {
+	const scope = [departmentName, branchName].map((value) => String(value ?? "").trim()).filter(Boolean);
+	if (scope.length) return scope.join(" - ");
+	const employee = String(employeeName ?? "").trim();
+	return employee ? `لدى ${employee}` : IT_WAREHOUSE;
+}
 var DATABASE_PATH = join(process.env.INIT_CWD ?? process.cwd(), "data", "itam.db");
 var ENTITIES = {
 	branches: {
@@ -189,7 +196,7 @@ var ENTITIES = {
 			"created_at",
 			"updated_at"
 		],
-		sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, purchase_date TEXT, warranty_expiry TEXT, image_url TEXT, notes TEXT, archived_at TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
+		sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT NOT NULL DEFAULT 'المستودع IT', department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, purchase_date TEXT, warranty_expiry TEXT, image_url TEXT, notes TEXT, archived_at TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
 		indexes: [
 			"CREATE INDEX IF NOT EXISTS idx_assets_employee ON assets(assigned_employee_id)",
 			"CREATE INDEX IF NOT EXISTS idx_assets_department ON assets(department_id)",
@@ -226,9 +233,10 @@ var ENTITIES = {
 			"return_condition",
 			"notes",
 			"return_notes",
+			"asset_snapshot",
 			"created_at"
 		],
-		sql: "CREATE TABLE IF NOT EXISTS assignment_history (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, employee_name TEXT, employee_number TEXT, employee_email TEXT, employee_phone TEXT, department_name TEXT, branch_name TEXT, assignment_date TEXT NOT NULL, return_date TEXT, return_condition TEXT, notes TEXT, return_notes TEXT, created_at TEXT NOT NULL)",
+		sql: "CREATE TABLE IF NOT EXISTS assignment_history (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, employee_name TEXT, employee_number TEXT, employee_email TEXT, employee_phone TEXT, department_name TEXT, branch_name TEXT, assignment_date TEXT NOT NULL, return_date TEXT, return_condition TEXT, notes TEXT, return_notes TEXT, asset_snapshot TEXT, created_at TEXT NOT NULL)",
 		indexes: ["CREATE INDEX IF NOT EXISTS idx_assignment_asset ON assignment_history(asset_id)", "CREATE INDEX IF NOT EXISTS idx_assignment_employee ON assignment_history(employee_id)"]
 	},
 	inventory_items: {
@@ -243,7 +251,7 @@ var ENTITIES = {
 			"notes",
 			"created_at"
 		],
-		sql: "CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'Consumable', color TEXT, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity >= 0), minimum_quantity REAL NOT NULL DEFAULT 1 CHECK(minimum_quantity >= 0), location TEXT, notes TEXT, created_at TEXT NOT NULL)"
+		sql: "CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'Consumable', color TEXT, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity >= 0), minimum_quantity REAL NOT NULL DEFAULT 1 CHECK(minimum_quantity >= 0), location TEXT NOT NULL DEFAULT 'المستودع IT', notes TEXT, created_at TEXT NOT NULL)"
 	},
 	asset_maintenance: {
 		columns: [
@@ -432,6 +440,13 @@ function migrateAssets(database) {
 	if (columns.length && !columns.some((column) => column.name === "warranty_expiry")) database.exec("ALTER TABLE assets ADD COLUMN warranty_expiry TEXT");
 	if (columns.length && !columns.some((column) => column.name === "archived_at")) database.exec("ALTER TABLE assets ADD COLUMN archived_at TEXT");
 }
+function migrateLocations(database) {
+	database.prepare("UPDATE assets SET location = ? WHERE assigned_employee_id IS NULL AND (location IS NULL OR trim(location) = '')").run(IT_WAREHOUSE);
+	const assignedWithoutLocation = database.prepare("SELECT assets.id, employees.department_id, employees.full_name FROM assets JOIN employees ON employees.id = assets.assigned_employee_id WHERE assets.location IS NULL OR trim(assets.location) = ''").all();
+	const updateAssetLocation = database.prepare("UPDATE assets SET location = ? WHERE id = ?");
+	for (const asset of assignedWithoutLocation) updateAssetLocation.run(departmentAssetLocation(database, asset.department_id, asset.full_name), asset.id);
+	database.prepare("UPDATE inventory_items SET location = ? WHERE location IS NULL OR trim(location) = ''").run(IT_WAREHOUSE);
+}
 function migrateSystemFields(database) {
 	const departmentColumns = database.prepare("PRAGMA table_info(departments)").all();
 	if (departmentColumns.length && !departmentColumns.some((column) => column.name === "branch_id")) database.exec("ALTER TABLE departments ADD COLUMN branch_id TEXT REFERENCES branches(id) ON DELETE SET NULL");
@@ -450,7 +465,8 @@ function migrateSystemFields(database) {
 		"department_name",
 		"branch_name",
 		"return_condition",
-		"return_notes"
+		"return_notes",
+		"asset_snapshot"
 	]) if (!assignmentColumns.some((entry) => entry.name === column)) database.exec(`ALTER TABLE assignment_history ADD COLUMN ${column} TEXT`);
 	database.exec("UPDATE assignment_history SET employee_name = COALESCE(employee_name, (SELECT full_name FROM employees WHERE employees.id = assignment_history.employee_id)), employee_number = COALESCE(employee_number, (SELECT employee_number FROM employees WHERE employees.id = assignment_history.employee_id)), employee_email = COALESCE(employee_email, (SELECT email FROM employees WHERE employees.id = assignment_history.employee_id)), employee_phone = COALESCE(employee_phone, (SELECT phone FROM employees WHERE employees.id = assignment_history.employee_id)), department_name = COALESCE(department_name, (SELECT departments.name FROM employees JOIN departments ON departments.id = employees.department_id WHERE employees.id = assignment_history.employee_id)), branch_name = COALESCE(branch_name, (SELECT COALESCE(branches.name, departments.branch) FROM employees JOIN departments ON departments.id = employees.department_id LEFT JOIN branches ON branches.id = departments.branch_id WHERE employees.id = assignment_history.employee_id))");
 	const maintenanceColumns = database.prepare("PRAGMA table_info(asset_maintenance)").all();
@@ -473,6 +489,7 @@ async function getLocalDatabase() {
 		migrateAssets(database);
 		migrateSystemFields(database);
 		migrateColors(database);
+		migrateLocations(database);
 		database.exec("INSERT OR IGNORE INTO app_settings (id, low_stock_threshold, dashboard_alerts_enabled, warranty_alert_days, updated_at) VALUES ('default', 2, 1, 30, datetime('now'))");
 		database.exec("CREATE TABLE IF NOT EXISTS admin_account (id TEXT PRIMARY KEY, username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL, password_salt TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)");
 		database.exec("CREATE TABLE IF NOT EXISTS admin_sessions (token_hash TEXT PRIMARY KEY, expires_at TEXT NOT NULL, created_at TEXT NOT NULL)");
@@ -490,6 +507,11 @@ function hydrate(row) {
 	} catch {
 		row.details = {};
 	}
+	if (typeof row.asset_snapshot === "string") try {
+		row.asset_snapshot = JSON.parse(row.asset_snapshot || "null");
+	} catch {
+		row.asset_snapshot = null;
+	}
 	if (row.dashboard_alerts_enabled !== void 0) row.dashboard_alerts_enabled = Boolean(row.dashboard_alerts_enabled);
 	return row;
 }
@@ -501,7 +523,7 @@ function match(row, filters) {
 	return filters.every(([field, value]) => row[field] === value);
 }
 function value(column, row) {
-	if (column === "used_items" || column === "details") return JSON.stringify(row[column] ?? (column === "used_items" ? [] : {}));
+	if (column === "used_items" || column === "details" || column === "asset_snapshot") return JSON.stringify(row[column] ?? (column === "used_items" ? [] : column === "details" ? {} : null));
 	if (column === "dashboard_alerts_enabled") return row[column] ? 1 : 0;
 	return row[column] ?? null;
 }
@@ -548,7 +570,11 @@ async function run(query) {
 		database.exec("BEGIN");
 		try {
 			for (const row of values) {
-				if (query.table === "assets") assertUniqueSerial(database, row);
+				if (query.table === "assets") {
+					row.location = String(row.location || "").trim() || "المستودع IT";
+					assertUniqueSerial(database, row);
+				}
+				if (query.table === "inventory_items") row.location = String(row.location || "").trim() || "المستودع IT";
 				if (query.table === "license_assignments") {
 					const license = database.prepare("SELECT seat_count FROM licenses WHERE id = ?").get(String(row.license_id));
 					const assigned = database.prepare("SELECT COUNT(*) AS count FROM license_assignments WHERE license_id = ?").get(String(row.license_id));
@@ -573,7 +599,11 @@ async function run(query) {
 		database.exec("BEGIN");
 		try {
 			result.forEach((row, index) => {
-				if (query.table === "assets") assertUniqueSerial(database, row);
+				if (query.table === "assets") {
+					row.location = String(row.location || "").trim() || "المستودع IT";
+					assertUniqueSerial(database, row);
+				}
+				if (query.table === "inventory_items") row.location = String(row.location || "").trim() || "المستودع IT";
 				if (query.table === "licenses" && query.payload.seat_count !== void 0) {
 					const assigned = database.prepare("SELECT COUNT(*) AS count FROM license_assignments WHERE license_id = ?").get(String(row.id));
 					if (Number(row.seat_count || 0) < Number(assigned.count)) throw new Error(`لا يمكن تقليل المقاعد عن ${assigned.count} لأنها مستخدمة حاليًا`);
@@ -589,13 +619,22 @@ async function run(query) {
 					const assignedAssets = database.prepare("SELECT * FROM assets WHERE assigned_employee_id = ?").all(String(row.id));
 					for (const assignedAsset of assignedAssets) {
 						const previousDepartment = assignedAsset.department_id ?? null;
+						const previousLocation = assignedAsset.location ?? null;
 						assignedAsset.department_id = row.department_id ?? null;
+						assignedAsset.location = departmentAssetLocation(database, row.department_id, row.full_name);
+						assignedAsset.updated_at = (/* @__PURE__ */ new Date()).toISOString();
 						save(database, "assets", assignedAsset, true);
-						if (previousDepartment !== assignedAsset.department_id) logActivity(database, "assets", assignedAsset.id, "update", {
-							changes: { department_id: {
-								from: previousDepartment,
-								to: assignedAsset.department_id
-							} },
+						if (previousDepartment !== assignedAsset.department_id || previousLocation !== assignedAsset.location) logActivity(database, "assets", assignedAsset.id, "update", {
+							changes: {
+								department_id: {
+									from: previousDepartment,
+									to: assignedAsset.department_id
+								},
+								location: {
+									from: previousLocation,
+									to: assignedAsset.location
+								}
+							},
 							reason: "employee_department_transfer"
 						});
 					}
@@ -660,6 +699,11 @@ async function restore(data) {
 function recordFor(database, table, id) {
 	const record = database.prepare(`SELECT * FROM ${table} WHERE id = ?`).get(id);
 	return record ? hydrate(record) : void 0;
+}
+function departmentAssetLocation(database, departmentId, employeeName) {
+	if (!departmentId) return employeeAssetLocation(void 0, void 0, employeeName);
+	const department = database.prepare("SELECT departments.name, COALESCE(branches.name, departments.branch) AS branch_name FROM departments LEFT JOIN branches ON branches.id = departments.branch_id WHERE departments.id = ?").get(String(departmentId));
+	return employeeAssetLocation(department?.name, department?.branch_name, employeeName);
 }
 function isAssetType(asset, expected) {
 	const type = String(asset.asset_type ?? "").trim().toLowerCase();
@@ -1031,18 +1075,131 @@ function syncHardwareFromMaintenance(database, maintenance, previousItems, nextI
 		current: nextItems
 	});
 }
+function assignmentAssetSnapshot(database, asset, sourceLocation, deliveryLocation) {
+	const specs = database.prepare("SELECT processor, memory, storage, graphics_card, operating_system, notes FROM pc_specs WHERE asset_id = ? LIMIT 1").get(String(asset.id));
+	return {
+		name: asset.name,
+		asset_id: asset.asset_id,
+		asset_type: asset.asset_type,
+		manufacturer: asset.manufacturer,
+		model: asset.model,
+		serial_number: asset.serial_number,
+		source_location: sourceLocation,
+		delivery_location: deliveryLocation,
+		specs: specs ?? null
+	};
+}
 async function runWorkflowAction(request) {
 	const database = await getLocalDatabase();
 	const now = (/* @__PURE__ */ new Date()).toISOString();
 	const today = now.slice(0, 10);
 	database.exec("BEGIN IMMEDIATE");
 	try {
+		if (request.action === "assign-asset") {
+			const asset = recordFor(database, "assets", request.assetId);
+			const person = recordFor(database, "employees", request.employeeId);
+			if (!asset || asset.archived_at) throw new Error("الأصل غير موجود أو مؤرشف");
+			if (!person || person.status === "inactive") throw new Error("الموظف المستلم غير موجود أو غير نشط");
+			const assignmentDate = String(request.assignmentDate || "").slice(0, 10);
+			if (!/^\d{4}-\d{2}-\d{2}$/.test(assignmentDate)) throw new Error("حدد تاريخ تسليم صحيح");
+			const latestOpen = database.prepare("SELECT assignment_date FROM assignment_history WHERE asset_id = ? AND return_date IS NULL ORDER BY assignment_date DESC LIMIT 1").get(request.assetId);
+			if (latestOpen?.assignment_date && assignmentDate < latestOpen.assignment_date) throw new Error("تاريخ التسليم الجديد لا يمكن أن يسبق التعيين الحالي");
+			const department = person.department_id ? recordFor(database, "departments", String(person.department_id)) : void 0;
+			const branch = department?.branch_id ? recordFor(database, "branches", String(department.branch_id)) : void 0;
+			const branchName = String(branch?.name || department?.branch || "").trim();
+			const deliveryLocation = employeeAssetLocation(department?.name, branchName, person.full_name);
+			const sourceLocation = String(asset.location || "المستودع IT");
+			database.prepare("UPDATE assignment_history SET return_date = ?, return_condition = COALESCE(return_condition, 'good'), return_notes = COALESCE(return_notes, 'إغلاق تلقائي قبل تسليم جديد') WHERE asset_id = ? AND return_date IS NULL").run(assignmentDate, request.assetId);
+			const assignment = {
+				id: crypto.randomUUID(),
+				asset_id: asset.id,
+				employee_id: person.id,
+				employee_name: person.full_name,
+				employee_number: person.employee_number || null,
+				employee_email: person.email || null,
+				employee_phone: person.phone || null,
+				department_name: department?.name || null,
+				branch_name: branchName || null,
+				assignment_date: assignmentDate,
+				return_date: null,
+				return_condition: null,
+				notes: request.notes?.trim() || null,
+				return_notes: null,
+				asset_snapshot: assignmentAssetSnapshot(database, asset, sourceLocation, deliveryLocation),
+				created_at: now
+			};
+			save(database, "assignment_history", assignment, false);
+			database.prepare("UPDATE assets SET assigned_employee_id = ?, department_id = ?, location = ?, status = 'active', updated_at = ? WHERE id = ?").run(String(person.id), person.department_id ? String(person.department_id) : null, deliveryLocation, now, request.assetId);
+			logActivity(database, "assets", asset.id, "assignment", {
+				assignment_id: assignment.id,
+				employee_name: person.full_name,
+				from_location: sourceLocation,
+				to_location: deliveryLocation
+			});
+			database.exec("COMMIT");
+			return assignment;
+		}
+		if (request.action === "return-asset") {
+			const asset = recordFor(database, "assets", request.assetId);
+			if (!asset || asset.archived_at) throw new Error("الأصل غير موجود أو مؤرشف");
+			if (!asset.assigned_employee_id) throw new Error("الأصل غير مسلّم إلى موظف حاليًا");
+			const person = recordFor(database, "employees", String(asset.assigned_employee_id));
+			const returnDate = String(request.returnDate || "").slice(0, 10);
+			if (!/^\d{4}-\d{2}-\d{2}$/.test(returnDate)) throw new Error("حدد تاريخ إرجاع صحيح");
+			if (![
+				"good",
+				"maintenance",
+				"damaged"
+			].includes(request.condition)) throw new Error("حدد حالة الأصل عند الإرجاع");
+			let assignment = database.prepare("SELECT * FROM assignment_history WHERE asset_id = ? AND return_date IS NULL ORDER BY assignment_date DESC LIMIT 1").get(request.assetId);
+			if (assignment) assignment = hydrate(assignment);
+			if (assignment?.assignment_date && returnDate < assignment.assignment_date) throw new Error("تاريخ الإرجاع لا يمكن أن يسبق تاريخ التسليم");
+			if (!assignment) {
+				const deliveryLocation = String(asset.location || "المستودع IT");
+				assignment = {
+					id: crypto.randomUUID(),
+					asset_id: asset.id,
+					employee_id: person?.id ?? null,
+					employee_name: person?.full_name ?? null,
+					employee_number: person?.employee_number ?? null,
+					employee_email: person?.email ?? null,
+					employee_phone: person?.phone ?? null,
+					department_name: null,
+					branch_name: null,
+					assignment_date: String(asset.updated_at || returnDate).slice(0, 10),
+					return_date: null,
+					return_condition: null,
+					notes: "تم إنشاء السجل تلقائيًا عند إرجاع الأصل",
+					return_notes: null,
+					asset_snapshot: assignmentAssetSnapshot(database, asset, IT_WAREHOUSE, deliveryLocation),
+					created_at: now
+				};
+				save(database, "assignment_history", assignment, false);
+			}
+			database.prepare("UPDATE assignment_history SET return_date = ?, return_condition = ?, return_notes = ? WHERE id = ?").run(returnDate, request.condition, request.notes?.trim() || null, String(assignment.id));
+			const status = request.condition === "maintenance" ? "maintenance" : request.condition === "damaged" ? "inactive" : "active";
+			database.prepare("UPDATE assets SET assigned_employee_id = NULL, location = ?, status = ?, updated_at = ? WHERE id = ?").run(IT_WAREHOUSE, status, now, request.assetId);
+			logActivity(database, "assets", asset.id, "return", {
+				assignment_id: assignment.id,
+				employee_name: assignment.employee_name || person?.full_name,
+				from_location: asset.location,
+				to_location: IT_WAREHOUSE,
+				condition: request.condition
+			});
+			database.exec("COMMIT");
+			return {
+				...assignment,
+				return_date: returnDate,
+				return_condition: request.condition,
+				return_notes: request.notes?.trim() || null
+			};
+		}
 		if (request.action === "archive-asset") {
 			const asset = recordFor(database, "assets", request.assetId);
 			if (!asset) throw new Error("الأصل غير موجود");
 			if (!asset.archived_at) {
 				database.prepare("UPDATE assignment_history SET return_date = ?, return_condition = COALESCE(return_condition, 'good'), return_notes = COALESCE(return_notes, 'إغلاق تلقائي عند أرشفة الأصل') WHERE asset_id = ? AND return_date IS NULL").run(today, request.assetId);
-				database.prepare("UPDATE assets SET archived_at = ?, assigned_employee_id = NULL, status = 'inactive', updated_at = ? WHERE id = ?").run(now, now, request.assetId);
+				database.prepare("UPDATE assets SET archived_at = ?, assigned_employee_id = NULL, location = ?, status = 'inactive', updated_at = ? WHERE id = ?").run(now, IT_WAREHOUSE, now, request.assetId);
 				logActivity(database, "assets", request.assetId, "archive", { previous_status: asset.status });
 			}
 			database.exec("COMMIT");
@@ -1054,7 +1211,7 @@ async function runWorkflowAction(request) {
 		if (request.action === "restore-asset") {
 			const asset = recordFor(database, "assets", request.assetId);
 			if (!asset) throw new Error("الأصل غير موجود");
-			database.prepare("UPDATE assets SET archived_at = NULL, status = 'active', updated_at = ? WHERE id = ?").run(now, request.assetId);
+			database.prepare("UPDATE assets SET archived_at = NULL, status = 'active', location = ?, updated_at = ? WHERE id = ?").run(IT_WAREHOUSE, now, request.assetId);
 			logActivity(database, "assets", request.assetId, "restore", {});
 			database.exec("COMMIT");
 			return {
@@ -1176,11 +1333,13 @@ async function authState(request) {
 	const database = await getLocalDatabase();
 	const now = (/* @__PURE__ */ new Date()).toISOString();
 	database.prepare("DELETE FROM admin_sessions WHERE expires_at <= ?").run(now);
-	const configured = Boolean(database.prepare("SELECT 1 FROM admin_account WHERE id = 'admin'").get());
+	const account = database.prepare("SELECT username FROM admin_account WHERE id = 'admin'").get();
+	const configured = Boolean(account);
 	const token = cookieValue(request, COOKIE_NAME);
 	return {
 		configured,
-		authenticated: Boolean(token && database.prepare("SELECT 1 FROM admin_sessions WHERE token_hash = ? AND expires_at > ?").get(tokenHash(token), now))
+		authenticated: Boolean(token && database.prepare("SELECT 1 FROM admin_sessions WHERE token_hash = ? AND expires_at > ?").get(tokenHash(token), now)),
+		username: account?.username ?? null
 	};
 }
 async function createSession(request) {
@@ -1318,7 +1477,7 @@ async function handleLocalImageRequest(request) {
 }
 var serverEntryPromise;
 async function getServerEntry() {
-	if (!serverEntryPromise) serverEntryPromise = import("./server-O4hPng80.mjs").then((m) => m.default ?? m);
+	if (!serverEntryPromise) serverEntryPromise = import("./server-0ZqouC_N.mjs").then((m) => m.default ?? m);
 	return serverEntryPromise;
 }
 async function normalizeCatastrophicSsrResponse(response) {
@@ -1399,4 +1558,4 @@ var server_default = { async fetch(request, env, ctx) {
 	}
 } };
 //#endregion
-export { server_default as default, renderErrorPage as t };
+export { server_default as default, renderErrorPage as n, IT_WAREHOUSE as t };

@@ -41,9 +41,10 @@ export async function authState(request: Request) {
   const database = await getLocalDatabase();
   const now = new Date().toISOString();
   database.prepare("DELETE FROM admin_sessions WHERE expires_at <= ?").run(now);
-  const configured = Boolean(
-    database.prepare("SELECT 1 FROM admin_account WHERE id = 'admin'").get(),
-  );
+  const account = database
+    .prepare("SELECT username FROM admin_account WHERE id = 'admin'")
+    .get() as { username: string } | undefined;
+  const configured = Boolean(account);
   const token = cookieValue(request, COOKIE_NAME);
   const authenticated = Boolean(
     token &&
@@ -53,7 +54,7 @@ export async function authState(request: Request) {
       )
       .get(tokenHash(token), now),
   );
-  return { configured, authenticated };
+  return { configured, authenticated, username: account?.username ?? null };
 }
 
 async function createSession(request: Request) {
@@ -108,13 +109,7 @@ export async function handleLocalAuthRequest(request: Request) {
           .prepare(
             "INSERT INTO admin_account (id, username, password_hash, password_salt, created_at, updated_at) VALUES ('admin', ?, ?, ?, ?, ?)",
           )
-          .run(
-            DEFAULT_USERNAME,
-            passwordHash(password, salt),
-            salt,
-            now,
-            now,
-          );
+          .run(DEFAULT_USERNAME, passwordHash(password, salt), salt, now, now);
         database.exec("COMMIT");
       } catch (error) {
         database.exec("ROLLBACK");

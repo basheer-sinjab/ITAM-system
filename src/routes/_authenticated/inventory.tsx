@@ -42,6 +42,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
+import { IT_WAREHOUSE } from "@/lib/locations";
 
 export const Route = createFileRoute("/_authenticated/inventory")({
   component: Inventory,
@@ -312,7 +313,7 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
     name: "",
     category: initialCategory || "Consumable",
     quantity: 0,
-    location: "",
+    location: IT_WAREHOUSE,
     notes: "",
     color: "",
   });
@@ -327,7 +328,7 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
       name: form.name.trim(),
       category: form.category,
       color: form.color || null,
-      location: form.location || null,
+      location: form.location?.trim() || IT_WAREHOUSE,
       notes: form.notes || null,
     };
     if (item) {
@@ -411,7 +412,13 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
             <Input
               value={form.location || ""}
               onChange={(event) => set("location", event.target.value)}
+              placeholder={IT_WAREHOUSE}
             />
+            {!item && (
+              <p className="text-xs text-muted-foreground">
+                الموقع الافتراضي هو {IT_WAREHOUSE} ويمكنك تغييره.
+              </p>
+            )}
           </Field>
           <Field label="ملاحظات" className="sm:col-span-2">
             <Textarea

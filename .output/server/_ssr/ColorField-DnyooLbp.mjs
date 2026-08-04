@@ -1,4 +1,4 @@
-import { N as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
+import { P as require_jsx_runtime } from "../_libs/@radix-ui/react-alert-dialog+[...].mjs";
 import { n as Input } from "./input-Dby3FvDq.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/ColorField-DnyooLbp.js
 var import_jsx_runtime = require_jsx_runtime();

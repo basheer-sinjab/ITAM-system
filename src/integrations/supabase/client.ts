@@ -5,6 +5,8 @@
  * layer keeps that UI intact while storing records in the local SQLite file.
  * Printer image files are kept separately in uploads/printers.
  */
+import { IT_WAREHOUSE } from "@/lib/locations";
+
 type Row = Record<string, any>;
 type Result = { data: any; error: Error | null };
 
@@ -60,6 +62,7 @@ function defaults(table: string, value: Row): Row {
       ...base,
       asset_type: value.asset_type ?? "Printer",
       status: value.status ?? "active",
+      location: value.location?.trim() || IT_WAREHOUSE,
       archived_at: value.archived_at ?? null,
       updated_at: now(),
     };
@@ -68,15 +71,17 @@ function defaults(table: string, value: Row): Row {
     return {
       assignment_date: new Date().toISOString().slice(0, 10),
       return_date: null,
+      asset_snapshot: null,
       ...base,
     };
   if (table === "asset_templates") return { asset_type: "Desktop PC", ...base };
   if (table === "inventory_items")
     return {
-      category: "Consumable",
-      quantity: 0,
-      minimum_quantity: 1,
       ...base,
+      category: value.category ?? "Consumable",
+      quantity: value.quantity ?? 0,
+      minimum_quantity: value.minimum_quantity ?? 1,
+      location: value.location?.trim() || IT_WAREHOUSE,
     };
   if (table === "inventory_movements")
     return {

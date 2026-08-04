@@ -2,6 +2,7 @@ import { mkdir } from "node:fs/promises";
 import { DatabaseSync } from "node:sqlite";
 import { dirname, join } from "node:path";
 import { readJsonBody } from "./local-request-security";
+import { employeeAssetLocation, IT_WAREHOUSE } from "./locations";
 
 type Row = Record<string, unknown>;
 type Query = {
@@ -84,7 +85,7 @@ const ENTITIES: Record<string, Entity> = {
       "created_at",
       "updated_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, purchase_date TEXT, warranty_expiry TEXT, image_url TEXT, notes TEXT, archived_at TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT NOT NULL DEFAULT 'المستودع IT', department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, purchase_date TEXT, warranty_expiry TEXT, image_url TEXT, notes TEXT, archived_at TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_assets_employee ON assets(assigned_employee_id)",
       "CREATE INDEX IF NOT EXISTS idx_assets_department ON assets(department_id)",
@@ -123,9 +124,10 @@ const ENTITIES: Record<string, Entity> = {
       "return_condition",
       "notes",
       "return_notes",
+      "asset_snapshot",
       "created_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS assignment_history (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, employee_name TEXT, employee_number TEXT, employee_email TEXT, employee_phone TEXT, department_name TEXT, branch_name TEXT, assignment_date TEXT NOT NULL, return_date TEXT, return_condition TEXT, notes TEXT, return_notes TEXT, created_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS assignment_history (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, employee_name TEXT, employee_number TEXT, employee_email TEXT, employee_phone TEXT, department_name TEXT, branch_name TEXT, assignment_date TEXT NOT NULL, return_date TEXT, return_condition TEXT, notes TEXT, return_notes TEXT, asset_snapshot TEXT, created_at TEXT NOT NULL)",
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_assignment_asset ON assignment_history(asset_id)",
       "CREATE INDEX IF NOT EXISTS idx_assignment_employee ON assignment_history(employee_id)",
@@ -143,7 +145,7 @@ const ENTITIES: Record<string, Entity> = {
       "notes",
       "created_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'Consumable', color TEXT, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity >= 0), minimum_quantity REAL NOT NULL DEFAULT 1 CHECK(minimum_quantity >= 0), location TEXT, notes TEXT, created_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'Consumable', color TEXT, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity >= 0), minimum_quantity REAL NOT NULL DEFAULT 1 CHECK(minimum_quantity >= 0), location TEXT NOT NULL DEFAULT 'المستودع IT', notes TEXT, created_at TEXT NOT NULL)",
   },
   asset_maintenance: {
     columns: [
@@ -392,6 +394,35 @@ function migrateAssets(database: DatabaseSync) {
   )
     database.exec("ALTER TABLE assets ADD COLUMN archived_at TEXT");
 }
+function migrateLocations(database: DatabaseSync) {
+  database
+    .prepare(
+      "UPDATE assets SET location = ? WHERE assigned_employee_id IS NULL AND (location IS NULL OR trim(location) = '')",
+    )
+    .run(IT_WAREHOUSE);
+  const assignedWithoutLocation = database
+    .prepare(
+      "SELECT assets.id, employees.department_id, employees.full_name FROM assets JOIN employees ON employees.id = assets.assigned_employee_id WHERE assets.location IS NULL OR trim(assets.location) = ''",
+    )
+    .all() as Array<{
+    id: string;
+    department_id?: string | null;
+    full_name?: string | null;
+  }>;
+  const updateAssetLocation = database.prepare(
+    "UPDATE assets SET location = ? WHERE id = ?",
+  );
+  for (const asset of assignedWithoutLocation)
+    updateAssetLocation.run(
+      departmentAssetLocation(database, asset.department_id, asset.full_name),
+      asset.id,
+    );
+  database
+    .prepare(
+      "UPDATE inventory_items SET location = ? WHERE location IS NULL OR trim(location) = ''",
+    )
+    .run(IT_WAREHOUSE);
+}
 function migrateSystemFields(database: DatabaseSync) {
   const departmentColumns = database
     .prepare("PRAGMA table_info(departments)")
@@ -442,6 +473,7 @@ function migrateSystemFields(database: DatabaseSync) {
     "branch_name",
     "return_condition",
     "return_notes",
+    "asset_snapshot",
   ]) {
     if (!assignmentColumns.some((entry) => entry.name === column))
       database.exec(`ALTER TABLE assignment_history ADD COLUMN ${column} TEXT`);
@@ -507,6 +539,7 @@ export async function getLocalDatabase() {
       migrateAssets(database);
       migrateSystemFields(database);
       migrateColors(database);
+      migrateLocations(database);
       database.exec(
         "INSERT OR IGNORE INTO app_settings (id, low_stock_threshold, dashboard_alerts_enabled, warranty_alert_days, updated_at) VALUES ('default', 2, 1, 30, datetime('now'))",
       );
@@ -536,6 +569,13 @@ function hydrate(row: Row) {
       row.details = {};
     }
   }
+  if (typeof row.asset_snapshot === "string") {
+    try {
+      row.asset_snapshot = JSON.parse(row.asset_snapshot || "null");
+    } catch {
+      row.asset_snapshot = null;
+    }
+  }
   if (row.dashboard_alerts_enabled !== undefined)
     row.dashboard_alerts_enabled = Boolean(row.dashboard_alerts_enabled);
   return row;
@@ -553,8 +593,15 @@ function match(row: Row, filters: Array<[string, unknown]>) {
 type SqlInputValue = null | number | bigint | string | NodeJS.ArrayBufferView;
 
 function value(column: string, row: Row): SqlInputValue {
-  if (column === "used_items" || column === "details")
-    return JSON.stringify(row[column] ?? (column === "used_items" ? [] : {}));
+  if (
+    column === "used_items" ||
+    column === "details" ||
+    column === "asset_snapshot"
+  )
+    return JSON.stringify(
+      row[column] ??
+        (column === "used_items" ? [] : column === "details" ? {} : null),
+    );
   if (column === "dashboard_alerts_enabled") return row[column] ? 1 : 0;
   return (row[column] ?? null) as SqlInputValue;
 }
@@ -646,7 +693,12 @@ async function run(query: Query) {
     database.exec("BEGIN");
     try {
       for (const row of values as Row[]) {
-        if (query.table === "assets") assertUniqueSerial(database, row);
+        if (query.table === "assets") {
+          row.location = String(row.location || "").trim() || IT_WAREHOUSE;
+          assertUniqueSerial(database, row);
+        }
+        if (query.table === "inventory_items")
+          row.location = String(row.location || "").trim() || IT_WAREHOUSE;
         if (query.table === "license_assignments") {
           const license = database
             .prepare("SELECT seat_count FROM licenses WHERE id = ?")
@@ -685,7 +737,12 @@ async function run(query: Query) {
     database.exec("BEGIN");
     try {
       result.forEach((row, index) => {
-        if (query.table === "assets") assertUniqueSerial(database, row);
+        if (query.table === "assets") {
+          row.location = String(row.location || "").trim() || IT_WAREHOUSE;
+          assertUniqueSerial(database, row);
+        }
+        if (query.table === "inventory_items")
+          row.location = String(row.location || "").trim() || IT_WAREHOUSE;
         if (
           query.table === "licenses" &&
           (query.payload as Row).seat_count !== undefined
@@ -725,14 +782,28 @@ async function run(query: Query) {
             .all(String(row.id)) as Row[];
           for (const assignedAsset of assignedAssets) {
             const previousDepartment = assignedAsset.department_id ?? null;
+            const previousLocation = assignedAsset.location ?? null;
             assignedAsset.department_id = row.department_id ?? null;
+            assignedAsset.location = departmentAssetLocation(
+              database,
+              row.department_id,
+              row.full_name,
+            );
+            assignedAsset.updated_at = new Date().toISOString();
             save(database, "assets", assignedAsset, true);
-            if (previousDepartment !== assignedAsset.department_id)
+            if (
+              previousDepartment !== assignedAsset.department_id ||
+              previousLocation !== assignedAsset.location
+            )
               logActivity(database, "assets", assignedAsset.id, "update", {
                 changes: {
                   department_id: {
                     from: previousDepartment,
                     to: assignedAsset.department_id,
+                  },
+                  location: {
+                    from: previousLocation,
+                    to: assignedAsset.location,
                   },
                 },
                 reason: "employee_department_transfer",
@@ -840,6 +911,25 @@ function recordFor(
     .prepare(`SELECT * FROM ${table} WHERE id = ?`)
     .get(id) as Row | undefined;
   return record ? hydrate(record) : undefined;
+}
+function departmentAssetLocation(
+  database: DatabaseSync,
+  departmentId: unknown,
+  employeeName?: unknown,
+) {
+  if (!departmentId)
+    return employeeAssetLocation(undefined, undefined, employeeName);
+  const department = database
+    .prepare(
+      "SELECT departments.name, COALESCE(branches.name, departments.branch) AS branch_name FROM departments LEFT JOIN branches ON branches.id = departments.branch_id WHERE departments.id = ?",
+    )
+    .get(String(departmentId)) as
+    { name?: string | null; branch_name?: string | null } | undefined;
+  return employeeAssetLocation(
+    department?.name,
+    department?.branch_name,
+    employeeName,
+  );
 }
 function isAssetType(asset: Row, expected: "printer" | "pc") {
   const type = String(asset.asset_type ?? "")
@@ -1283,6 +1373,20 @@ async function runHardwareAction(request: HardwareAction) {
 type WorkflowAction =
   | { action: "archive-asset"; assetId: string }
   | { action: "restore-asset"; assetId: string }
+  | {
+      action: "assign-asset";
+      assetId: string;
+      employeeId: string;
+      assignmentDate: string;
+      notes?: string;
+    }
+  | {
+      action: "return-asset";
+      assetId: string;
+      returnDate: string;
+      condition: "good" | "maintenance" | "damaged";
+      notes?: string;
+    }
   | { action: "save-maintenance"; record: Row }
   | { action: "delete-maintenance"; maintenanceId: string };
 
@@ -1520,12 +1624,214 @@ function syncHardwareFromMaintenance(
     });
 }
 
+function assignmentAssetSnapshot(
+  database: DatabaseSync,
+  asset: Row,
+  sourceLocation: string,
+  deliveryLocation: string,
+) {
+  const specs = database
+    .prepare(
+      "SELECT processor, memory, storage, graphics_card, operating_system, notes FROM pc_specs WHERE asset_id = ? LIMIT 1",
+    )
+    .get(String(asset.id)) as Row | undefined;
+  return {
+    name: asset.name,
+    asset_id: asset.asset_id,
+    asset_type: asset.asset_type,
+    manufacturer: asset.manufacturer,
+    model: asset.model,
+    serial_number: asset.serial_number,
+    source_location: sourceLocation,
+    delivery_location: deliveryLocation,
+    specs: specs ?? null,
+  };
+}
+
 async function runWorkflowAction(request: WorkflowAction) {
   const database = await getLocalDatabase();
   const now = new Date().toISOString();
   const today = now.slice(0, 10);
   database.exec("BEGIN IMMEDIATE");
   try {
+    if (request.action === "assign-asset") {
+      const asset = recordFor(database, "assets", request.assetId);
+      const person = recordFor(database, "employees", request.employeeId);
+      if (!asset || asset.archived_at)
+        throw new Error("الأصل غير موجود أو مؤرشف");
+      if (!person || person.status === "inactive")
+        throw new Error("الموظف المستلم غير موجود أو غير نشط");
+      const assignmentDate = String(request.assignmentDate || "").slice(0, 10);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(assignmentDate))
+        throw new Error("حدد تاريخ تسليم صحيح");
+      const latestOpen = database
+        .prepare(
+          "SELECT assignment_date FROM assignment_history WHERE asset_id = ? AND return_date IS NULL ORDER BY assignment_date DESC LIMIT 1",
+        )
+        .get(request.assetId) as { assignment_date?: string } | undefined;
+      if (
+        latestOpen?.assignment_date &&
+        assignmentDate < latestOpen.assignment_date
+      )
+        throw new Error("تاريخ التسليم الجديد لا يمكن أن يسبق التعيين الحالي");
+
+      const department = person.department_id
+        ? recordFor(database, "departments", String(person.department_id))
+        : undefined;
+      const branch = department?.branch_id
+        ? recordFor(database, "branches", String(department.branch_id))
+        : undefined;
+      const branchName = String(
+        branch?.name || department?.branch || "",
+      ).trim();
+      const deliveryLocation = employeeAssetLocation(
+        department?.name,
+        branchName,
+        person.full_name,
+      );
+      const sourceLocation = String(asset.location || IT_WAREHOUSE);
+      database
+        .prepare(
+          "UPDATE assignment_history SET return_date = ?, return_condition = COALESCE(return_condition, 'good'), return_notes = COALESCE(return_notes, 'إغلاق تلقائي قبل تسليم جديد') WHERE asset_id = ? AND return_date IS NULL",
+        )
+        .run(assignmentDate, request.assetId);
+
+      const assignment: Row = {
+        id: crypto.randomUUID(),
+        asset_id: asset.id,
+        employee_id: person.id,
+        employee_name: person.full_name,
+        employee_number: person.employee_number || null,
+        employee_email: person.email || null,
+        employee_phone: person.phone || null,
+        department_name: department?.name || null,
+        branch_name: branchName || null,
+        assignment_date: assignmentDate,
+        return_date: null,
+        return_condition: null,
+        notes: request.notes?.trim() || null,
+        return_notes: null,
+        asset_snapshot: assignmentAssetSnapshot(
+          database,
+          asset,
+          sourceLocation,
+          deliveryLocation,
+        ),
+        created_at: now,
+      };
+      save(database, "assignment_history", assignment, false);
+      database
+        .prepare(
+          "UPDATE assets SET assigned_employee_id = ?, department_id = ?, location = ?, status = 'active', updated_at = ? WHERE id = ?",
+        )
+        .run(
+          String(person.id),
+          person.department_id ? String(person.department_id) : null,
+          deliveryLocation,
+          now,
+          request.assetId,
+        );
+      logActivity(database, "assets", asset.id, "assignment", {
+        assignment_id: assignment.id,
+        employee_name: person.full_name,
+        from_location: sourceLocation,
+        to_location: deliveryLocation,
+      });
+      database.exec("COMMIT");
+      return assignment;
+    }
+
+    if (request.action === "return-asset") {
+      const asset = recordFor(database, "assets", request.assetId);
+      if (!asset || asset.archived_at)
+        throw new Error("الأصل غير موجود أو مؤرشف");
+      if (!asset.assigned_employee_id)
+        throw new Error("الأصل غير مسلّم إلى موظف حاليًا");
+      const person = recordFor(
+        database,
+        "employees",
+        String(asset.assigned_employee_id),
+      );
+      const returnDate = String(request.returnDate || "").slice(0, 10);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(returnDate))
+        throw new Error("حدد تاريخ إرجاع صحيح");
+      if (!["good", "maintenance", "damaged"].includes(request.condition))
+        throw new Error("حدد حالة الأصل عند الإرجاع");
+      let assignment = database
+        .prepare(
+          "SELECT * FROM assignment_history WHERE asset_id = ? AND return_date IS NULL ORDER BY assignment_date DESC LIMIT 1",
+        )
+        .get(request.assetId) as Row | undefined;
+      if (assignment) assignment = hydrate(assignment);
+      if (
+        assignment?.assignment_date &&
+        returnDate < assignment.assignment_date
+      )
+        throw new Error("تاريخ الإرجاع لا يمكن أن يسبق تاريخ التسليم");
+      if (!assignment) {
+        const deliveryLocation = String(asset.location || IT_WAREHOUSE);
+        assignment = {
+          id: crypto.randomUUID(),
+          asset_id: asset.id,
+          employee_id: person?.id ?? null,
+          employee_name: person?.full_name ?? null,
+          employee_number: person?.employee_number ?? null,
+          employee_email: person?.email ?? null,
+          employee_phone: person?.phone ?? null,
+          department_name: null,
+          branch_name: null,
+          assignment_date: String(asset.updated_at || returnDate).slice(0, 10),
+          return_date: null,
+          return_condition: null,
+          notes: "تم إنشاء السجل تلقائيًا عند إرجاع الأصل",
+          return_notes: null,
+          asset_snapshot: assignmentAssetSnapshot(
+            database,
+            asset,
+            IT_WAREHOUSE,
+            deliveryLocation,
+          ),
+          created_at: now,
+        };
+        save(database, "assignment_history", assignment, false);
+      }
+      database
+        .prepare(
+          "UPDATE assignment_history SET return_date = ?, return_condition = ?, return_notes = ? WHERE id = ?",
+        )
+        .run(
+          returnDate,
+          request.condition,
+          request.notes?.trim() || null,
+          String(assignment.id),
+        );
+      const status =
+        request.condition === "maintenance"
+          ? "maintenance"
+          : request.condition === "damaged"
+            ? "inactive"
+            : "active";
+      database
+        .prepare(
+          "UPDATE assets SET assigned_employee_id = NULL, location = ?, status = ?, updated_at = ? WHERE id = ?",
+        )
+        .run(IT_WAREHOUSE, status, now, request.assetId);
+      logActivity(database, "assets", asset.id, "return", {
+        assignment_id: assignment.id,
+        employee_name: assignment.employee_name || person?.full_name,
+        from_location: asset.location,
+        to_location: IT_WAREHOUSE,
+        condition: request.condition,
+      });
+      database.exec("COMMIT");
+      return {
+        ...assignment,
+        return_date: returnDate,
+        return_condition: request.condition,
+        return_notes: request.notes?.trim() || null,
+      };
+    }
+
     if (request.action === "archive-asset") {
       const asset = recordFor(database, "assets", request.assetId);
       if (!asset) throw new Error("الأصل غير موجود");
@@ -1537,9 +1843,9 @@ async function runWorkflowAction(request: WorkflowAction) {
           .run(today, request.assetId);
         database
           .prepare(
-            "UPDATE assets SET archived_at = ?, assigned_employee_id = NULL, status = 'inactive', updated_at = ? WHERE id = ?",
+            "UPDATE assets SET archived_at = ?, assigned_employee_id = NULL, location = ?, status = 'inactive', updated_at = ? WHERE id = ?",
           )
-          .run(now, now, request.assetId);
+          .run(now, IT_WAREHOUSE, now, request.assetId);
         logActivity(database, "assets", request.assetId, "archive", {
           previous_status: asset.status,
         });
@@ -1553,9 +1859,9 @@ async function runWorkflowAction(request: WorkflowAction) {
       if (!asset) throw new Error("الأصل غير موجود");
       database
         .prepare(
-          "UPDATE assets SET archived_at = NULL, status = 'active', updated_at = ? WHERE id = ?",
+          "UPDATE assets SET archived_at = NULL, status = 'active', location = ?, updated_at = ? WHERE id = ?",
         )
-        .run(now, request.assetId);
+        .run(IT_WAREHOUSE, now, request.assetId);
       logActivity(database, "assets", request.assetId, "restore", {});
       database.exec("COMMIT");
       return { ...asset, archived_at: null, status: "active" };
