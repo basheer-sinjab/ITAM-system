@@ -1,6 +1,7 @@
 import { mkdir } from "node:fs/promises";
 import { DatabaseSync } from "node:sqlite";
 import { dirname, join } from "node:path";
+import { readJsonBody } from "./local-request-security";
 
 type Row = Record<string, unknown>;
 type Query = {
@@ -79,10 +80,11 @@ const ENTITIES: Record<string, Entity> = {
       "warranty_expiry",
       "image_url",
       "notes",
+      "archived_at",
       "created_at",
       "updated_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, purchase_date TEXT, warranty_expiry TEXT, image_url TEXT, notes TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, serial_number TEXT UNIQUE, status TEXT NOT NULL DEFAULT 'active', location TEXT, department_id TEXT REFERENCES departments(id) ON DELETE SET NULL, assigned_employee_id TEXT REFERENCES employees(id) ON DELETE SET NULL, purchase_date TEXT, warranty_expiry TEXT, image_url TEXT, notes TEXT, archived_at TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_assets_employee ON assets(assigned_employee_id)",
       "CREATE INDEX IF NOT EXISTS idx_assets_department ON assets(department_id)",
@@ -156,9 +158,11 @@ const ENTITIES: Record<string, Entity> = {
       "resolution",
       "notes",
       "used_items",
+      "source_type",
+      "source_id",
       "created_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS asset_maintenance (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, maintenance_date TEXT NOT NULL, maintenance_type TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'Closed' CHECK(status IN ('Open','Closed')), technician TEXT, cost REAL NOT NULL DEFAULT 0 CHECK(cost >= 0), problem_description TEXT, resolution TEXT, notes TEXT, used_items TEXT NOT NULL DEFAULT '[]', created_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS asset_maintenance (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, maintenance_date TEXT NOT NULL, maintenance_type TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'Closed' CHECK(status IN ('Open','Closed')), technician TEXT, cost REAL NOT NULL DEFAULT 0 CHECK(cost >= 0), problem_description TEXT, resolution TEXT, notes TEXT, used_items TEXT NOT NULL DEFAULT '[]', source_type TEXT, source_id TEXT, created_at TEXT NOT NULL)",
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_maintenance_asset_date ON asset_maintenance(asset_id, maintenance_date DESC)",
       "CREATE INDEX IF NOT EXISTS idx_maintenance_status ON asset_maintenance(status)",
@@ -211,9 +215,10 @@ const ENTITIES: Record<string, Entity> = {
       "replacement_of_id",
       "notes",
       "undone_at",
+      "maintenance_id",
       "created_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS pc_part_installations (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, inventory_item_id TEXT REFERENCES inventory_items(id) ON DELETE SET NULL, part_name TEXT NOT NULL, installed_at TEXT NOT NULL, removed_at TEXT, old_part_action TEXT, replacement_of_id TEXT, notes TEXT, undone_at TEXT, created_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS pc_part_installations (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, inventory_item_id TEXT REFERENCES inventory_items(id) ON DELETE SET NULL, part_name TEXT NOT NULL, installed_at TEXT NOT NULL, removed_at TEXT, old_part_action TEXT, replacement_of_id TEXT, notes TEXT, undone_at TEXT, maintenance_id TEXT REFERENCES asset_maintenance(id) ON DELETE SET NULL, created_at TEXT NOT NULL)",
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_pc_parts_asset ON pc_part_installations(asset_id, installed_at DESC)",
       "CREATE INDEX IF NOT EXISTS idx_pc_parts_inventory ON pc_part_installations(inventory_item_id)",
@@ -229,9 +234,10 @@ const ENTITIES: Record<string, Entity> = {
       "installed_at",
       "notes",
       "undone_at",
+      "maintenance_id",
       "created_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS toner_installations (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, inventory_item_id TEXT REFERENCES inventory_items(id) ON DELETE SET NULL, toner_name TEXT NOT NULL, quantity REAL NOT NULL DEFAULT 1 CHECK(quantity > 0), installed_at TEXT NOT NULL, notes TEXT, undone_at TEXT, created_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS toner_installations (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, inventory_item_id TEXT REFERENCES inventory_items(id) ON DELETE SET NULL, toner_name TEXT NOT NULL, quantity REAL NOT NULL DEFAULT 1 CHECK(quantity > 0), installed_at TEXT NOT NULL, notes TEXT, undone_at TEXT, maintenance_id TEXT REFERENCES asset_maintenance(id) ON DELETE SET NULL, created_at TEXT NOT NULL)",
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_toner_installations_asset ON toner_installations(asset_id, installed_at DESC)",
       "CREATE INDEX IF NOT EXISTS idx_toner_installations_inventory ON toner_installations(inventory_item_id)",
@@ -380,6 +386,11 @@ function migrateAssets(database: DatabaseSync) {
     !columns.some((column) => column.name === "warranty_expiry")
   )
     database.exec("ALTER TABLE assets ADD COLUMN warranty_expiry TEXT");
+  if (
+    columns.length &&
+    !columns.some((column) => column.name === "archived_at")
+  )
+    database.exec("ALTER TABLE assets ADD COLUMN archived_at TEXT");
 }
 function migrateSystemFields(database: DatabaseSync) {
   const departmentColumns = database
@@ -438,6 +449,23 @@ function migrateSystemFields(database: DatabaseSync) {
   database.exec(
     "UPDATE assignment_history SET employee_name = COALESCE(employee_name, (SELECT full_name FROM employees WHERE employees.id = assignment_history.employee_id)), employee_number = COALESCE(employee_number, (SELECT employee_number FROM employees WHERE employees.id = assignment_history.employee_id)), employee_email = COALESCE(employee_email, (SELECT email FROM employees WHERE employees.id = assignment_history.employee_id)), employee_phone = COALESCE(employee_phone, (SELECT phone FROM employees WHERE employees.id = assignment_history.employee_id)), department_name = COALESCE(department_name, (SELECT departments.name FROM employees JOIN departments ON departments.id = employees.department_id WHERE employees.id = assignment_history.employee_id)), branch_name = COALESCE(branch_name, (SELECT COALESCE(branches.name, departments.branch) FROM employees JOIN departments ON departments.id = employees.department_id LEFT JOIN branches ON branches.id = departments.branch_id WHERE employees.id = assignment_history.employee_id))",
   );
+
+  const maintenanceColumns = database
+    .prepare("PRAGMA table_info(asset_maintenance)")
+    .all() as Array<{ name: string }>;
+  for (const column of ["source_type", "source_id"])
+    if (!maintenanceColumns.some((entry) => entry.name === column))
+      database.exec(`ALTER TABLE asset_maintenance ADD COLUMN ${column} TEXT`);
+
+  for (const table of ["pc_part_installations", "toner_installations"]) {
+    const installationColumns = database
+      .prepare(`PRAGMA table_info(${table})`)
+      .all() as Array<{ name: string }>;
+    if (!installationColumns.some((entry) => entry.name === "maintenance_id"))
+      database.exec(
+        `ALTER TABLE ${table} ADD COLUMN maintenance_id TEXT REFERENCES asset_maintenance(id) ON DELETE SET NULL`,
+      );
+  }
 }
 function seedAssetTemplates(database: DatabaseSync) {
   const assets = database
@@ -463,7 +491,7 @@ function seedAssetTemplates(database: DatabaseSync) {
       new Date().toISOString(),
     );
 }
-async function db() {
+export async function getLocalDatabase() {
   if (!ready)
     ready = mkdir(dirname(DATABASE_PATH), { recursive: true }).then(() => {
       const database = new DatabaseSync(DATABASE_PATH);
@@ -481,6 +509,15 @@ async function db() {
       migrateColors(database);
       database.exec(
         "INSERT OR IGNORE INTO app_settings (id, low_stock_threshold, dashboard_alerts_enabled, warranty_alert_days, updated_at) VALUES ('default', 2, 1, 30, datetime('now'))",
+      );
+      database.exec(
+        "CREATE TABLE IF NOT EXISTS admin_account (id TEXT PRIMARY KEY, username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL, password_salt TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
+      );
+      database.exec(
+        "CREATE TABLE IF NOT EXISTS admin_sessions (token_hash TEXT PRIMARY KEY, expires_at TEXT NOT NULL, created_at TEXT NOT NULL)",
+      );
+      database.exec(
+        "CREATE INDEX IF NOT EXISTS idx_admin_sessions_expiry ON admin_sessions(expires_at)",
       );
       for (const entity of Object.values(ENTITIES))
         entity.indexes?.forEach((index) => database.exec(index));
@@ -505,7 +542,7 @@ function hydrate(row: Row) {
 }
 async function rows(table: string) {
   definition(table);
-  return (await db())
+  return (await getLocalDatabase())
     .prepare(`SELECT * FROM ${table}`)
     .all()
     .map((row) => hydrate(row as Row));
@@ -580,8 +617,26 @@ function logActivity(
     );
 }
 async function run(query: Query) {
-  const database = await db();
+  definition(query.table);
+  if (
+    !["select", "insert", "update", "delete", "upsert"].includes(
+      query.operation,
+    )
+  )
+    throw new Error("عملية البيانات غير مدعومة");
+  const database = await getLocalDatabase();
   const filters = query.filters ?? [];
+  if (
+    (query.operation === "update" || query.operation === "delete") &&
+    filters.length === 0
+  )
+    throw new Error("تم رفض العملية لأنها لا تحدد السجلات المطلوبة");
+  if (query.table === "activity_log" && query.operation !== "select")
+    throw new Error("سجل النشاط للقراءة فقط");
+  if (query.table === "asset_maintenance" && query.operation !== "select")
+    throw new Error("يجب حفظ الصيانة من خلال مسار الصيانة الآمن");
+  if (query.table === "assets" && query.operation === "delete")
+    throw new Error("لا يمكن حذف الأصل نهائيًا؛ استخدم الأرشفة");
   let result = await rows(query.table);
   if (query.operation === "insert" || query.operation === "upsert") {
     const values = Array.isArray(query.payload)
@@ -728,7 +783,7 @@ async function exportData() {
   );
 }
 async function restore(data: Record<string, Row[]>) {
-  const database = await db();
+  const database = await getLocalDatabase();
   const optionalTables = new Set([
     "inventory_movements",
     "activity_log",
@@ -781,8 +836,10 @@ function recordFor(
   table: string,
   id: string,
 ): Row | undefined {
-  return database.prepare(`SELECT * FROM ${table} WHERE id = ?`).get(id) as
-    Row | undefined;
+  const record = database
+    .prepare(`SELECT * FROM ${table} WHERE id = ?`)
+    .get(id) as Row | undefined;
+  return record ? hydrate(record) : undefined;
 }
 function isAssetType(asset: Row, expected: "printer" | "pc") {
   const type = String(asset.asset_type ?? "")
@@ -806,10 +863,11 @@ function addInventoryMovement(
   quantity: number,
   movementDate: string,
   note: string,
+  maintenanceId: string | null = null,
 ) {
   database
     .prepare(
-      "INSERT INTO inventory_movements (id, item_id, movement_date, movement_type, quantity, note, maintenance_id, created_at) VALUES (?, ?, ?, ?, ?, ?, NULL, ?)",
+      "INSERT INTO inventory_movements (id, item_id, movement_date, movement_type, quantity, note, maintenance_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
     )
     .run(
       crypto.randomUUID(),
@@ -818,8 +876,88 @@ function addInventoryMovement(
       movementType,
       quantity,
       note,
+      maintenanceId,
       new Date().toISOString(),
     );
+}
+
+function createHardwareMaintenance(
+  database: DatabaseSync,
+  input: {
+    id: string;
+    assetId: string;
+    date: string;
+    itemId: string;
+    quantity: number;
+    sourceType: "toner_installation" | "part_installation";
+    sourceId: string;
+    itemName: string;
+    notes?: string;
+    replacement?: boolean;
+    createdAt: string;
+  },
+) {
+  const isToner = input.sourceType === "toner_installation";
+  const action = isToner
+    ? `تغيير حبر ${input.itemName}`
+    : input.replacement
+      ? `استبدال قطعة ${input.itemName}`
+      : `تركيب قطعة ${input.itemName}`;
+  save(
+    database,
+    "asset_maintenance",
+    {
+      id: input.id,
+      asset_id: input.assetId,
+      maintenance_date: input.date,
+      maintenance_type: isToner
+        ? "Toner Replacement"
+        : input.replacement
+          ? "Part Replacement"
+          : "Part Installation",
+      status: "Closed",
+      technician: null,
+      cost: 0,
+      problem_description: action,
+      resolution: `تم ${action}`,
+      notes: input.notes?.trim() || null,
+      used_items: [{ id: input.itemId, quantity: input.quantity }],
+      source_type: input.sourceType,
+      source_id: input.sourceId,
+      created_at: input.createdAt,
+    },
+    false,
+  );
+  logActivity(database, "asset_maintenance", input.id, "create", {
+    source: input.sourceType,
+    asset_id: input.assetId,
+    item_name: input.itemName,
+    quantity: input.quantity,
+  });
+}
+
+function markLinkedMaintenanceUndone(
+  database: DatabaseSync,
+  maintenanceId: unknown,
+  note: string,
+) {
+  if (!maintenanceId) return;
+  const maintenance = recordFor(
+    database,
+    "asset_maintenance",
+    String(maintenanceId),
+  );
+  if (!maintenance) return;
+  const resolution = [maintenance.resolution, note].filter(Boolean).join(" — ");
+  database
+    .prepare(
+      "UPDATE asset_maintenance SET used_items = '[]', source_type = COALESCE(source_type, 'hardware') || '_undone', resolution = ? WHERE id = ?",
+    )
+    .run(resolution, String(maintenanceId));
+  logActivity(database, "asset_maintenance", maintenanceId, "update", {
+    reason: "hardware_undo",
+    note,
+  });
 }
 function takeFromInventory(
   database: DatabaseSync,
@@ -836,7 +974,7 @@ function takeFromInventory(
     throw new Error(`الكمية المتوفرة من ${itemName} لا تكفي`);
 }
 async function runHardwareAction(request: HardwareAction) {
-  const database = await db();
+  const database = await getLocalDatabase();
   const now = new Date().toISOString();
   const today = now.slice(0, 10);
   database.exec("BEGIN");
@@ -850,9 +988,23 @@ async function runHardwareAction(request: HardwareAction) {
         throw new Error("اختر حبرًا من المخزون");
       const quantity = Math.max(1, Number(request.quantity) || 1);
       const installedAt = request.installedAt || today;
+      const installationId = crypto.randomUUID();
+      const maintenanceId = crypto.randomUUID();
+      createHardwareMaintenance(database, {
+        id: maintenanceId,
+        assetId: String(asset.id),
+        date: installedAt,
+        itemId: String(item.id),
+        quantity,
+        sourceType: "toner_installation",
+        sourceId: installationId,
+        itemName: String(item.name),
+        notes: request.notes,
+        createdAt: now,
+      });
       takeFromInventory(database, String(item.id), quantity, String(item.name));
       const installation: Row = {
-        id: crypto.randomUUID(),
+        id: installationId,
         asset_id: asset.id,
         inventory_item_id: item.id,
         toner_name: item.name,
@@ -860,6 +1012,7 @@ async function runHardwareAction(request: HardwareAction) {
         installed_at: installedAt,
         notes: request.notes?.trim() || null,
         undone_at: null,
+        maintenance_id: maintenanceId,
         created_at: now,
       };
       save(database, "toner_installations", installation, false);
@@ -870,6 +1023,7 @@ async function runHardwareAction(request: HardwareAction) {
         quantity,
         installedAt,
         `تركيب حبر في ${asset.name}`,
+        maintenanceId,
       );
       logActivity(database, "assets", asset.id, "toner_install", {
         installation_id: installation.id,
@@ -908,6 +1062,14 @@ async function runHardwareAction(request: HardwareAction) {
         Number(installation.quantity),
         today,
         `تراجع عن تركيب حبر ${installation.toner_name}`,
+        installation.maintenance_id
+          ? String(installation.maintenance_id)
+          : null,
+      );
+      markLinkedMaintenanceUndone(
+        database,
+        installation.maintenance_id,
+        `تم التراجع عن تركيب حبر ${installation.toner_name}`,
       );
       logActivity(database, "assets", installation.asset_id, "toner_undo", {
         installation_id: installation.id,
@@ -921,10 +1083,14 @@ async function runHardwareAction(request: HardwareAction) {
       const asset = recordFor(database, "assets", request.assetId);
       const item = recordFor(database, "inventory_items", request.itemId);
       if (!asset || !isAssetType(asset, "pc"))
-        throw new Error("تركيب القطع متاح لأصول الكمبيوتر المكتبي فقط");
+        throw new Error(
+          "تركيب القطع متاح لأصول الكمبيوتر المكتبي واللابتوب فقط",
+        );
       if (!item || item.category !== "Spare Part")
         throw new Error("اختر قطعة غيار من المخزون");
       const installedAt = request.installedAt || today;
+      const installationId = crypto.randomUUID();
+      const maintenanceId = crypto.randomUUID();
       let oldPart: Row | undefined;
       if (request.oldInstallationId) {
         oldPart = recordFor(
@@ -946,6 +1112,19 @@ async function runHardwareAction(request: HardwareAction) {
           )
         )
           throw new Error("حدد ما تم مع القطعة القديمة");
+        createHardwareMaintenance(database, {
+          id: maintenanceId,
+          assetId: String(asset.id),
+          date: installedAt,
+          itemId: String(item.id),
+          quantity: 1,
+          sourceType: "part_installation",
+          sourceId: installationId,
+          itemName: String(item.name),
+          notes: request.notes,
+          replacement: true,
+          createdAt: now,
+        });
         if (
           request.oldPartAction === "return_to_stock" &&
           oldPart.inventory_item_id
@@ -962,6 +1141,7 @@ async function runHardwareAction(request: HardwareAction) {
             1,
             installedAt,
             `إرجاع قطعة ${oldPart.part_name} بعد استبدالها`,
+            maintenanceId,
           );
         }
         database
@@ -970,9 +1150,22 @@ async function runHardwareAction(request: HardwareAction) {
           )
           .run(installedAt, request.oldPartAction, String(oldPart.id));
       }
+      if (!oldPart)
+        createHardwareMaintenance(database, {
+          id: maintenanceId,
+          assetId: String(asset.id),
+          date: installedAt,
+          itemId: String(item.id),
+          quantity: 1,
+          sourceType: "part_installation",
+          sourceId: installationId,
+          itemName: String(item.name),
+          notes: request.notes,
+          createdAt: now,
+        });
       takeFromInventory(database, String(item.id), 1, String(item.name));
       const installation: Row = {
-        id: crypto.randomUUID(),
+        id: installationId,
         asset_id: asset.id,
         inventory_item_id: item.id,
         part_name: item.name,
@@ -982,6 +1175,7 @@ async function runHardwareAction(request: HardwareAction) {
         replacement_of_id: oldPart?.id ?? null,
         notes: request.notes?.trim() || null,
         undone_at: null,
+        maintenance_id: maintenanceId,
         created_at: now,
       };
       save(database, "pc_part_installations", installation, false);
@@ -994,6 +1188,7 @@ async function runHardwareAction(request: HardwareAction) {
         oldPart
           ? `تركيب ${item.name} بدل ${oldPart.part_name} في ${asset.name}`
           : `تركيب ${item.name} في ${asset.name}`,
+        maintenanceId,
       );
       logActivity(database, "assets", asset.id, "part_install", {
         installation_id: installation.id,
@@ -1026,6 +1221,7 @@ async function runHardwareAction(request: HardwareAction) {
       1,
       today,
       `تراجع عن تركيب ${installation.part_name}`,
+      installation.maintenance_id ? String(installation.maintenance_id) : null,
     );
     if (installation.replacement_of_id) {
       const oldPart = recordFor(
@@ -1051,6 +1247,9 @@ async function runHardwareAction(request: HardwareAction) {
           1,
           today,
           `إعادة تركيب ${oldPart.part_name} بعد التراجع عن الاستبدال`,
+          installation.maintenance_id
+            ? String(installation.maintenance_id)
+            : null,
         );
       }
       database
@@ -1064,6 +1263,11 @@ async function runHardwareAction(request: HardwareAction) {
         "UPDATE pc_part_installations SET removed_at = ?, undone_at = ? WHERE id = ?",
       )
       .run(today, now, String(installation.id));
+    markLinkedMaintenanceUndone(
+      database,
+      installation.maintenance_id,
+      `تم التراجع عن تركيب ${installation.part_name}`,
+    );
     logActivity(database, "assets", installation.asset_id, "part_undo", {
       installation_id: installation.id,
       item_name: installation.part_name,
@@ -1075,12 +1279,389 @@ async function runHardwareAction(request: HardwareAction) {
     throw error;
   }
 }
+
+type WorkflowAction =
+  | { action: "archive-asset"; assetId: string }
+  | { action: "restore-asset"; assetId: string }
+  | { action: "save-maintenance"; record: Row }
+  | { action: "delete-maintenance"; maintenanceId: string };
+
+type UsedItem = { id: string; quantity: number };
+
+function normalizedUsedItems(value: unknown): UsedItem[] {
+  if (!Array.isArray(value)) return [];
+  const quantities = new Map<string, number>();
+  for (const entry of value) {
+    if (!entry || typeof entry !== "object")
+      throw new Error("بيانات المواد المستخدمة غير صالحة");
+    const item = entry as Record<string, unknown>;
+    const id = String(item.id ?? item.item_id ?? "").trim();
+    const quantity = Number(item.quantity);
+    if (!id || !Number.isFinite(quantity) || quantity <= 0)
+      throw new Error("كمية المادة المستخدمة غير صالحة");
+    quantities.set(id, (quantities.get(id) ?? 0) + quantity);
+  }
+  return [...quantities].map(([id, quantity]) => ({ id, quantity }));
+}
+
+function usedItemMap(items: UsedItem[]) {
+  return new Map(items.map((item) => [item.id, item.quantity]));
+}
+
+function usedItemsEqual(left: UsedItem[], right: UsedItem[]) {
+  const a = usedItemMap(left);
+  const b = usedItemMap(right);
+  return (
+    a.size === b.size &&
+    [...a].every(([id, quantity]) => b.get(id) === quantity)
+  );
+}
+
+function reconcileMaintenanceInventory(
+  database: DatabaseSync,
+  previous: UsedItem[],
+  next: UsedItem[],
+  date: string,
+  maintenanceId: string,
+) {
+  const before = usedItemMap(previous);
+  const after = usedItemMap(next);
+  const itemIds = new Set([...before.keys(), ...after.keys()]);
+  for (const itemId of itemIds) {
+    const change = (after.get(itemId) ?? 0) - (before.get(itemId) ?? 0);
+    if (!change) continue;
+    const item = recordFor(database, "inventory_items", itemId);
+    if (!item) throw new Error("أحد عناصر المخزون المستخدمة غير موجود");
+    if (change > 0)
+      takeFromInventory(database, itemId, change, String(item.name));
+    else
+      database
+        .prepare(
+          "UPDATE inventory_items SET quantity = quantity + ? WHERE id = ?",
+        )
+        .run(Math.abs(change), itemId);
+    addInventoryMovement(
+      database,
+      itemId,
+      change > 0 ? "use" : "return",
+      Math.abs(change),
+      date,
+      change > 0 ? "استخدام في سجل صيانة" : "إرجاع بعد تعديل أو حذف سجل صيانة",
+      maintenanceId,
+    );
+  }
+}
+
+function syncHardwareFromMaintenance(
+  database: DatabaseSync,
+  maintenance: Row,
+  previousItems: UsedItem[],
+  nextItems: UsedItem[],
+  now: string,
+) {
+  const asset = recordFor(database, "assets", String(maintenance.asset_id));
+  if (!asset) throw new Error("الأصل المرتبط بالصيانة غير موجود");
+  const date = String(maintenance.maintenance_date);
+  const notes = maintenance.notes ? String(maintenance.notes) : null;
+  const nextMap = usedItemMap(nextItems);
+  const inventory = new Map<string, Row>();
+  for (const item of nextItems) {
+    const record = recordFor(database, "inventory_items", item.id);
+    if (!record) throw new Error("أحد عناصر المخزون المستخدمة غير موجود");
+    inventory.set(item.id, record);
+  }
+
+  if (isAssetType(asset, "printer")) {
+    const target = new Map(
+      [...nextMap].filter(([id]) => inventory.get(id)?.category === "Toner"),
+    );
+    const linked = database
+      .prepare(
+        "SELECT * FROM toner_installations WHERE maintenance_id = ? AND undone_at IS NULL ORDER BY created_at",
+      )
+      .all(String(maintenance.id)) as Row[];
+    const retained = new Set<string>();
+    for (const installation of linked) {
+      const itemId = String(installation.inventory_item_id ?? "");
+      const quantity = target.get(itemId);
+      if (quantity !== undefined && !retained.has(itemId)) {
+        database
+          .prepare(
+            "UPDATE toner_installations SET quantity = ?, installed_at = ?, notes = ? WHERE id = ?",
+          )
+          .run(quantity, date, notes, String(installation.id));
+        retained.add(itemId);
+      } else {
+        database
+          .prepare("UPDATE toner_installations SET undone_at = ? WHERE id = ?")
+          .run(now, String(installation.id));
+        logActivity(database, "assets", asset.id, "toner_undo", {
+          installation_id: installation.id,
+          source: "maintenance",
+        });
+      }
+    }
+    for (const [itemId, quantity] of target) {
+      if (retained.has(itemId)) continue;
+      const item = inventory.get(itemId)!;
+      const installationId = crypto.randomUUID();
+      save(
+        database,
+        "toner_installations",
+        {
+          id: installationId,
+          asset_id: asset.id,
+          inventory_item_id: item.id,
+          toner_name: item.name,
+          quantity,
+          installed_at: date,
+          notes,
+          undone_at: null,
+          maintenance_id: maintenance.id,
+          created_at: now,
+        },
+        false,
+      );
+      logActivity(database, "assets", asset.id, "toner_install", {
+        installation_id: installationId,
+        item_name: item.name,
+        quantity,
+        source: "maintenance",
+      });
+    }
+  }
+
+  if (isAssetType(asset, "pc")) {
+    const target = new Map(
+      [...nextMap].filter(
+        ([id]) => inventory.get(id)?.category === "Spare Part",
+      ),
+    );
+    for (const [itemId, quantity] of target)
+      if (!Number.isInteger(quantity))
+        throw new Error(
+          `كمية قطعة ${inventory.get(itemId)?.name ?? itemId} يجب أن تكون رقمًا صحيحًا`,
+        );
+    const linked = database
+      .prepare(
+        "SELECT * FROM pc_part_installations WHERE maintenance_id = ? AND undone_at IS NULL ORDER BY created_at",
+      )
+      .all(String(maintenance.id)) as Row[];
+    const itemIds = new Set([
+      ...target.keys(),
+      ...linked.map((item) => String(item.inventory_item_id ?? "")),
+    ]);
+    for (const itemId of itemIds) {
+      if (!itemId) continue;
+      const installations = linked.filter(
+        (item) => String(item.inventory_item_id ?? "") === itemId,
+      );
+      const removed = installations.filter((item) => item.removed_at);
+      const active = installations.filter((item) => !item.removed_at);
+      const wanted = target.get(itemId) ?? 0;
+      if (wanted < removed.length)
+        throw new Error(
+          "لا يمكن إزالة قطعة من سجل صيانة بعد استبدالها؛ يبقى السجل محفوظًا للتاريخ",
+        );
+      const keepActive = Math.max(0, wanted - removed.length);
+      const removedByEdit = active.slice(keepActive);
+      if (removedByEdit.some((item) => item.replacement_of_id))
+        throw new Error(
+          "للتراجع عن قطعة بديلة استخدم زر التراجع من صفحة الأصل حتى تعود القطعة القديمة بطريقة صحيحة",
+        );
+      for (const installation of removedByEdit) {
+        database
+          .prepare(
+            "UPDATE pc_part_installations SET removed_at = ?, undone_at = ? WHERE id = ?",
+          )
+          .run(date, now, String(installation.id));
+        logActivity(database, "assets", asset.id, "part_undo", {
+          installation_id: installation.id,
+          source: "maintenance",
+        });
+      }
+      const missing = keepActive - Math.min(active.length, keepActive);
+      for (let index = 0; index < missing; index += 1) {
+        const item = inventory.get(itemId);
+        if (!item) throw new Error("قطعة الغيار غير موجودة في المخزون");
+        const installationId = crypto.randomUUID();
+        save(
+          database,
+          "pc_part_installations",
+          {
+            id: installationId,
+            asset_id: asset.id,
+            inventory_item_id: item.id,
+            part_name: item.name,
+            installed_at: date,
+            removed_at: null,
+            old_part_action: null,
+            replacement_of_id: null,
+            notes,
+            undone_at: null,
+            maintenance_id: maintenance.id,
+            created_at: now,
+          },
+          false,
+        );
+        logActivity(database, "assets", asset.id, "part_install", {
+          installation_id: installationId,
+          item_name: item.name,
+          source: "maintenance",
+        });
+      }
+    }
+  }
+
+  if (!usedItemsEqual(previousItems, nextItems))
+    logActivity(database, "asset_maintenance", maintenance.id, "sync", {
+      previous: previousItems,
+      current: nextItems,
+    });
+}
+
+async function runWorkflowAction(request: WorkflowAction) {
+  const database = await getLocalDatabase();
+  const now = new Date().toISOString();
+  const today = now.slice(0, 10);
+  database.exec("BEGIN IMMEDIATE");
+  try {
+    if (request.action === "archive-asset") {
+      const asset = recordFor(database, "assets", request.assetId);
+      if (!asset) throw new Error("الأصل غير موجود");
+      if (!asset.archived_at) {
+        database
+          .prepare(
+            "UPDATE assignment_history SET return_date = ?, return_condition = COALESCE(return_condition, 'good'), return_notes = COALESCE(return_notes, 'إغلاق تلقائي عند أرشفة الأصل') WHERE asset_id = ? AND return_date IS NULL",
+          )
+          .run(today, request.assetId);
+        database
+          .prepare(
+            "UPDATE assets SET archived_at = ?, assigned_employee_id = NULL, status = 'inactive', updated_at = ? WHERE id = ?",
+          )
+          .run(now, now, request.assetId);
+        logActivity(database, "assets", request.assetId, "archive", {
+          previous_status: asset.status,
+        });
+      }
+      database.exec("COMMIT");
+      return { ...asset, archived_at: asset.archived_at || now };
+    }
+
+    if (request.action === "restore-asset") {
+      const asset = recordFor(database, "assets", request.assetId);
+      if (!asset) throw new Error("الأصل غير موجود");
+      database
+        .prepare(
+          "UPDATE assets SET archived_at = NULL, status = 'active', updated_at = ? WHERE id = ?",
+        )
+        .run(now, request.assetId);
+      logActivity(database, "assets", request.assetId, "restore", {});
+      database.exec("COMMIT");
+      return { ...asset, archived_at: null, status: "active" };
+    }
+
+    if (request.action === "save-maintenance") {
+      const input = request.record;
+      const id = String(input.id ?? crypto.randomUUID());
+      const previous = recordFor(database, "asset_maintenance", id);
+      const asset = recordFor(database, "assets", String(input.asset_id ?? ""));
+      if (!asset || asset.archived_at)
+        throw new Error("اختر أصلًا موجودًا وغير مؤرشف");
+      if (previous && previous.asset_id !== input.asset_id) {
+        const linked = database
+          .prepare(
+            "SELECT 1 FROM toner_installations WHERE maintenance_id = ? UNION SELECT 1 FROM pc_part_installations WHERE maintenance_id = ? LIMIT 1",
+          )
+          .get(id, id);
+        if (linked)
+          throw new Error("لا يمكن تغيير الأصل بعد ربط الصيانة بحبر أو قطعة");
+      }
+      const date = String(input.maintenance_date ?? today);
+      const status = input.status === "Open" ? "Open" : "Closed";
+      const cost = Math.max(0, Number(input.cost) || 0);
+      const previousItems = normalizedUsedItems(previous?.used_items ?? []);
+      const nextItems = normalizedUsedItems(input.used_items ?? []);
+      const maintenance: Row = {
+        ...previous,
+        ...input,
+        id,
+        asset_id: asset.id,
+        maintenance_date: date,
+        maintenance_type: String(input.maintenance_type || "Corrective"),
+        status,
+        technician: input.technician || null,
+        cost,
+        problem_description: input.problem_description || null,
+        resolution: input.resolution || null,
+        notes: input.notes || null,
+        used_items: nextItems,
+        source_type:
+          previous?.source_type ?? input.source_type ?? "maintenance",
+        source_id: previous?.source_id ?? input.source_id ?? null,
+        created_at: previous?.created_at ?? now,
+      };
+      save(database, "asset_maintenance", maintenance, Boolean(previous));
+      reconcileMaintenanceInventory(
+        database,
+        previousItems,
+        nextItems,
+        date,
+        id,
+      );
+      syncHardwareFromMaintenance(
+        database,
+        maintenance,
+        previousItems,
+        nextItems,
+        now,
+      );
+      logActivity(
+        database,
+        "asset_maintenance",
+        id,
+        previous ? "update" : "create",
+        { current: maintenance },
+      );
+      database.exec("COMMIT");
+      return maintenance;
+    }
+
+    const maintenance = recordFor(
+      database,
+      "asset_maintenance",
+      request.maintenanceId,
+    );
+    if (!maintenance) throw new Error("سجل الصيانة غير موجود");
+    const previousItems = normalizedUsedItems(maintenance.used_items ?? []);
+    syncHardwareFromMaintenance(database, maintenance, previousItems, [], now);
+    reconcileMaintenanceInventory(
+      database,
+      previousItems,
+      [],
+      today,
+      String(maintenance.id),
+    );
+    logActivity(database, "asset_maintenance", maintenance.id, "delete", {
+      previous: maintenance,
+    });
+    database
+      .prepare("DELETE FROM asset_maintenance WHERE id = ?")
+      .run(String(maintenance.id));
+    database.exec("COMMIT");
+    return maintenance;
+  } catch (error) {
+    database.exec("ROLLBACK");
+    throw error;
+  }
+}
+
 export async function handleLocalDataRequest(request: Request) {
   const url = new URL(request.url);
   if (!url.pathname.startsWith("/api/local-data")) return null;
   try {
     if (url.pathname === "/api/local-data/status" && request.method === "GET") {
-      const database = await db();
+      const database = await getLocalDatabase();
       return Response.json({
         hasData: Object.keys(ENTITIES).some(
           (table) =>
@@ -1092,7 +1673,7 @@ export async function handleLocalDataRequest(request: Request) {
     }
     if (url.pathname === "/api/local-data/query" && request.method === "POST")
       return Response.json({
-        data: await run((await request.json()) as Query),
+        data: await run(await readJsonBody<Query>(request)),
         error: null,
       });
     if (
@@ -1100,7 +1681,19 @@ export async function handleLocalDataRequest(request: Request) {
       request.method === "POST"
     )
       return Response.json({
-        data: await runHardwareAction((await request.json()) as HardwareAction),
+        data: await runHardwareAction(
+          await readJsonBody<HardwareAction>(request),
+        ),
+        error: null,
+      });
+    if (
+      url.pathname === "/api/local-data/workflow" &&
+      request.method === "POST"
+    )
+      return Response.json({
+        data: await runWorkflowAction(
+          await readJsonBody<WorkflowAction>(request),
+        ),
         error: null,
       });
     if (url.pathname === "/api/local-data/export" && request.method === "GET")
@@ -1109,7 +1702,9 @@ export async function handleLocalDataRequest(request: Request) {
       url.pathname === "/api/local-data/restore" &&
       request.method === "POST"
     ) {
-      await restore((await request.json()) as Record<string, Row[]>);
+      await restore(
+        await readJsonBody<Record<string, Row[]>>(request, 50_000_000),
+      );
       return Response.json({ ok: true });
     }
     return new Response("Not found", { status: 404 });

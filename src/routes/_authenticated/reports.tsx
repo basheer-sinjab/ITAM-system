@@ -111,7 +111,7 @@ function ReportsPage() {
             asset.asset_id,
             asset.name,
             asset.asset_type,
-            status(asset.status),
+            asset.archived_at ? "مؤرشف" : status(asset.status),
             data.departments.find(
               (item: any) => item.id === asset.department_id,
             )?.name || "—",

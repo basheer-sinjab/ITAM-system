@@ -440,7 +440,9 @@ function AssignmentForm({ licenses, employees, assets, close, saved }: any) {
           <Picker
             label="الترخيص"
             value={form.license_id}
-            onChange={(value) => setForm({ ...form, license_id: value })}
+            onChange={(value: string) =>
+              setForm({ ...form, license_id: value })
+            }
             options={licenses}
             name="license_name"
             required
@@ -448,14 +450,16 @@ function AssignmentForm({ licenses, employees, assets, close, saved }: any) {
           <Picker
             label="الموظف"
             value={form.employee_id}
-            onChange={(value) => setForm({ ...form, employee_id: value })}
+            onChange={(value: string) =>
+              setForm({ ...form, employee_id: value })
+            }
             options={employees}
             name="full_name"
           />
           <Picker
             label="الأصل"
             value={form.asset_id}
-            onChange={(value) => setForm({ ...form, asset_id: value })}
+            onChange={(value: string) => setForm({ ...form, asset_id: value })}
             options={assets}
             name="name"
           />

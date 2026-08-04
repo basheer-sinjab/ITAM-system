@@ -57,6 +57,8 @@ export async function createLocalBackup() {
 }
 
 export async function restoreLocalBackup(file: File) {
+  if (file.size > 200 * 1024 * 1024)
+    throw new Error("حجم ملف النسخة الاحتياطية أكبر من 200 ميغابايت");
   let backup: LocalBackup;
   try {
     backup = JSON.parse(await file.text()) as LocalBackup;
@@ -81,6 +83,7 @@ export async function restoreLocalBackup(file: File) {
     formData.append("path", image.path);
     const response = await fetch("/api/printer-images/restore", {
       method: "POST",
+      headers: { "x-itam-request": "1" },
       body: formData,
     });
     if (!response.ok)

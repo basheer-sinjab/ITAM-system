@@ -25,7 +25,8 @@ const SOURCES = [
     table: "assets",
     icon: Monitor,
     title: (item: any) => item.name,
-    subtitle: (item: any) => item.asset_id || item.serial_number,
+    subtitle: (item: any) =>
+      `${item.asset_id || item.serial_number || ""}${item.archived_at ? " — مؤرشف" : ""}`,
     to: (item: any) => `/assets/${item.id}`,
   },
   {

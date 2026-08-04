@@ -23,7 +23,11 @@ function getFilename(path: string) {
 function extensionFor(file: File) {
   const extension = extname(file.name).toLowerCase();
   if (mimeTypes[extension]) return extension;
-  return Object.entries(mimeTypes).find(([, mimeType]) => mimeType === file.type)?.[0] ?? null;
+  return (
+    Object.entries(mimeTypes).find(
+      ([, mimeType]) => mimeType === file.type,
+    )?.[0] ?? null
+  );
 }
 
 function badRequest(message: string) {
@@ -42,16 +46,27 @@ async function saveImage(file: File, requestedPath?: string) {
   if (!extension) throw new Error("صيغة الصورة غير مدعومة");
 
   const requestedFilename = requestedPath ? getFilename(requestedPath) : null;
-  if (requestedPath && !requestedFilename) throw new Error("مسار الصورة غير صالح");
+  if (requestedPath && !requestedFilename)
+    throw new Error("مسار الصورة غير صالح");
 
   const filename = requestedFilename ?? `${randomUUID()}${extension}`;
   await mkdir(UPLOADS_DIRECTORY, { recursive: true });
-  await writeFile(join(UPLOADS_DIRECTORY, filename), Buffer.from(await file.arrayBuffer()));
+  await writeFile(
+    join(UPLOADS_DIRECTORY, filename),
+    Buffer.from(await file.arrayBuffer()),
+  );
   return `${UPLOADS_PATH}${filename}`;
 }
 
 export async function handleLocalImageRequest(request: Request) {
   const url = new URL(request.url);
+
+  if (
+    request.method === "POST" &&
+    Number(request.headers.get("content-length") || 0) >
+      MAX_IMAGE_SIZE + 1024 * 1024
+  )
+    return badRequest("حجم طلب الصورة أكبر من المسموح");
 
   if (request.method === "GET" && url.pathname.startsWith(UPLOADS_PATH)) {
     const filename = getFilename(url.pathname);
@@ -79,19 +94,27 @@ export async function handleLocalImageRequest(request: Request) {
       if (!(image instanceof File)) return badRequest("لم يتم اختيار صورة");
       return Response.json({ path: await saveImage(image) }, { status: 201 });
     } catch (error) {
-      return badRequest(error instanceof Error ? error.message : "تعذر رفع الصورة");
+      return badRequest(
+        error instanceof Error ? error.message : "تعذر رفع الصورة",
+      );
     }
   }
 
-  if (url.pathname === "/api/printer-images/restore" && request.method === "POST") {
+  if (
+    url.pathname === "/api/printer-images/restore" &&
+    request.method === "POST"
+  ) {
     try {
       const formData = await request.formData();
       const image = formData.get("image");
       const path = formData.get("path");
-      if (!(image instanceof File) || typeof path !== "string") return badRequest("بيانات الاستعادة غير صالحة");
+      if (!(image instanceof File) || typeof path !== "string")
+        return badRequest("بيانات الاستعادة غير صالحة");
       return Response.json({ path: await saveImage(image, path) });
     } catch (error) {
-      return badRequest(error instanceof Error ? error.message : "تعذر استعادة الصورة");
+      return badRequest(
+        error instanceof Error ? error.message : "تعذر استعادة الصورة",
+      );
     }
   }
 

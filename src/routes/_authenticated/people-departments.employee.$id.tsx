@@ -113,29 +113,41 @@ function EmployeeDetails() {
       })
       .eq("employee_id", id)
       .eq("return_date", null);
-    if (historyResult.error) return toast.error(historyResult.error.message);
+    if (historyResult.error) {
+      toast.error(historyResult.error.message);
+      return;
+    }
     const licensesResult = await supabase
       .from("license_assignments")
       .delete()
       .eq("employee_id", id);
-    if (licensesResult.error) return toast.error(licensesResult.error.message);
+    if (licensesResult.error) {
+      toast.error(licensesResult.error.message);
+      return;
+    }
     const assetsResult = await supabase
       .from("assets")
       .update({ assigned_employee_id: null })
       .eq("assigned_employee_id", id);
-    if (assetsResult.error) return toast.error(assetsResult.error.message);
+    if (assetsResult.error) {
+      toast.error(assetsResult.error.message);
+      return;
+    }
     const result = await supabase.from("employees").delete().eq("id", id);
-    if (result.error) return toast.error(result.error.message);
+    if (result.error) {
+      toast.error(result.error.message);
+      return;
+    }
     queryClient.invalidateQueries();
     toast.success("تم حذف الموظف");
-    navigate({ to: "/people-departments" });
+    navigate({ to: "/people-departments", search: { tab: "employees" } });
   };
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <Link to="/people-departments">
+          <Link to="/people-departments" search={{ tab: "employees" }}>
             <Button
               variant="ghost"
               size="icon"

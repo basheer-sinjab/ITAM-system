@@ -296,6 +296,9 @@ function PcPartsPanel({ asset }: any) {
       queryClient.invalidateQueries({ queryKey: ["inventory"] }),
       queryClient.invalidateQueries({ queryKey: ["inventory-movements"] }),
       queryClient.invalidateQueries({ queryKey: ["asset-activity", asset.id] }),
+      queryClient.invalidateQueries({
+        queryKey: ["asset-maintenance", asset.id],
+      }),
     ]);
   };
   const undo = async (installation: any) => {
@@ -541,6 +544,9 @@ function PrinterTonerPanel({ asset }: any) {
       queryClient.invalidateQueries({ queryKey: ["inventory"] }),
       queryClient.invalidateQueries({ queryKey: ["inventory-movements"] }),
       queryClient.invalidateQueries({ queryKey: ["asset-activity", asset.id] }),
+      queryClient.invalidateQueries({
+        queryKey: ["asset-maintenance", asset.id],
+      }),
     ]);
   };
   const undo = async (installation: any) => {

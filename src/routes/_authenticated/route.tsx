@@ -8,6 +8,7 @@ import {
   Users,
   Settings,
   FileBarChart,
+  LogOut,
 } from "lucide-react";
 import { GlobalSearch } from "@/components/GlobalSearch";
 
@@ -36,6 +37,14 @@ const SECONDARY_NAV = [
 ] as const;
 
 function AppLayout() {
+  const logout = async () => {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      headers: { "x-itam-request": "1", "content-type": "application/json" },
+      body: "{}",
+    });
+    window.location.replace("/login");
+  };
   return (
     <div className="flex min-h-screen bg-background">
       <aside className="no-print sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-l border-sidebar-border/70 bg-sidebar text-sidebar-foreground lg:flex">
@@ -74,6 +83,14 @@ function AppLayout() {
               {item.label}
             </Link>
           ))}
+          <button
+            type="button"
+            onClick={() => void logout()}
+            className="mt-1 flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          >
+            <LogOut className="size-[18px]" />
+            تسجيل الخروج
+          </button>
         </nav>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">

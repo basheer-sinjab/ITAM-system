@@ -3,19 +3,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   Activity,
+  Archive,
+  ArchiveRestore,
   ArrowRight,
   CirclePlus,
   Clock3,
   Pencil,
   Printer,
   RotateCcw,
-  Trash2,
   UserCheck,
   UserPlus,
   Wrench,
 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { runWorkflowAction, supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { PrinterImage } from "@/components/PrinterImage";
@@ -50,6 +51,7 @@ const STATUS_LABELS: Record<string, string> = {
   inactive: "غير نشط",
   maintenance: "تحت الصيانة",
   retired: "متقاعد",
+  archived: "مؤرشف",
 };
 const RETURN_CONDITIONS: Record<string, string> = {
   good: "سليم",
@@ -130,9 +132,19 @@ function AssetDetails() {
           .order("created_at", { ascending: false })
       ).data ?? [],
   });
-  const remove = useMutation({
-    mutationFn: () => supabase.from("assets").delete().eq("id", id),
-    onSuccess: () => navigate({ to: "/assets" }),
+  const archiveMutation = useMutation({
+    mutationFn: (action: "archive-asset" | "restore-asset") =>
+      runWorkflowAction({ action, assetId: id }),
+    onSuccess: async (_, action) => {
+      await queryClient.invalidateQueries();
+      toast.success(
+        action === "archive-asset"
+          ? "تمت أرشفة الأصل مع الاحتفاظ بسجلاته"
+          : "تمت استعادة الأصل من الأرشيف",
+      );
+      if (action === "archive-asset") navigate({ to: "/assets" });
+    },
+    onError: (error: Error) => toast.error(error.message),
   });
 
   if (!asset) return <p className="text-muted-foreground">جارٍ التحميل…</p>;
@@ -205,33 +217,57 @@ function AssetDetails() {
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          {currentEmployee ? (
-            <Button onClick={() => setReturnOpen(true)}>
-              <RotateCcw className="ml-2 size-4" />
-              إرجاع الأصل
-            </Button>
-          ) : (
-            <Button onClick={() => setCheckoutOpen(true)}>
-              <UserPlus className="ml-2 size-4" />
-              تسليم الأصل
+          {!asset.archived_at &&
+            (currentEmployee ? (
+              <Button onClick={() => setReturnOpen(true)}>
+                <RotateCcw className="ml-2 size-4" />
+                إرجاع الأصل
+              </Button>
+            ) : (
+              <Button onClick={() => setCheckoutOpen(true)}>
+                <UserPlus className="ml-2 size-4" />
+                تسليم الأصل
+              </Button>
+            ))}
+          {!asset.archived_at && (
+            <Button variant="outline" onClick={() => setEditOpen(true)}>
+              <Pencil className="ml-2 size-4" />
+              تعديل البيانات
             </Button>
           )}
-          <Button variant="outline" onClick={() => setEditOpen(true)}>
-            <Pencil className="ml-2 size-4" />
-            تعديل البيانات
-          </Button>
-          <ConfirmButton
-            variant="outline"
-            className="text-destructive"
-            title="حذف الأصل؟"
-            description={`سيتم حذف ${asset.name} وسجلاته المرتبطة نهائيًا.`}
-            onConfirm={() => remove.mutate()}
-          >
-            <Trash2 className="ml-2 size-4" />
-            حذف
-          </ConfirmButton>
+          {asset.archived_at ? (
+            <Button
+              variant="outline"
+              onClick={() => archiveMutation.mutate("restore-asset")}
+            >
+              <ArchiveRestore className="ml-2 size-4" />
+              استعادة من الأرشيف
+            </Button>
+          ) : (
+            <ConfirmButton
+              variant="outline"
+              title="أرشفة الأصل؟"
+              description={`سيتم إيقاف ${asset.name} وإغلاق تعيينه الحالي مع الاحتفاظ بنماذج التسليم والصيانة.`}
+              confirmLabel="تأكيد الأرشفة"
+              onConfirm={() =>
+                archiveMutation
+                  .mutateAsync("archive-asset")
+                  .then(() => undefined)
+              }
+            >
+              <Archive className="ml-2 size-4" />
+              أرشفة
+            </ConfirmButton>
+          )}
         </div>
       </header>
+
+      {asset.archived_at && (
+        <section className="rounded-xl border border-slate-300 bg-slate-100 p-4 text-sm text-slate-700">
+          هذا الأصل مؤرشف منذ {formatDate(asset.archived_at)}. سجلات التسليم
+          والصيانة محفوظة للرجوع إليها.
+        </section>
+      )}
 
       {currentEmployee && (
         <section className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4">
@@ -272,7 +308,12 @@ function AssetDetails() {
             ["المصنّع", asset.manufacturer],
             ["الموديل", asset.model],
             ["الرقم التسلسلي", asset.serial_number],
-            ["الحالة", STATUS_LABELS[asset.status] || asset.status],
+            [
+              "الحالة",
+              asset.archived_at
+                ? STATUS_LABELS.archived
+                : STATUS_LABELS[asset.status] || asset.status,
+            ],
             ["القسم", department?.name],
             ["معيّن لـ", currentEmployee?.full_name],
             ["تاريخ الشراء", formatDate(asset.purchase_date)],
@@ -294,7 +335,7 @@ function AssetDetails() {
         </section>
       )}
 
-      <AssetHardwareTabs asset={asset} />
+      {!asset.archived_at && <AssetHardwareTabs asset={asset} />}
 
       <Timeline events={timeline} printAssignment={printAssignment} />
 

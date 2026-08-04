@@ -36,6 +36,7 @@ function AssetsPage() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [type, setType] = useState("__all__");
+  const [scope, setScope] = useState("current");
   const [open, setOpen] = useState(false);
   const { data: assets = [] } = useQuery({
     queryKey: ["assets"],
@@ -63,8 +64,12 @@ function AssetsPage() {
     queryFn: async () =>
       (await supabase.from("branches").select("*").order("name")).data ?? [],
   });
+  const currentAssets = assets.filter((asset: any) => !asset.archived_at);
   const filtered = assets.filter(
     (asset: any) =>
+      (scope === "archived"
+        ? Boolean(asset.archived_at)
+        : !asset.archived_at) &&
       (type === "__all__" || asset.asset_type === type) &&
       [asset.name, asset.asset_id, asset.serial_number, asset.model].some((v) =>
         String(v ?? "")
@@ -72,10 +77,10 @@ function AssetsPage() {
           .includes(search.toLowerCase()),
       ),
   );
-  const assignedAssets = assets.filter(
+  const assignedAssets = currentAssets.filter(
     (asset: any) => asset.assigned_employee_id,
   ).length;
-  const activeAssets = assets.filter(
+  const activeAssets = currentAssets.filter(
     (asset: any) => asset.status === "active",
   ).length;
   return (
@@ -83,7 +88,7 @@ function AssetsPage() {
       <ManagementHeader
         icon={Monitor}
         title="الأصول"
-        description={`${filtered.length} أصل معروض من أصل ${assets.length}`}
+        description={`${filtered.length} أصل معروض من أصل ${scope === "archived" ? assets.length - currentAssets.length : currentAssets.length}`}
         action={
           <Button className="gap-2" onClick={() => setOpen(true)}>
             <Plus className="size-4" />
@@ -92,7 +97,11 @@ function AssetsPage() {
         }
       />
       <section className="grid gap-3 sm:grid-cols-3">
-        <MetricCard icon={Boxes} label="إجمالي الأصول" value={assets.length} />
+        <MetricCard
+          icon={Boxes}
+          label="إجمالي الأصول"
+          value={currentAssets.length}
+        />
         <MetricCard
           icon={UserRound}
           label="أصول معيّنة"
@@ -106,7 +115,7 @@ function AssetsPage() {
           tone="amber"
         />
       </section>
-      <div className="surface-panel grid gap-3 p-4 md:grid-cols-2">
+      <div className="surface-panel grid gap-3 p-4 md:grid-cols-3">
         <div className="relative">
           <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -127,6 +136,15 @@ function AssetsPage() {
                 {item}
               </SelectItem>
             ))}
+          </SelectContent>
+        </Select>
+        <Select value={scope} onValueChange={setScope}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="current">الأصول الحالية</SelectItem>
+            <SelectItem value="archived">الأرشيف</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -179,15 +197,17 @@ function AssetsPage() {
                   <span className="font-mono">{asset.asset_id}</span>
                   <span className="flex items-center gap-1.5">
                     <span
-                      className={`size-2.5 rounded-full ${asset.status === "active" ? "bg-emerald-500" : asset.status === "maintenance" ? "bg-amber-500" : asset.status === "retired" ? "bg-slate-400" : "bg-rose-500"}`}
+                      className={`size-2.5 rounded-full ${asset.archived_at ? "bg-slate-400" : asset.status === "active" ? "bg-emerald-500" : asset.status === "maintenance" ? "bg-amber-500" : asset.status === "retired" ? "bg-slate-400" : "bg-rose-500"}`}
                     />
-                    {asset.status === "active"
-                      ? "نشط"
-                      : asset.status === "maintenance"
-                        ? "صيانة"
-                        : asset.status === "retired"
-                          ? "متقاعد"
-                          : "غير نشط"}
+                    {asset.archived_at
+                      ? "مؤرشف"
+                      : asset.status === "active"
+                        ? "نشط"
+                        : asset.status === "maintenance"
+                          ? "صيانة"
+                          : asset.status === "retired"
+                            ? "متقاعد"
+                            : "غير نشط"}
                   </span>
                 </div>
               </div>

@@ -80,13 +80,18 @@ function LicenseDetails() {
       .from("license_assignments")
       .delete()
       .eq("license_id", license.id);
-    if (assignmentsResult.error)
-      return toast.error(assignmentsResult.error.message);
+    if (assignmentsResult.error) {
+      toast.error(assignmentsResult.error.message);
+      return;
+    }
     const result = await supabase
       .from("licenses")
       .delete()
       .eq("id", license.id);
-    if (result.error) return toast.error(result.error.message);
+    if (result.error) {
+      toast.error(result.error.message);
+      return;
+    }
     refresh();
     toast.success("تم حذف الترخيص");
     navigate({ to: "/licenses" });

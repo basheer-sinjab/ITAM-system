@@ -38,7 +38,8 @@ function Dashboard() {
     return <p className="text-muted-foreground">جارٍ تحميل لوحة التحكم...</p>;
 
   const { assets, maintenance, inventory, licenses, settings } = data;
-  const assignedAssets = assets.filter(
+  const currentAssets = assets.filter((asset: any) => !asset.archived_at);
+  const assignedAssets = currentAssets.filter(
     (asset: any) => asset.assigned_employee_id,
   ).length;
   const openMaintenance = maintenance.filter(
@@ -54,19 +55,19 @@ function Dashboard() {
     const remaining = daysUntil(license.expiration_date);
     return remaining !== null && remaining >= 0 && remaining <= 30;
   });
-  const expiringWarranties = assets.filter((asset: any) => {
+  const expiringWarranties = currentAssets.filter((asset: any) => {
     const remaining = daysUntil(asset.warranty_expiry);
     return (
       remaining !== null && remaining >= 0 && remaining <= warrantyAlertDays
     );
   });
-  const activeAssets = assets.filter(
+  const activeAssets = currentAssets.filter(
     (asset: any) => asset.status === "active",
   ).length;
   const assetInfo = (assetId: string) =>
     assets.find((asset: any) => asset.id === assetId);
-  const healthPercent = assets.length
-    ? Math.round((activeAssets / assets.length) * 100)
+  const healthPercent = currentAssets.length
+    ? Math.round((activeAssets / currentAssets.length) * 100)
     : 100;
 
   return (
@@ -108,7 +109,7 @@ function Dashboard() {
           to="/assets"
           icon={Monitor}
           label="إجمالي الأصول"
-          value={assets.length}
+          value={currentAssets.length}
           detail="عرض جميع الأجهزة"
           tone="blue"
         />

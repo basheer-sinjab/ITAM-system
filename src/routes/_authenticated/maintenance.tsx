@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { CircleDot, Pencil, Plus, Search, Trash2, Wrench } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { runWorkflowAction, supabase } from "@/integrations/supabase/client";
 import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
 import { ConfirmButton } from "@/components/ConfirmButton";
@@ -30,6 +30,14 @@ export const Route = createFileRoute("/_authenticated/maintenance")({
   component: Maintenance,
 });
 
+const MAINTENANCE_TYPES: Record<string, string> = {
+  Corrective: "تصحيحية",
+  Preventive: "وقائية",
+  "Toner Replacement": "تغيير حبر",
+  "Part Installation": "تركيب قطعة",
+  "Part Replacement": "استبدال قطعة",
+};
+
 function assetLabel(asset: any) {
   return `${asset.name} - ${asset.asset_id || asset.serial_number || asset.id}`;
 }
@@ -39,41 +47,6 @@ function movementItems(items: any[] = []) {
     item_id: item.item_id || item.id,
     quantity: Number(item.quantity) || 0,
   }));
-}
-
-async function reconcileInventory(
-  inventory: any[],
-  previousItems: any[],
-  nextItems: any[],
-  maintenanceId: string | null,
-) {
-  for (const adjustment of inventoryAdjustment(
-    movementItems(previousItems),
-    movementItems(nextItems),
-  )) {
-    const item = inventory.find((entry: any) => entry.id === adjustment.itemId);
-    if (!item) continue;
-    const nextQuantity = Number(item.quantity) + adjustment.quantityChange;
-    if (nextQuantity < 0)
-      throw new Error(`الكمية المتوفرة من ${item.name} لا تكفي`);
-    const update = await supabase
-      .from("inventory_items")
-      .update({ quantity: nextQuantity })
-      .eq("id", item.id);
-    if (update.error) throw update.error;
-    const movement = await supabase.from("inventory_movements").insert({
-      item_id: item.id,
-      movement_type: adjustment.quantityChange > 0 ? "return" : "use",
-      quantity: Math.abs(adjustment.quantityChange),
-      note:
-        adjustment.quantityChange > 0
-          ? "إرجاع بعد تعديل أو حذف سجل صيانة"
-          : "استخدام في سجل صيانة",
-      maintenance_id: maintenanceId,
-    });
-    if (movement.error) throw movement.error;
-    item.quantity = nextQuantity;
-  }
 }
 
 function Maintenance() {
@@ -132,24 +105,16 @@ function Maintenance() {
     return matchesSearch && matchesStatus;
   });
   const removeRecord = async (maintenanceRecord: any) => {
-    const { error } = await supabase
-      .from("asset_maintenance")
-      .delete()
-      .eq("id", maintenanceRecord.id);
-    if (error) return toast.error(error.message);
     try {
-      await reconcileInventory(
-        inventory,
-        maintenanceRecord.used_items || [],
-        [],
-        null,
-      );
-    } catch (reconcileError) {
+      await runWorkflowAction({
+        action: "delete-maintenance",
+        maintenanceId: maintenanceRecord.id,
+      });
+    } catch (error) {
       toast.error(
-        reconcileError instanceof Error
-          ? reconcileError.message
-          : "تعذر إرجاع الكميات",
+        error instanceof Error ? error.message : "تعذر حذف سجل الصيانة",
       );
+      return;
     }
     await qc.invalidateQueries();
     toast.success("تم حذف سجل الصيانة");
@@ -258,9 +223,8 @@ function Maintenance() {
                 </td>
                 <td className="p-4">{maintenanceRecord.maintenance_date}</td>
                 <td className="p-4">
-                  {maintenanceRecord.maintenance_type === "Preventive"
-                    ? "وقائية"
-                    : "تصحيحية"}
+                  {MAINTENANCE_TYPES[maintenanceRecord.maintenance_type] ||
+                    maintenanceRecord.maintenance_type}
                 </td>
                 <td className="p-4">
                   <span
@@ -360,27 +324,13 @@ function MaintenanceForm({
         `الكمية المتوفرة من ${inventory.find((item: any) => item.id === insufficient.itemId)?.name} لا تكفي`,
       );
     const payload = { ...form, cost: Number(form.cost || 0) };
-    const result = form.id
-      ? await supabase
-          .from("asset_maintenance")
-          .update(payload)
-          .eq("id", form.id)
-      : await supabase.from("asset_maintenance").insert(payload);
-    if (result.error) return toast.error(result.error.message);
-    const savedRecord = Array.isArray(result.data)
-      ? result.data[0]
-      : result.data;
     try {
-      await reconcileInventory(
-        inventory,
-        record.used_items || [],
-        form.used_items || [],
-        form.id || savedRecord?.id,
-      );
+      await runWorkflowAction({ action: "save-maintenance", record: payload });
     } catch (error) {
-      return toast.error(
-        error instanceof Error ? error.message : "تعذر تحديث المخزون",
+      toast.error(
+        error instanceof Error ? error.message : "تعذر حفظ سجل الصيانة",
       );
+      return;
     }
     saved();
     toast.success(form.id ? "تم تعديل سجل الصيانة" : "تمت إضافة سجل الصيانة");
@@ -388,17 +338,16 @@ function MaintenanceForm({
   };
   const remove = async () => {
     if (!form.id) return;
-    const result = await supabase
-      .from("asset_maintenance")
-      .delete()
-      .eq("id", form.id);
-    if (result.error) return toast.error(result.error.message);
     try {
-      await reconcileInventory(inventory, record.used_items || [], [], null);
+      await runWorkflowAction({
+        action: "delete-maintenance",
+        maintenanceId: form.id,
+      });
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "تعذر إرجاع الكميات",
+        error instanceof Error ? error.message : "تعذر حذف سجل الصيانة",
       );
+      return;
     }
     saved();
     toast.success("تم حذف سجل الصيانة");
@@ -501,6 +450,9 @@ function MaintenanceForm({
               <SelectContent>
                 <SelectItem value="Corrective">تصحيحية</SelectItem>
                 <SelectItem value="Preventive">وقائية</SelectItem>
+                <SelectItem value="Toner Replacement">تغيير حبر</SelectItem>
+                <SelectItem value="Part Installation">تركيب قطعة</SelectItem>
+                <SelectItem value="Part Replacement">استبدال قطعة</SelectItem>
               </SelectContent>
             </Select>
           </div>

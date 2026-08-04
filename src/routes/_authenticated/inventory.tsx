@@ -121,7 +121,10 @@ function Inventory() {
       .from("inventory_items")
       .delete()
       .eq("id", item.id);
-    if (result.error) return toast.error(result.error.message);
+    if (result.error) {
+      toast.error(result.error.message);
+      return;
+    }
     refresh();
     toast.success("تم حذف العنصر من المخزون");
   };
@@ -334,24 +337,20 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
         .eq("id", item.id);
       if (result.error) return toast.error(result.error.message);
     } else {
-      const result = await supabase
-        .from("inventory_items")
-        .insert({
-          ...payload,
-          quantity: Math.max(0, Number(form.quantity) || 0),
-          minimum_quantity: 1,
-        });
+      const result = await supabase.from("inventory_items").insert({
+        ...payload,
+        quantity: Math.max(0, Number(form.quantity) || 0),
+        minimum_quantity: 1,
+      });
       if (result.error) return toast.error(result.error.message);
       const created = Array.isArray(result.data) ? result.data[0] : result.data;
       if (created && Number(form.quantity) > 0)
-        await supabase
-          .from("inventory_movements")
-          .insert({
-            item_id: created.id,
-            movement_type: "add",
-            quantity: Number(form.quantity),
-            note: "الكمية الافتتاحية",
-          });
+        await supabase.from("inventory_movements").insert({
+          item_id: created.id,
+          movement_type: "add",
+          quantity: Number(form.quantity),
+          note: "الكمية الافتتاحية",
+        });
     }
     saved();
     close();
@@ -458,14 +457,12 @@ function MovementDialog({
       .update({ quantity: nextQuantity })
       .eq("id", item.id);
     if (update.error) return toast.error(update.error.message);
-    const log = await supabase
-      .from("inventory_movements")
-      .insert({
-        item_id: item.id,
-        movement_type: type,
-        quantity: amount,
-        note: note.trim() || null,
-      });
+    const log = await supabase.from("inventory_movements").insert({
+      item_id: item.id,
+      movement_type: type,
+      quantity: amount,
+      note: note.trim() || null,
+    });
     if (log.error) return toast.error(log.error.message);
     saved();
     close();

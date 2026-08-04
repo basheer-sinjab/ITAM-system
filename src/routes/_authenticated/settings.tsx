@@ -26,6 +26,16 @@ import { ConfirmButton } from "@/components/ConfirmButton";
 import { downloadCsv, parseCsv } from "@/lib/csv";
 import { AssetTemplatesSettings } from "@/components/AssetTemplatesSettings";
 import { COLOR_PALETTE, ColorField } from "@/components/ColorField";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type LookupTable = "branches" | "technicians";
 
@@ -132,19 +142,24 @@ function BackupSettings() {
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isWorking, setIsWorking] = useState(false);
+  const [pendingRestore, setPendingRestore] = useState<File>();
+
+  const downloadBackupFile = (backup: string, prefix = "itam-backup") => {
+    const url = URL.createObjectURL(
+      new Blob([backup], { type: "application/json" }),
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${prefix}-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   const downloadBackup = async () => {
     setIsWorking(true);
     try {
       const backup = await createLocalBackup();
-      const url = URL.createObjectURL(
-        new Blob([backup], { type: "application/json" }),
-      );
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `printers-backup-${new Date().toISOString().slice(0, 10)}.json`;
-      link.click();
-      URL.revokeObjectURL(url);
+      downloadBackupFile(backup);
       toast.success("تم إنشاء النسخة الاحتياطية مع الصور");
     } catch (error) {
       toast.error(
@@ -159,6 +174,8 @@ function BackupSettings() {
     if (!file) return;
     setIsWorking(true);
     try {
+      const safetyBackup = await createLocalBackup();
+      downloadBackupFile(safetyBackup, "itam-before-restore");
       await restoreLocalBackup(file);
       await queryClient.invalidateQueries();
       toast.success("تمت استعادة البيانات والصور");
@@ -171,6 +188,7 @@ function BackupSettings() {
     } finally {
       setIsWorking(false);
       if (inputRef.current) inputRef.current.value = "";
+      setPendingRestore(undefined);
     }
   };
 
@@ -201,9 +219,40 @@ function BackupSettings() {
           className="hidden"
           type="file"
           accept="application/json,.json"
-          onChange={(event) => restoreBackup(event.target.files?.[0])}
+          onChange={(event) => setPendingRestore(event.target.files?.[0])}
         />
       </div>
+      <AlertDialog
+        open={Boolean(pendingRestore)}
+        onOpenChange={(open) => {
+          if (!open && !isWorking) {
+            setPendingRestore(undefined);
+            if (inputRef.current) inputRef.current.value = "";
+          }
+        }}
+      >
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader className="text-right sm:text-right">
+            <AlertDialogTitle>استعادة النسخة الاحتياطية؟</AlertDialogTitle>
+            <AlertDialogDescription>
+              ستستبدل النسخة المختارة جميع البيانات الحالية. سينزّل النظام أولًا
+              نسخة أمان تلقائية من البيانات الحالية.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2 sm:flex-row-reverse sm:space-x-0">
+            <AlertDialogAction
+              disabled={isWorking}
+              onClick={(event) => {
+                event.preventDefault();
+                void restoreBackup(pendingRestore);
+              }}
+            >
+              تأكيد الاستعادة
+            </AlertDialogAction>
+            <AlertDialogCancel disabled={isWorking}>إلغاء</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -302,7 +351,7 @@ function LookupManager({
             لا توجد عناصر.
           </li>
         )}
-        {(rows ?? []).map((r) => (
+        {(rows ?? []).map((r: any) => (
           <li
             key={r.id}
             className="flex items-center justify-between gap-2 p-3"

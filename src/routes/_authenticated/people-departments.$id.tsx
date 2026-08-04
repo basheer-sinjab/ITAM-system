@@ -92,9 +92,15 @@ function DepartmentDetails() {
       .from("employees")
       .update({ department_id: null })
       .eq("department_id", id);
-    if (detach.error) return toast.error(detach.error.message);
+    if (detach.error) {
+      toast.error(detach.error.message);
+      return;
+    }
     const result = await supabase.from("departments").delete().eq("id", id);
-    if (result.error) return toast.error(result.error.message);
+    if (result.error) {
+      toast.error(result.error.message);
+      return;
+    }
     queryClient.invalidateQueries();
     toast.success("تم حذف القسم");
     navigate({ to: "/people-departments", search: { tab: "departments" } });

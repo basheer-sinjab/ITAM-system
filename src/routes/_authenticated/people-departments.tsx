@@ -62,9 +62,6 @@ function PeopleDepartments() {
   const [departmentOpen, setDepartmentOpen] = useState(false);
   const [employeeSearch, setEmployeeSearch] = useState("");
   const [departmentSearch, setDepartmentSearch] = useState("");
-  const [newBranch, setNewBranch] = useState("");
-  const [newBranchColor, setNewBranchColor] = useState(COLOR_PALETTE[0]);
-  const [newTechnician, setNewTechnician] = useState("");
   const { data: employees = [] } = useQuery({
     queryKey: ["employees"],
     queryFn: async () =>
@@ -230,6 +227,7 @@ function PeopleDepartments() {
                         key={employee.id}
                         to="/people-departments/employee/$id"
                         params={{ id: employee.id }}
+                        search={{ tab: "employees" }}
                         className="surface-panel interactive-card p-5 hover:interactive-card-hover"
                       >
                         <div className="flex items-start justify-between gap-3">
@@ -294,6 +292,7 @@ function PeopleDepartments() {
                         key={employee.id}
                         to="/people-departments/employee/$id"
                         params={{ id: employee.id }}
+                        search={{ tab: "employees" }}
                         className="surface-panel interactive-card p-5 hover:interactive-card-hover"
                       >
                         <h2 className="font-semibold">{employee.full_name}</h2>
@@ -384,6 +383,7 @@ function PeopleDepartments() {
                           key={department.id}
                           to="/people-departments/$id"
                           params={{ id: department.id }}
+                          search={{ tab: "departments" }}
                           className="surface-panel interactive-card p-5 hover:interactive-card-hover"
                           style={{
                             borderTopWidth: 4,
@@ -440,6 +440,7 @@ function PeopleDepartments() {
                           key={department.id}
                           to="/people-departments/$id"
                           params={{ id: department.id }}
+                          search={{ tab: "departments" }}
                           className="surface-panel interactive-card p-5 hover:interactive-card-hover"
                         >
                           <h2 className="font-semibold">{department.name}</h2>
@@ -455,35 +456,6 @@ function PeopleDepartments() {
           </div>
         </TabsContent>
         <TabsContent value="branches" className="space-y-4">
-          <div className="surface-panel space-y-3 p-3">
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Input
-                value={newBranch}
-                onChange={(event) => setNewBranch(event.target.value)}
-                placeholder="اسم الفرع الجديد"
-              />
-              <Button
-                onClick={async () => {
-                  if (!newBranch.trim()) return toast.error("اسم الفرع مطلوب");
-                  const result = await supabase.from("branches").insert({
-                    name: newBranch.trim(),
-                    color: newBranchColor,
-                  });
-                  if (result.error) return toast.error(result.error.message);
-                  setNewBranch("");
-                  setNewBranchColor(
-                    COLOR_PALETTE[(branches.length + 1) % COLOR_PALETTE.length],
-                  );
-                  queryClient.invalidateQueries({ queryKey: ["branches"] });
-                  toast.success("تمت إضافة الفرع");
-                }}
-              >
-                <Plus className="ml-2 size-4" />
-                إضافة فرع
-              </Button>
-            </div>
-            <ColorField value={newBranchColor} onChange={setNewBranchColor} />
-          </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {branches.map((branch: any) => (
               <div
@@ -518,29 +490,6 @@ function PeopleDepartments() {
           </div>
         </TabsContent>
         <TabsContent value="technicians" className="space-y-4">
-          <div className="surface-panel flex flex-col gap-2 p-3 sm:flex-row">
-            <Input
-              value={newTechnician}
-              onChange={(event) => setNewTechnician(event.target.value)}
-              placeholder="اسم الفني الجديد"
-            />
-            <Button
-              onClick={async () => {
-                if (!newTechnician.trim())
-                  return toast.error("اسم الفني مطلوب");
-                const result = await supabase
-                  .from("technicians")
-                  .insert({ name: newTechnician.trim() });
-                if (result.error) return toast.error(result.error.message);
-                setNewTechnician("");
-                queryClient.invalidateQueries({ queryKey: ["technicians"] });
-                toast.success("تمت إضافة الفني");
-              }}
-            >
-              <Plus className="ml-2 size-4" />
-              إضافة فني
-            </Button>
-          </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {technicians.map((technician: any) => (
               <div

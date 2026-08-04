@@ -125,22 +125,54 @@ var Activity = createLucideIcon("activity", [["path", {
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
-var ArrowLeftRight = createLucideIcon("arrow-left-right", [
-	["path", {
-		d: "M8 3 4 7l4 4",
-		key: "9rb6wj"
+var ArchiveRestore = createLucideIcon("archive-restore", [
+	["rect", {
+		width: "20",
+		height: "5",
+		x: "2",
+		y: "3",
+		rx: "1",
+		key: "1wp1u1"
 	}],
 	["path", {
-		d: "M4 7h16",
-		key: "6tx8e3"
+		d: "M4 8v11a2 2 0 0 0 2 2h2",
+		key: "tvwodi"
 	}],
 	["path", {
-		d: "m16 21 4-4-4-4",
-		key: "siv7j2"
+		d: "M20 8v11a2 2 0 0 1-2 2h-2",
+		key: "1gkqxj"
 	}],
 	["path", {
-		d: "M20 17H4",
-		key: "h6l3hr"
+		d: "m9 15 3-3 3 3",
+		key: "1pd0qc"
+	}],
+	["path", {
+		d: "M12 12v9",
+		key: "192myk"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var Archive = createLucideIcon("archive", [
+	["rect", {
+		width: "20",
+		height: "5",
+		x: "2",
+		y: "3",
+		rx: "1",
+		key: "1wp1u1"
+	}],
+	["path", {
+		d: "M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8",
+		key: "1s80jp"
+	}],
+	["path", {
+		d: "M10 12h4",
+		key: "a56b0p"
 	}]
 ]);
 /**
@@ -665,6 +697,52 @@ var LayoutDashboard = createLucideIcon("layout-dashboard", [
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
+var LockKeyhole = createLucideIcon("lock-keyhole", [
+	["circle", {
+		cx: "12",
+		cy: "16",
+		r: "1",
+		key: "1au0dj"
+	}],
+	["rect", {
+		x: "3",
+		y: "10",
+		width: "18",
+		height: "12",
+		rx: "2",
+		key: "6s8ecr"
+	}],
+	["path", {
+		d: "M7 10V7a5 5 0 0 1 10 0v3",
+		key: "1pqi11"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var LogOut = createLucideIcon("log-out", [
+	["path", {
+		d: "m16 17 5-5-5-5",
+		key: "1bji2h"
+	}],
+	["path", {
+		d: "M21 12H9",
+		key: "dn1m92"
+	}],
+	["path", {
+		d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4",
+		key: "1uf3rs"
+	}]
+]);
+/**
+* @license lucide-react v0.575.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
 var Mail = createLucideIcon("mail", [["path", {
 	d: "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7",
 	key: "132q7q"
@@ -981,16 +1059,6 @@ var ShieldCheck = createLucideIcon("shield-check", [["path", {
 * This source code is licensed under the ISC license.
 * See the LICENSE file in the root directory of this source tree.
 */
-var Star = createLucideIcon("star", [["path", {
-	d: "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z",
-	key: "r04s7s"
-}]]);
-/**
-* @license lucide-react v0.575.0 - ISC
-*
-* This source code is licensed under the ISC license.
-* See the LICENSE file in the root directory of this source tree.
-*/
 var Trash2 = createLucideIcon("trash-2", [
 	["path", {
 		d: "M10 11v6",
@@ -1194,4 +1262,4 @@ var X = createLucideIcon("x", [["path", {
 	key: "d8bk6v"
 }]]);
 //#endregion
-export { History as A, ChevronUp as B, Monitor as C, LayoutDashboard as D, Mail as E, Clock3 as F, Boxes as G, Check as H, ClipboardCheck as I, ArrowLeftRight as J, ArrowRight as K, CirclePlus as L, FileChartColumnIncreasing as M, Download as N, Layers as O, Cpu as P, CircleDot as R, PackagePlus as S, MemoryStick as T, CalendarClock as U, ChevronDown as V, Building2 as W, Activity as Y, Printer as _, UserRound as a, Pencil as b, Upload as c, Star as d, ShieldCheck as f, RotateCcw as g, Search as h, UsersRound as i, FileSpreadsheet as j, KeyRound as k, TriangleAlert as l, Settings2 as m, Wrench as n, UserPlus as o, Settings as p, ArrowLeft as q, Users as r, UserCheck as s, X as t, Trash2 as u, Plus as v, Minus as w, Package as x, Phone as y, CircleCheck as z };
+export { KeyRound as A, CircleCheck as B, Minus as C, LockKeyhole as D, LogOut as E, Cpu as F, Building2 as G, ChevronDown as H, Clock3 as I, ArrowLeft as J, Boxes as K, ClipboardCheck as L, FileSpreadsheet as M, FileChartColumnIncreasing as N, LayoutDashboard as O, Download as P, CirclePlus as R, Monitor as S, Mail as T, Check as U, ChevronUp as V, CalendarClock as W, ArchiveRestore as X, Archive as Y, Activity as Z, Plus as _, UserRound as a, Package as b, Upload as c, ShieldCheck as d, Settings as f, Printer as g, RotateCcw as h, UsersRound as i, History as j, Layers as k, TriangleAlert as l, Search as m, Wrench as n, UserPlus as o, Settings2 as p, ArrowRight as q, Users as r, UserCheck as s, X as t, Trash2 as u, Phone as v, MemoryStick as w, PackagePlus as x, Pencil as y, CircleDot as z };

@@ -41,7 +41,12 @@ const ASSET_PREFIXES: Record<string, string> = {
 };
 
 async function api<T>(path: string, init?: RequestInit) {
-  const response = await fetch(`/api/local-data${path}`, init);
+  const headers = new Headers(init?.headers);
+  headers.set("x-itam-request", "1");
+  const response = await fetch(`/api/local-data${path}`, {
+    ...init,
+    headers,
+  });
   const body = await response.json();
   if (!response.ok)
     throw new Error(body.message ?? "تعذر الوصول إلى قاعدة البيانات");
@@ -55,6 +60,7 @@ function defaults(table: string, value: Row): Row {
       ...base,
       asset_type: value.asset_type ?? "Printer",
       status: value.status ?? "active",
+      archived_at: value.archived_at ?? null,
       updated_at: now(),
     };
   if (table === "employees") return { status: "active", ...base };
@@ -86,6 +92,8 @@ function defaults(table: string, value: Row): Row {
       status: "Closed",
       used_items: [],
       cost: 0,
+      source_type: null,
+      source_id: null,
       ...base,
     };
   if (table === "pc_specs") return { updated_at: now(), ...base };
@@ -96,6 +104,7 @@ function defaults(table: string, value: Row): Row {
       old_part_action: null,
       replacement_of_id: null,
       undone_at: null,
+      maintenance_id: null,
       ...base,
     };
   if (table === "toner_installations")
@@ -103,6 +112,7 @@ function defaults(table: string, value: Row): Row {
       quantity: 1,
       installed_at: new Date().toISOString().slice(0, 10),
       undone_at: null,
+      maintenance_id: null,
       ...base,
     };
   if (table === "licenses") return { seat_count: 1, ...base };
@@ -211,7 +221,6 @@ class Query {
             ? response.data
             : [response.data];
       if (this.operation === "select") {
-        rows = await this.expand(rows);
         if (this.selectText !== "*" && !this.selectText.includes("(")) {
           const fields = this.selectText.split(",").map((x) => x.trim());
           rows = rows.map((r) =>
@@ -226,30 +235,6 @@ class Query {
         error: error instanceof Error ? error : new Error(String(error)),
       };
     }
-  }
-  private async expand(rows: Row[]) {
-    if (
-      this.table === "toner_replacements" &&
-      this.selectText.includes("toner_replacement_items")
-    ) {
-      const items = await getRows("toner_replacement_items");
-      rows = rows.map((r) => ({
-        ...r,
-        toner_replacement_items: items.filter((i) => i.replacement_id === r.id),
-      }));
-    }
-    if (
-      (this.table === "toner_replacements" ||
-        this.table === "maintenance_records") &&
-      this.selectText.includes("printers(")
-    ) {
-      const printers = await getRows("printers");
-      rows = rows.map((r) => ({
-        ...r,
-        printers: printers.find((p) => p.id === r.printer_id) ?? null,
-      }));
-    }
-    return rows;
   }
   then<TResult1 = Result, TResult2 = never>(
     ok?: ((value: Result) => TResult1 | PromiseLike<TResult1>) | null,
@@ -295,6 +280,16 @@ export async function restoreLocalData(data: Record<string, Row[]>) {
 export async function runHardwareAction<T = Row>(payload: Row): Promise<T> {
   return (
     await api<{ data: T }>("/hardware", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+  ).data;
+}
+
+export async function runWorkflowAction<T = Row>(payload: Row): Promise<T> {
+  return (
+    await api<{ data: T }>("/workflow", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(payload),
