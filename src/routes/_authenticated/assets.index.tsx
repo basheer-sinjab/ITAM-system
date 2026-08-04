@@ -23,6 +23,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { PrinterImage } from "@/components/PrinterImage";
+import { ScopeColorBadges } from "@/components/ScopeColorBadges";
 import { ASSET_TYPES, uploadPrinterImage } from "@/lib/pms";
 import { toast } from "sonner";
 
@@ -56,6 +57,11 @@ function AssetsPage() {
     queryKey: ["departments"],
     queryFn: async () =>
       (await supabase.from("departments").select("*").order("name")).data ?? [],
+  });
+  const { data: branches = [] } = useQuery({
+    queryKey: ["branches"],
+    queryFn: async () =>
+      (await supabase.from("branches").select("*").order("name")).data ?? [],
   });
   const filtered = assets.filter(
     (asset: any) =>
@@ -125,57 +131,69 @@ function AssetsPage() {
         </Select>
       </div>
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-        {filtered.map((asset: any) => (
-          <Link
-            key={asset.id}
-            to="/assets/$id"
-            params={{ id: asset.id }}
-            className="surface-panel interactive-card overflow-hidden hover:interactive-card-hover"
-          >
-            <PrinterImage
-              path={asset.image_url}
-              alt={asset.name}
-              className="h-40 w-full"
-            />
-            <div className="space-y-2 p-4">
-              <div className="flex items-start justify-between gap-2">
-                <p className="font-semibold">{asset.name}</p>
-                <span className="rounded-md bg-primary/10 px-2 py-1 text-xs text-primary">
-                  {asset.asset_type}
-                </span>
+        {filtered.map((asset: any) => {
+          const department = departments.find(
+            (item: any) => item.id === asset.department_id,
+          );
+          const branch = branches.find(
+            (item: any) =>
+              item.id === department?.branch_id ||
+              (!department?.branch_id && item.name === department?.branch),
+          );
+          return (
+            <Link
+              key={asset.id}
+              to="/assets/$id"
+              params={{ id: asset.id }}
+              className="surface-panel interactive-card overflow-hidden border-t-4 hover:interactive-card-hover"
+              style={{
+                borderTopColor: department?.color || branch?.color || "#2563eb",
+              }}
+            >
+              <PrinterImage
+                path={asset.image_url}
+                alt={asset.name}
+                className="h-40 w-full"
+              />
+              <div className="space-y-2 p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="font-semibold">{asset.name}</p>
+                  <span className="rounded-md bg-primary/10 px-2 py-1 text-xs text-primary">
+                    {asset.asset_type}
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {asset.manufacturer || "الشركة غير محددة"}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {asset.assigned_employee_id
+                    ? `معين لـ (${employees.find((employee: any) => employee.id === asset.assigned_employee_id)?.full_name ?? "موظف"})`
+                    : "غير معين"}
+                </p>
+                {department ? (
+                  <ScopeColorBadges department={department} branch={branch} />
+                ) : (
+                  <p className="text-xs text-muted-foreground">قسم غير محدد</p>
+                )}
+                <div className="flex items-center justify-between border-t pt-2 text-xs text-muted-foreground">
+                  <span className="font-mono">{asset.asset_id}</span>
+                  <span className="flex items-center gap-1.5">
+                    <span
+                      className={`size-2.5 rounded-full ${asset.status === "active" ? "bg-emerald-500" : asset.status === "maintenance" ? "bg-amber-500" : asset.status === "retired" ? "bg-slate-400" : "bg-rose-500"}`}
+                    />
+                    {asset.status === "active"
+                      ? "نشط"
+                      : asset.status === "maintenance"
+                        ? "صيانة"
+                        : asset.status === "retired"
+                          ? "متقاعد"
+                          : "غير نشط"}
+                  </span>
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                {asset.manufacturer || "الشركة غير محددة"}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {asset.assigned_employee_id
-                  ? `معين لـ (${employees.find((employee: any) => employee.id === asset.assigned_employee_id)?.full_name ?? "موظف"})`
-                  : "غير معين"}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                القسم:{" "}
-                {departments.find(
-                  (department: any) => department.id === asset.department_id,
-                )?.name ?? "غير محدد"}
-              </p>
-              <div className="flex items-center justify-between border-t pt-2 text-xs text-muted-foreground">
-                <span className="font-mono">{asset.asset_id}</span>
-                <span className="flex items-center gap-1.5">
-                  <span
-                    className={`size-2.5 rounded-full ${asset.status === "active" ? "bg-emerald-500" : asset.status === "maintenance" ? "bg-amber-500" : asset.status === "retired" ? "bg-slate-400" : "bg-rose-500"}`}
-                  />
-                  {asset.status === "active"
-                    ? "نشط"
-                    : asset.status === "maintenance"
-                      ? "صيانة"
-                      : asset.status === "retired"
-                        ? "متقاعد"
-                        : "غير نشط"}
-                </span>
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
       <AssetForm
         open={open}
@@ -195,6 +213,13 @@ export function AssetForm({
   onSaved,
 }: any) {
   const queryClient = useQueryClient();
+  const [templateId, setTemplateId] = useState(NONE);
+  const { data: templates = [] } = useQuery({
+    queryKey: ["asset-templates"],
+    queryFn: async () =>
+      (await supabase.from("asset_templates").select("*").order("name")).data ??
+      [],
+  });
   const [form, setForm] = useState<any>({
     name: "",
     asset_type: "Printer",
@@ -230,6 +255,7 @@ export function AssetForm({
             },
       );
       setFile(null);
+      setTemplateId(NONE);
     }
   }, [open, asset]);
   const save = useMutation({
@@ -243,6 +269,9 @@ export function AssetForm({
       const payload = {
         ...form,
         name: form.name.trim(),
+        manufacturer: form.manufacturer?.trim() || null,
+        model: form.model?.trim() || null,
+        serial_number: form.serial_number?.trim() || null,
         department_id,
         purchase_date: form.purchase_date || null,
         warranty_expiry: form.warranty_expiry || null,
@@ -277,6 +306,43 @@ export function AssetForm({
           <DialogTitle>{asset ? "تعديل أصل" : "إضافة أصل"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 sm:grid-cols-2">
+          {!asset && (
+            <div className="space-y-2 sm:col-span-2">
+              <Label>قالب الجهاز (اختياري)</Label>
+              <Select
+                value={templateId}
+                onValueChange={(value) => {
+                  setTemplateId(value);
+                  const template = templates.find(
+                    (item: any) => item.id === value,
+                  );
+                  if (!template) return;
+                  setForm((current: any) => ({
+                    ...current,
+                    name: template.name,
+                    asset_type: template.asset_type,
+                    manufacturer: template.manufacturer || "",
+                    model: template.model || "",
+                  }));
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="ابدأ من قالب محفوظ" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NONE}>بدون قالب</SelectItem>
+                  {templates.map((template: any) => (
+                    <SelectItem key={template.id} value={template.id}>
+                      {template.name} — {template.asset_type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                يمكنك إدارة القوالب من الإعدادات ← قوالب الأجهزة.
+              </p>
+            </div>
+          )}
           {[
             ["رقم الأصل (يتولد تلقائياً إن ترك فارغاً)", "asset_id"],
             ["اسم الأصل *", "name"],

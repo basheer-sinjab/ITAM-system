@@ -31,6 +31,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { ScopeColorBadges } from "@/components/ScopeColorBadges";
 
 export const Route = createFileRoute(
   "/_authenticated/people-departments/employee/$id",
@@ -92,6 +93,11 @@ function EmployeeDetails() {
   const departmentLabel = department
     ? `${department.name} - ${branchName || "فرع غير محدد"}`
     : "بدون قسم";
+  const branch = branches.find(
+    (item: any) =>
+      item.id === department?.branch_id ||
+      (!department?.branch_id && item.name === department?.branch),
+  );
   const assignedLicenses = assignments
     .map((assignment: any) =>
       licenses.find((license: any) => license.id === assignment.license_id),
@@ -141,6 +147,9 @@ function EmployeeDetails() {
           <div>
             <h1 className="text-2xl font-bold">{employee.full_name}</h1>
             <p className="text-sm text-muted-foreground">{departmentLabel}</p>
+            <div className="mt-2">
+              <ScopeColorBadges department={department} branch={branch} />
+            </div>
           </div>
         </div>
         <div className="flex gap-2">
@@ -280,20 +289,27 @@ function EmployeeEdit({
   const set = (key: string, value: any) => setForm({ ...form, [key]: value });
   const save = async () => {
     if (!form.full_name?.trim()) return toast.error("الاسم الكامل مطلوب");
+    const nextDepartmentId =
+      form.department_id === "__none__" ? null : form.department_id;
+    const departmentChanged =
+      (employee.department_id || null) !== (nextDepartmentId || null);
     const result = await supabase
       .from("employees")
       .update({
         ...form,
         employee_number: form.employee_number?.trim() || null,
         full_name: form.full_name.trim(),
-        department_id:
-          form.department_id === "__none__" ? null : form.department_id,
+        department_id: nextDepartmentId,
       })
       .eq("id", employee.id);
     if (result.error) return toast.error(result.error.message);
     saved();
     onOpenChange(false);
-    toast.success("تم تعديل الموظف");
+    toast.success(
+      departmentChanged
+        ? "تم تعديل الموظف ونقل أصوله إلى القسم الجديد"
+        : "تم تعديل الموظف",
+    );
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

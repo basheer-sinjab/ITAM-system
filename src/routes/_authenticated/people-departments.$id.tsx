@@ -31,6 +31,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { COLOR_PALETTE, ColorField } from "@/components/ColorField";
 
 export const Route = createFileRoute("/_authenticated/people-departments/$id")({
   component: DepartmentDetails,
@@ -228,6 +229,7 @@ function DepartmentEdit({
 }: any) {
   const [name, setName] = useState("");
   const [branchId, setBranchId] = useState("");
+  const [color, setColor] = useState(COLOR_PALETTE[0]);
   const [notes, setNotes] = useState("");
   useEffect(() => {
     if (open) {
@@ -239,6 +241,7 @@ function DepartmentEdit({
           "",
       );
       setNotes(department.notes || "");
+      setColor(department.color || COLOR_PALETTE[0]);
     }
   }, [open, department, branches]);
   const save = async () => {
@@ -250,6 +253,7 @@ function DepartmentEdit({
         branch_id: branchId || null,
         branch:
           branches.find((branch: any) => branch.id === branchId)?.name || "",
+        color,
         notes: notes || null,
       })
       .eq("id", department.id);
@@ -296,6 +300,9 @@ function DepartmentEdit({
               value={notes}
               onChange={(event) => setNotes(event.target.value)}
             />
+          </Field>
+          <Field label="لون القسم">
+            <ColorField value={color} onChange={setColor} />
           </Field>
         </div>
         <DialogFooter>

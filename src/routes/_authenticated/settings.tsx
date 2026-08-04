@@ -24,6 +24,8 @@ import { createLocalBackup, restoreLocalBackup } from "@/lib/local-backup";
 import { ManagementHeader } from "@/components/ManagementVisuals";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { downloadCsv, parseCsv } from "@/lib/csv";
+import { AssetTemplatesSettings } from "@/components/AssetTemplatesSettings";
+import { COLOR_PALETTE, ColorField } from "@/components/ColorField";
 
 type LookupTable = "branches" | "technicians";
 
@@ -55,7 +57,7 @@ function SettingsPage() {
       />
 
       <Tabs defaultValue="branches" dir="rtl" className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-3 lg:grid-cols-6">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-4 lg:grid-cols-7">
           <TabsTrigger
             className="h-auto min-h-9 whitespace-normal text-center leading-5"
             value="branches"
@@ -67,6 +69,12 @@ function SettingsPage() {
             value="technicians"
           >
             الفنيون
+          </TabsTrigger>
+          <TabsTrigger
+            className="h-auto min-h-9 whitespace-normal text-center leading-5"
+            value="asset-templates"
+          >
+            قوالب الأجهزة
           </TabsTrigger>
           <TabsTrigger
             className="h-auto min-h-9 whitespace-normal text-center leading-5"
@@ -99,6 +107,9 @@ function SettingsPage() {
         </TabsContent>
         <TabsContent value="technicians" className="mt-4">
           <LookupManager table="technicians" title="الفنيون" />
+        </TabsContent>
+        <TabsContent value="asset-templates" className="mt-4">
+          <AssetTemplatesSettings />
         </TabsContent>
         <TabsContent value="alerts" className="mt-4">
           <AlertSettings />
@@ -206,8 +217,10 @@ function LookupManager({
 }) {
   const qc = useQueryClient();
   const [name, setName] = useState("");
+  const [color, setColor] = useState(COLOR_PALETTE[0]);
   const [editId, setEditId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
+  const [editColor, setEditColor] = useState(COLOR_PALETTE[0]);
 
   const { data: rows } = useQuery({
     queryKey: [table],
@@ -218,14 +231,19 @@ function LookupManager({
   const add = useMutation({
     mutationFn: async () => {
       if (!name.trim()) throw new Error("الاسم مطلوب");
-      const { error } = await supabase
-        .from(table)
-        .insert({ name: name.trim() });
+      const { error } = await supabase.from(table).insert({
+        name: name.trim(),
+        ...(table === "branches" ? { color } : {}),
+      });
       if (error) throw error;
     },
     onSuccess: () => {
       qc.invalidateQueries();
       setName("");
+      if (table === "branches")
+        setColor(
+          COLOR_PALETTE[((rows?.length ?? 0) + 1) % COLOR_PALETTE.length],
+        );
       toast.success("تمت الإضافة");
     },
     onError: (e: Error) => toast.error(e.message),
@@ -235,7 +253,10 @@ function LookupManager({
     mutationFn: async () => {
       const { error } = await supabase
         .from(table)
-        .update({ name: editName.trim() })
+        .update({
+          name: editName.trim(),
+          ...(table === "branches" ? { color: editColor } : {}),
+        })
         .eq("id", editId!);
       if (error) throw error;
     },
@@ -274,6 +295,7 @@ function LookupManager({
           إضافة
         </Button>
       </div>
+      {table === "branches" && <ColorField value={color} onChange={setColor} />}
       <ul className="divide-y rounded-lg border">
         {(rows ?? []).length === 0 && (
           <li className="p-4 text-center text-sm text-muted-foreground">
@@ -287,10 +309,15 @@ function LookupManager({
           >
             {editId === r.id ? (
               <>
-                <Input
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                />
+                <div className="flex-1 space-y-2">
+                  <Input
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                  />
+                  {table === "branches" && (
+                    <ColorField value={editColor} onChange={setEditColor} />
+                  )}
+                </div>
                 <div className="flex gap-1">
                   <Button
                     variant="ghost"
@@ -310,7 +337,15 @@ function LookupManager({
               </>
             ) : (
               <>
-                <span>{r.name}</span>
+                <span className="flex items-center gap-2">
+                  {table === "branches" && (
+                    <span
+                      className="size-3 rounded-full"
+                      style={{ backgroundColor: r.color || COLOR_PALETTE[0] }}
+                    />
+                  )}
+                  {r.name}
+                </span>
                 <div className="flex gap-1">
                   <Button
                     variant="ghost"
@@ -318,6 +353,7 @@ function LookupManager({
                     onClick={() => {
                       setEditId(r.id);
                       setEditName(r.name);
+                      setEditColor(r.color || COLOR_PALETTE[0]);
                     }}
                   >
                     <Pencil className="size-4" />

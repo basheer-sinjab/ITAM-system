@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { COLOR_PALETTE, ColorField } from "@/components/ColorField";
 
 export const Route = createFileRoute("/_authenticated/people-departments")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -62,6 +63,7 @@ function PeopleDepartments() {
   const [employeeSearch, setEmployeeSearch] = useState("");
   const [departmentSearch, setDepartmentSearch] = useState("");
   const [newBranch, setNewBranch] = useState("");
+  const [newBranchColor, setNewBranchColor] = useState(COLOR_PALETTE[0]);
   const [newTechnician, setNewTechnician] = useState("");
   const { data: employees = [] } = useQuery({
     queryKey: ["employees"],
@@ -200,7 +202,18 @@ function PeopleDepartments() {
                 >
                   <summary className="flex cursor-pointer list-none items-center justify-between border-b p-4 font-semibold marker:hidden">
                     <span className="flex items-center gap-2">
-                      <Building2 className="size-4 text-primary" />
+                      <span
+                        className="size-3 rounded-full"
+                        style={{
+                          backgroundColor:
+                            department.color ||
+                            branches.find(
+                              (branch: any) =>
+                                branch.id === department.branch_id,
+                            )?.color ||
+                            COLOR_PALETTE[0],
+                        }}
+                      />
                       {department.name} -{" "}
                       {departmentBranchName(department) || "فرع غير محدد"}
                       <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
@@ -324,7 +337,12 @@ function PeopleDepartments() {
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between border-b p-5 marker:hidden">
                   <span className="flex items-center gap-3 text-lg font-semibold">
-                    <Building2 className="size-5 text-primary" />
+                    <span
+                      className="size-4 rounded-full"
+                      style={{
+                        backgroundColor: branch.color || COLOR_PALETTE[0],
+                      }}
+                    />
                     {branch.name}
                     <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
                       {
@@ -367,6 +385,13 @@ function PeopleDepartments() {
                           to="/people-departments/$id"
                           params={{ id: department.id }}
                           className="surface-panel interactive-card p-5 hover:interactive-card-hover"
+                          style={{
+                            borderTopWidth: 4,
+                            borderTopColor:
+                              department.color ||
+                              branch.color ||
+                              COLOR_PALETTE[0],
+                          }}
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-700">
@@ -430,32 +455,53 @@ function PeopleDepartments() {
           </div>
         </TabsContent>
         <TabsContent value="branches" className="space-y-4">
-          <div className="surface-panel flex flex-col gap-2 p-3 sm:flex-row">
-            <Input
-              value={newBranch}
-              onChange={(event) => setNewBranch(event.target.value)}
-              placeholder="اسم الفرع الجديد"
-            />
-            <Button
-              onClick={async () => {
-                if (!newBranch.trim()) return toast.error("اسم الفرع مطلوب");
-                const result = await supabase
-                  .from("branches")
-                  .insert({ name: newBranch.trim() });
-                if (result.error) return toast.error(result.error.message);
-                setNewBranch("");
-                queryClient.invalidateQueries({ queryKey: ["branches"] });
-                toast.success("تمت إضافة الفرع");
-              }}
-            >
-              <Plus className="ml-2 size-4" />
-              إضافة فرع
-            </Button>
+          <div className="surface-panel space-y-3 p-3">
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Input
+                value={newBranch}
+                onChange={(event) => setNewBranch(event.target.value)}
+                placeholder="اسم الفرع الجديد"
+              />
+              <Button
+                onClick={async () => {
+                  if (!newBranch.trim()) return toast.error("اسم الفرع مطلوب");
+                  const result = await supabase.from("branches").insert({
+                    name: newBranch.trim(),
+                    color: newBranchColor,
+                  });
+                  if (result.error) return toast.error(result.error.message);
+                  setNewBranch("");
+                  setNewBranchColor(
+                    COLOR_PALETTE[(branches.length + 1) % COLOR_PALETTE.length],
+                  );
+                  queryClient.invalidateQueries({ queryKey: ["branches"] });
+                  toast.success("تمت إضافة الفرع");
+                }}
+              >
+                <Plus className="ml-2 size-4" />
+                إضافة فرع
+              </Button>
+            </div>
+            <ColorField value={newBranchColor} onChange={setNewBranchColor} />
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {branches.map((branch: any) => (
-              <div key={branch.id} className="surface-panel p-5">
-                <h2 className="font-semibold">{branch.name}</h2>
+              <div
+                key={branch.id}
+                className="surface-panel border-t-4 p-5"
+                style={{
+                  borderTopColor: branch.color || COLOR_PALETTE[0],
+                }}
+              >
+                <h2 className="flex items-center gap-2 font-semibold">
+                  <span
+                    className="size-3 rounded-full"
+                    style={{
+                      backgroundColor: branch.color || COLOR_PALETTE[0],
+                    }}
+                  />
+                  {branch.name}
+                </h2>
                 <p className="mt-2 text-sm text-muted-foreground">
                   الأقسام:{" "}
                   {
@@ -602,13 +648,11 @@ function EmployeeForm({ departments, branches = [], close, saved }: any) {
             onClick={async () => {
               if (!form.full_name?.trim())
                 return toast.error("الاسم الكامل مطلوب");
-              const result = await supabase
-                .from("employees")
-                .insert({
-                  ...form,
-                  full_name: form.full_name.trim(),
-                  employee_number: form.employee_number?.trim() || null,
-                });
+              const result = await supabase.from("employees").insert({
+                ...form,
+                full_name: form.full_name.trim(),
+                employee_number: form.employee_number?.trim() || null,
+              });
               if (result.error) return toast.error(result.error.message);
               saved();
               close();
@@ -625,6 +669,9 @@ function EmployeeForm({ departments, branches = [], close, saved }: any) {
 function DepartmentForm({ close, saved, branches = [] }: any) {
   const [name, setName] = useState("");
   const [branchId, setBranchId] = useState("");
+  const [color, setColor] = useState(
+    COLOR_PALETTE[branches.length % COLOR_PALETTE.length],
+  );
   const [notes, setNotes] = useState("");
   return (
     <Dialog open onOpenChange={close}>
@@ -665,6 +712,9 @@ function DepartmentForm({ close, saved, branches = [] }: any) {
               onChange={(event) => setNotes(event.target.value)}
             />
           </Field>
+          <Field label="لون القسم">
+            <ColorField value={color} onChange={setColor} />
+          </Field>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={close}>
@@ -673,16 +723,15 @@ function DepartmentForm({ close, saved, branches = [] }: any) {
           <Button
             onClick={async () => {
               if (!name.trim()) return toast.error("اسم القسم مطلوب");
-              const result = await supabase
-                .from("departments")
-                .insert({
-                  name: name.trim(),
-                  branch_id: branchId || null,
-                  branch:
-                    branches.find((item: any) => item.id === branchId)?.name ||
-                    "",
-                  notes,
-                });
+              const result = await supabase.from("departments").insert({
+                name: name.trim(),
+                branch_id: branchId || null,
+                branch:
+                  branches.find((item: any) => item.id === branchId)?.name ||
+                  "",
+                color,
+                notes,
+              });
               if (result.error) return toast.error(result.error.message);
               saved();
               close();

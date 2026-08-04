@@ -14,10 +14,14 @@ const TABLES = [
   "departments",
   "employees",
   "assets",
+  "asset_templates",
   "assignment_history",
   "inventory_items",
   "asset_maintenance",
   "inventory_movements",
+  "pc_specs",
+  "pc_part_installations",
+  "toner_installations",
   "licenses",
   "license_assignments",
   "activity_log",
@@ -60,6 +64,7 @@ function defaults(table: string, value: Row): Row {
       return_date: null,
       ...base,
     };
+  if (table === "asset_templates") return { asset_type: "Desktop PC", ...base };
   if (table === "inventory_items")
     return {
       category: "Consumable",
@@ -81,6 +86,23 @@ function defaults(table: string, value: Row): Row {
       status: "Closed",
       used_items: [],
       cost: 0,
+      ...base,
+    };
+  if (table === "pc_specs") return { updated_at: now(), ...base };
+  if (table === "pc_part_installations")
+    return {
+      installed_at: new Date().toISOString().slice(0, 10),
+      removed_at: null,
+      old_part_action: null,
+      replacement_of_id: null,
+      undone_at: null,
+      ...base,
+    };
+  if (table === "toner_installations")
+    return {
+      quantity: 1,
+      installed_at: new Date().toISOString().slice(0, 10),
+      undone_at: null,
       ...base,
     };
   if (table === "licenses") return { seat_count: 1, ...base };
@@ -268,4 +290,14 @@ export async function restoreLocalData(data: Record<string, Row[]>) {
     headers: { "content-type": "application/json" },
     body: JSON.stringify(data),
   });
+}
+
+export async function runHardwareAction<T = Row>(payload: Row): Promise<T> {
+  return (
+    await api<{ data: T }>("/hardware", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+  ).data;
 }

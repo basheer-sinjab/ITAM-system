@@ -38,6 +38,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatDate } from "@/lib/pms";
+import { ScopeColorBadges } from "@/components/ScopeColorBadges";
+import { AssetHardwareTabs } from "@/components/asset/AssetHardwareTabs";
 
 export const Route = createFileRoute("/_authenticated/assets/$id")({
   component: AssetDetails,
@@ -140,6 +142,11 @@ function AssetDetails() {
   const currentEmployee = employee(asset.assigned_employee_id);
   const department = departments.find(
     (item: any) => item.id === asset.department_id,
+  );
+  const branch = branches.find(
+    (item: any) =>
+      item.id === department?.branch_id ||
+      (!department?.branch_id && item.name === department?.branch),
   );
   const currentAssignment =
     history.find(
@@ -279,6 +286,15 @@ function AssetDetails() {
           ))}
         </dl>
       </div>
+
+      {(department || branch) && (
+        <section className="surface-panel flex flex-wrap items-center gap-3 p-4">
+          <span className="text-sm text-muted-foreground">القسم والفرع:</span>
+          <ScopeColorBadges department={department} branch={branch} />
+        </section>
+      )}
+
+      <AssetHardwareTabs asset={asset} />
 
       <Timeline events={timeline} printAssignment={printAssignment} />
 
@@ -660,6 +676,42 @@ function buildTimeline(
         title: "تم تغيير حالة الأصل",
         description: `${STATUS_LABELS[change.from] || change.from || "غير محدد"} ← ${STATUS_LABELS[change.to] || change.to || "غير محدد"}`,
       });
+    else if (entry.action === "toner_install")
+      events.push({
+        id: `toner-${entry.id}`,
+        type: "toner",
+        date: entry.created_at,
+        title: "تم تركيب حبر",
+        description: `${entry.details?.item_name || "حبر"}${entry.details?.quantity ? ` · الكمية ${entry.details.quantity}` : ""}`,
+      });
+    else if (entry.action === "toner_undo")
+      events.push({
+        id: `toner-undo-${entry.id}`,
+        type: "undo",
+        date: entry.created_at,
+        title: "تم التراجع عن تركيب حبر",
+        description: entry.details?.item_name || "تمت إعادة الحبر للمخزون.",
+      });
+    else if (entry.action === "part_install")
+      events.push({
+        id: `part-${entry.id}`,
+        type: "part",
+        date: entry.created_at,
+        title: entry.details?.replaced_part
+          ? "تم استبدال قطعة"
+          : "تم تركيب قطعة",
+        description: entry.details?.replaced_part
+          ? `${entry.details.replaced_part} ← ${entry.details.item_name}`
+          : entry.details?.item_name || "قطعة غيار",
+      });
+    else if (entry.action === "part_undo")
+      events.push({
+        id: `part-undo-${entry.id}`,
+        type: "undo",
+        date: entry.created_at,
+        title: "تم التراجع عن تركيب قطعة",
+        description: entry.details?.item_name || "تمت إعادة القطعة للمخزون.",
+      });
   }
   return events.sort(
     (left, right) =>
@@ -674,6 +726,9 @@ function Timeline({ events, printAssignment }: any) {
     return: RotateCcw,
     maintenance: Wrench,
     status: Activity,
+    toner: Printer,
+    part: Wrench,
+    undo: RotateCcw,
   };
   return (
     <section className="surface-panel overflow-hidden">

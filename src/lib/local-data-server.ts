@@ -21,16 +21,24 @@ const DATABASE_PATH = join(
 );
 const ENTITIES: Record<string, Entity> = {
   branches: {
-    columns: ["id", "name", "notes", "created_at"],
-    sql: "CREATE TABLE IF NOT EXISTS branches (id TEXT PRIMARY KEY, name TEXT NOT NULL, notes TEXT, created_at TEXT NOT NULL)",
+    columns: ["id", "name", "color", "notes", "created_at"],
+    sql: "CREATE TABLE IF NOT EXISTS branches (id TEXT PRIMARY KEY, name TEXT NOT NULL, color TEXT, notes TEXT, created_at TEXT NOT NULL)",
   },
   technicians: {
     columns: ["id", "name", "created_at"],
     sql: "CREATE TABLE IF NOT EXISTS technicians (id TEXT PRIMARY KEY, name TEXT NOT NULL, created_at TEXT NOT NULL)",
   },
   departments: {
-    columns: ["id", "name", "branch", "branch_id", "notes", "created_at"],
-    sql: "CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, name TEXT NOT NULL, branch TEXT NOT NULL DEFAULT '', branch_id TEXT REFERENCES branches(id) ON DELETE SET NULL, notes TEXT, created_at TEXT NOT NULL, UNIQUE(name, branch_id))",
+    columns: [
+      "id",
+      "name",
+      "branch",
+      "branch_id",
+      "color",
+      "notes",
+      "created_at",
+    ],
+    sql: "CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, name TEXT NOT NULL, branch TEXT NOT NULL DEFAULT '', branch_id TEXT REFERENCES branches(id) ON DELETE SET NULL, color TEXT, notes TEXT, created_at TEXT NOT NULL, UNIQUE(name, branch_id))",
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_departments_branch_id_name ON departments(branch_id, name)",
     ],
@@ -80,6 +88,21 @@ const ENTITIES: Record<string, Entity> = {
       "CREATE INDEX IF NOT EXISTS idx_assets_department ON assets(department_id)",
       "CREATE INDEX IF NOT EXISTS idx_assets_status ON assets(status)",
       "CREATE INDEX IF NOT EXISTS idx_assets_warranty ON assets(warranty_expiry)",
+    ],
+  },
+  asset_templates: {
+    columns: [
+      "id",
+      "name",
+      "asset_type",
+      "manufacturer",
+      "model",
+      "notes",
+      "created_at",
+    ],
+    sql: "CREATE TABLE IF NOT EXISTS asset_templates (id TEXT PRIMARY KEY, name TEXT NOT NULL, asset_type TEXT NOT NULL, manufacturer TEXT, model TEXT, notes TEXT, created_at TEXT NOT NULL)",
+    indexes: [
+      "CREATE INDEX IF NOT EXISTS idx_asset_templates_type_name ON asset_templates(asset_type, name)",
     ],
   },
   assignment_history: {
@@ -156,6 +179,62 @@ const ENTITIES: Record<string, Entity> = {
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_inventory_movements_item_date ON inventory_movements(item_id, movement_date DESC)",
       "CREATE INDEX IF NOT EXISTS idx_inventory_movements_maintenance ON inventory_movements(maintenance_id)",
+    ],
+  },
+  pc_specs: {
+    columns: [
+      "id",
+      "asset_id",
+      "processor",
+      "memory",
+      "storage",
+      "graphics_card",
+      "operating_system",
+      "notes",
+      "created_at",
+      "updated_at",
+    ],
+    sql: "CREATE TABLE IF NOT EXISTS pc_specs (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE REFERENCES assets(id) ON DELETE CASCADE, processor TEXT, memory TEXT, storage TEXT, graphics_card TEXT, operating_system TEXT, notes TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
+    indexes: [
+      "CREATE INDEX IF NOT EXISTS idx_pc_specs_asset ON pc_specs(asset_id)",
+    ],
+  },
+  pc_part_installations: {
+    columns: [
+      "id",
+      "asset_id",
+      "inventory_item_id",
+      "part_name",
+      "installed_at",
+      "removed_at",
+      "old_part_action",
+      "replacement_of_id",
+      "notes",
+      "undone_at",
+      "created_at",
+    ],
+    sql: "CREATE TABLE IF NOT EXISTS pc_part_installations (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, inventory_item_id TEXT REFERENCES inventory_items(id) ON DELETE SET NULL, part_name TEXT NOT NULL, installed_at TEXT NOT NULL, removed_at TEXT, old_part_action TEXT, replacement_of_id TEXT, notes TEXT, undone_at TEXT, created_at TEXT NOT NULL)",
+    indexes: [
+      "CREATE INDEX IF NOT EXISTS idx_pc_parts_asset ON pc_part_installations(asset_id, installed_at DESC)",
+      "CREATE INDEX IF NOT EXISTS idx_pc_parts_inventory ON pc_part_installations(inventory_item_id)",
+    ],
+  },
+  toner_installations: {
+    columns: [
+      "id",
+      "asset_id",
+      "inventory_item_id",
+      "toner_name",
+      "quantity",
+      "installed_at",
+      "notes",
+      "undone_at",
+      "created_at",
+    ],
+    sql: "CREATE TABLE IF NOT EXISTS toner_installations (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, inventory_item_id TEXT REFERENCES inventory_items(id) ON DELETE SET NULL, toner_name TEXT NOT NULL, quantity REAL NOT NULL DEFAULT 1 CHECK(quantity > 0), installed_at TEXT NOT NULL, notes TEXT, undone_at TEXT, created_at TEXT NOT NULL)",
+    indexes: [
+      "CREATE INDEX IF NOT EXISTS idx_toner_installations_asset ON toner_installations(asset_id, installed_at DESC)",
+      "CREATE INDEX IF NOT EXISTS idx_toner_installations_inventory ON toner_installations(inventory_item_id)",
     ],
   },
   licenses: {
@@ -247,6 +326,38 @@ function migrateInventory(database: DatabaseSync) {
     database.exec("ALTER TABLE inventory_items ADD COLUMN color TEXT");
   }
 }
+function migrateColors(database: DatabaseSync) {
+  const palette = [
+    "#2563eb",
+    "#0f766e",
+    "#7c3aed",
+    "#c2410c",
+    "#be123c",
+    "#0369a1",
+    "#4d7c0f",
+    "#a21caf",
+  ];
+  for (const table of ["branches", "departments"]) {
+    const columns = database
+      .prepare(`PRAGMA table_info(${table})`)
+      .all() as Array<{ name: string }>;
+    if (columns.length && !columns.some((column) => column.name === "color"))
+      database.exec(`ALTER TABLE ${table} ADD COLUMN color TEXT`);
+    const rows = database
+      .prepare(`SELECT id, color FROM ${table} ORDER BY created_at, name`)
+      .all() as Array<{ id: string; color?: string | null }>;
+    const update = database.prepare(
+      `UPDATE ${table} SET color = ? WHERE id = ?`,
+    );
+    rows.forEach((row, index) => {
+      if (!row.color)
+        update.run(
+          palette[(index + (table === "departments" ? 2 : 0)) % palette.length],
+          row.id,
+        );
+    });
+  }
+}
 function migrateAssets(database: DatabaseSync) {
   const columns = database.prepare("PRAGMA table_info(assets)").all() as Array<{
     name: string;
@@ -328,21 +439,52 @@ function migrateSystemFields(database: DatabaseSync) {
     "UPDATE assignment_history SET employee_name = COALESCE(employee_name, (SELECT full_name FROM employees WHERE employees.id = assignment_history.employee_id)), employee_number = COALESCE(employee_number, (SELECT employee_number FROM employees WHERE employees.id = assignment_history.employee_id)), employee_email = COALESCE(employee_email, (SELECT email FROM employees WHERE employees.id = assignment_history.employee_id)), employee_phone = COALESCE(employee_phone, (SELECT phone FROM employees WHERE employees.id = assignment_history.employee_id)), department_name = COALESCE(department_name, (SELECT departments.name FROM employees JOIN departments ON departments.id = employees.department_id WHERE employees.id = assignment_history.employee_id)), branch_name = COALESCE(branch_name, (SELECT COALESCE(branches.name, departments.branch) FROM employees JOIN departments ON departments.id = employees.department_id LEFT JOIN branches ON branches.id = departments.branch_id WHERE employees.id = assignment_history.employee_id))",
   );
 }
+function seedAssetTemplates(database: DatabaseSync) {
+  const assets = database
+    .prepare(
+      "SELECT MIN(name) AS name, asset_type, manufacturer, model FROM assets WHERE COALESCE(trim(manufacturer), '') <> '' OR COALESCE(trim(model), '') <> '' GROUP BY asset_type, manufacturer, model",
+    )
+    .all() as Array<{
+    name: string;
+    asset_type: string;
+    manufacturer?: string | null;
+    model?: string | null;
+  }>;
+  const insert = database.prepare(
+    "INSERT INTO asset_templates (id, name, asset_type, manufacturer, model, notes, created_at) VALUES (?, ?, ?, ?, ?, NULL, ?)",
+  );
+  for (const asset of assets)
+    insert.run(
+      crypto.randomUUID(),
+      asset.name,
+      asset.asset_type,
+      asset.manufacturer ?? null,
+      asset.model ?? null,
+      new Date().toISOString(),
+    );
+}
 async function db() {
   if (!ready)
     ready = mkdir(dirname(DATABASE_PATH), { recursive: true }).then(() => {
       const database = new DatabaseSync(DATABASE_PATH);
+      const shouldSeedAssetTemplates = !database
+        .prepare(
+          "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'asset_templates'",
+        )
+        .get();
       migrateDepartments(database);
       database.exec("PRAGMA foreign_keys = ON");
       for (const entity of Object.values(ENTITIES)) database.exec(entity.sql);
       migrateInventory(database);
       migrateAssets(database);
       migrateSystemFields(database);
+      migrateColors(database);
       database.exec(
         "INSERT OR IGNORE INTO app_settings (id, low_stock_threshold, dashboard_alerts_enabled, warranty_alert_days, updated_at) VALUES ('default', 2, 1, 30, datetime('now'))",
       );
       for (const entity of Object.values(ENTITIES))
         entity.indexes?.forEach((index) => database.exec(index));
+      if (shouldSeedAssetTemplates) seedAssetTemplates(database);
       return database;
     });
   return ready;
@@ -371,11 +513,13 @@ async function rows(table: string) {
 function match(row: Row, filters: Array<[string, unknown]>) {
   return filters.every(([field, value]) => row[field] === value);
 }
-function value(column: string, row: Row) {
+type SqlInputValue = null | number | bigint | string | NodeJS.ArrayBufferView;
+
+function value(column: string, row: Row): SqlInputValue {
   if (column === "used_items" || column === "details")
     return JSON.stringify(row[column] ?? (column === "used_items" ? [] : {}));
   if (column === "dashboard_alerts_enabled") return row[column] ? 1 : 0;
-  return row[column] ?? null;
+  return (row[column] ?? null) as SqlInputValue;
 }
 function save(
   database: DatabaseSync,
@@ -395,6 +539,24 @@ function save(
       `${upsert ? "INSERT" : "INSERT"} INTO ${table} (${columns.join(",")}) VALUES (${placeholders})${upsert ? ` ON CONFLICT(id) DO UPDATE SET ${updates}` : ""}`,
     )
     .run(...columns.map((column) => value(column, row)));
+}
+function normalizedSerial(serial: unknown) {
+  return typeof serial === "string" && serial.trim() ? serial.trim() : null;
+}
+function assertUniqueSerial(database: DatabaseSync, row: Row) {
+  const serial = normalizedSerial(row.serial_number);
+  row.serial_number = serial;
+  if (!serial) return;
+  const duplicate = database
+    .prepare(
+      "SELECT id, asset_id FROM assets WHERE lower(trim(serial_number)) = lower(trim(?)) AND id <> ? LIMIT 1",
+    )
+    .get(serial, String(row.id ?? "")) as
+    { id: string; asset_id: string } | undefined;
+  if (duplicate)
+    throw new Error(
+      `الرقم التسلسلي مستخدم مسبقًا في الأصل ${duplicate.asset_id}`,
+    );
 }
 function logActivity(
   database: DatabaseSync,
@@ -429,6 +591,7 @@ async function run(query: Query) {
     database.exec("BEGIN");
     try {
       for (const row of values as Row[]) {
+        if (query.table === "assets") assertUniqueSerial(database, row);
         if (query.table === "license_assignments") {
           const license = database
             .prepare("SELECT seat_count FROM licenses WHERE id = ?")
@@ -467,6 +630,7 @@ async function run(query: Query) {
     database.exec("BEGIN");
     try {
       result.forEach((row, index) => {
+        if (query.table === "assets") assertUniqueSerial(database, row);
         if (
           query.table === "licenses" &&
           (query.payload as Row).seat_count !== undefined
@@ -493,6 +657,33 @@ async function run(query: Query) {
         );
         if (Object.keys(changes).length)
           logActivity(database, query.table, row.id, "update", { changes });
+        if (
+          query.table === "employees" &&
+          Object.prototype.hasOwnProperty.call(
+            query.payload as Row,
+            "department_id",
+          ) &&
+          previous.department_id !== row.department_id
+        ) {
+          const assignedAssets = database
+            .prepare("SELECT * FROM assets WHERE assigned_employee_id = ?")
+            .all(String(row.id)) as Row[];
+          for (const assignedAsset of assignedAssets) {
+            const previousDepartment = assignedAsset.department_id ?? null;
+            assignedAsset.department_id = row.department_id ?? null;
+            save(database, "assets", assignedAsset, true);
+            if (previousDepartment !== assignedAsset.department_id)
+              logActivity(database, "assets", assignedAsset.id, "update", {
+                changes: {
+                  department_id: {
+                    from: previousDepartment,
+                    to: assignedAsset.department_id,
+                  },
+                },
+                reason: "employee_department_transfer",
+              });
+          }
+        }
       });
       database.exec("COMMIT");
     } catch (error) {
@@ -538,7 +729,14 @@ async function exportData() {
 }
 async function restore(data: Record<string, Row[]>) {
   const database = await db();
-  const optionalTables = new Set(["inventory_movements", "activity_log"]);
+  const optionalTables = new Set([
+    "inventory_movements",
+    "activity_log",
+    "asset_templates",
+    "pc_specs",
+    "pc_part_installations",
+    "toner_installations",
+  ]);
   for (const table of Object.keys(ENTITIES)) {
     if (data[table] === undefined && optionalTables.has(table))
       data[table] = [];
@@ -552,6 +750,326 @@ async function restore(data: Record<string, Row[]>) {
     for (const table of Object.keys(ENTITIES))
       for (const row of data[table]) save(database, table, row, false);
     database.exec("COMMIT");
+  } catch (error) {
+    database.exec("ROLLBACK");
+    throw error;
+  }
+}
+type HardwareAction =
+  | {
+      action: "install-toner";
+      assetId: string;
+      itemId: string;
+      quantity?: number;
+      installedAt?: string;
+      notes?: string;
+    }
+  | { action: "undo-toner"; installationId: string }
+  | {
+      action: "install-part";
+      assetId: string;
+      itemId: string;
+      installedAt?: string;
+      notes?: string;
+      oldInstallationId?: string;
+      oldPartAction?: "damaged" | "return_to_stock" | "disposed";
+    }
+  | { action: "undo-part"; installationId: string };
+
+function recordFor(
+  database: DatabaseSync,
+  table: string,
+  id: string,
+): Row | undefined {
+  return database.prepare(`SELECT * FROM ${table} WHERE id = ?`).get(id) as
+    Row | undefined;
+}
+function isAssetType(asset: Row, expected: "printer" | "pc") {
+  const type = String(asset.asset_type ?? "")
+    .trim()
+    .toLowerCase();
+  if (expected === "printer")
+    return type === "printer" || type.includes("طابعة");
+  return (
+    type === "desktop pc" ||
+    type === "pc" ||
+    type === "laptop" ||
+    type.includes("notebook") ||
+    type.includes("desktop") ||
+    type.includes("كمبيوتر مكتبي")
+  );
+}
+function addInventoryMovement(
+  database: DatabaseSync,
+  itemId: string,
+  movementType: "use" | "return",
+  quantity: number,
+  movementDate: string,
+  note: string,
+) {
+  database
+    .prepare(
+      "INSERT INTO inventory_movements (id, item_id, movement_date, movement_type, quantity, note, maintenance_id, created_at) VALUES (?, ?, ?, ?, ?, ?, NULL, ?)",
+    )
+    .run(
+      crypto.randomUUID(),
+      itemId,
+      movementDate,
+      movementType,
+      quantity,
+      note,
+      new Date().toISOString(),
+    );
+}
+function takeFromInventory(
+  database: DatabaseSync,
+  itemId: string,
+  quantity: number,
+  itemName: string,
+) {
+  const result = database
+    .prepare(
+      "UPDATE inventory_items SET quantity = quantity - ? WHERE id = ? AND quantity >= ?",
+    )
+    .run(quantity, itemId, quantity);
+  if (!result.changes)
+    throw new Error(`الكمية المتوفرة من ${itemName} لا تكفي`);
+}
+async function runHardwareAction(request: HardwareAction) {
+  const database = await db();
+  const now = new Date().toISOString();
+  const today = now.slice(0, 10);
+  database.exec("BEGIN");
+  try {
+    if (request.action === "install-toner") {
+      const asset = recordFor(database, "assets", request.assetId);
+      const item = recordFor(database, "inventory_items", request.itemId);
+      if (!asset || !isAssetType(asset, "printer"))
+        throw new Error("تركيب الحبر متاح لأصول الطابعات فقط");
+      if (!item || item.category !== "Toner")
+        throw new Error("اختر حبرًا من المخزون");
+      const quantity = Math.max(1, Number(request.quantity) || 1);
+      const installedAt = request.installedAt || today;
+      takeFromInventory(database, String(item.id), quantity, String(item.name));
+      const installation: Row = {
+        id: crypto.randomUUID(),
+        asset_id: asset.id,
+        inventory_item_id: item.id,
+        toner_name: item.name,
+        quantity,
+        installed_at: installedAt,
+        notes: request.notes?.trim() || null,
+        undone_at: null,
+        created_at: now,
+      };
+      save(database, "toner_installations", installation, false);
+      addInventoryMovement(
+        database,
+        String(item.id),
+        "use",
+        quantity,
+        installedAt,
+        `تركيب حبر في ${asset.name}`,
+      );
+      logActivity(database, "assets", asset.id, "toner_install", {
+        installation_id: installation.id,
+        item_name: item.name,
+        quantity,
+      });
+      database.exec("COMMIT");
+      return installation;
+    }
+
+    if (request.action === "undo-toner") {
+      const installation = recordFor(
+        database,
+        "toner_installations",
+        request.installationId,
+      );
+      if (!installation || installation.undone_at)
+        throw new Error("عملية تركيب الحبر غير متاحة للتراجع");
+      if (!installation.inventory_item_id)
+        throw new Error("عنصر الحبر الأصلي غير موجود في المخزون");
+      database
+        .prepare(
+          "UPDATE inventory_items SET quantity = quantity + ? WHERE id = ?",
+        )
+        .run(
+          Number(installation.quantity),
+          String(installation.inventory_item_id),
+        );
+      database
+        .prepare("UPDATE toner_installations SET undone_at = ? WHERE id = ?")
+        .run(now, String(installation.id));
+      addInventoryMovement(
+        database,
+        String(installation.inventory_item_id),
+        "return",
+        Number(installation.quantity),
+        today,
+        `تراجع عن تركيب حبر ${installation.toner_name}`,
+      );
+      logActivity(database, "assets", installation.asset_id, "toner_undo", {
+        installation_id: installation.id,
+        item_name: installation.toner_name,
+      });
+      database.exec("COMMIT");
+      return { ...installation, undone_at: now };
+    }
+
+    if (request.action === "install-part") {
+      const asset = recordFor(database, "assets", request.assetId);
+      const item = recordFor(database, "inventory_items", request.itemId);
+      if (!asset || !isAssetType(asset, "pc"))
+        throw new Error("تركيب القطع متاح لأصول الكمبيوتر المكتبي فقط");
+      if (!item || item.category !== "Spare Part")
+        throw new Error("اختر قطعة غيار من المخزون");
+      const installedAt = request.installedAt || today;
+      let oldPart: Row | undefined;
+      if (request.oldInstallationId) {
+        oldPart = recordFor(
+          database,
+          "pc_part_installations",
+          request.oldInstallationId,
+        );
+        if (
+          !oldPart ||
+          oldPart.asset_id !== asset.id ||
+          oldPart.removed_at ||
+          oldPart.undone_at
+        )
+          throw new Error("القطعة القديمة غير متاحة للاستبدال");
+        if (
+          !request.oldPartAction ||
+          !["damaged", "return_to_stock", "disposed"].includes(
+            request.oldPartAction,
+          )
+        )
+          throw new Error("حدد ما تم مع القطعة القديمة");
+        if (
+          request.oldPartAction === "return_to_stock" &&
+          oldPart.inventory_item_id
+        ) {
+          database
+            .prepare(
+              "UPDATE inventory_items SET quantity = quantity + 1 WHERE id = ?",
+            )
+            .run(String(oldPart.inventory_item_id));
+          addInventoryMovement(
+            database,
+            String(oldPart.inventory_item_id),
+            "return",
+            1,
+            installedAt,
+            `إرجاع قطعة ${oldPart.part_name} بعد استبدالها`,
+          );
+        }
+        database
+          .prepare(
+            "UPDATE pc_part_installations SET removed_at = ?, old_part_action = ? WHERE id = ?",
+          )
+          .run(installedAt, request.oldPartAction, String(oldPart.id));
+      }
+      takeFromInventory(database, String(item.id), 1, String(item.name));
+      const installation: Row = {
+        id: crypto.randomUUID(),
+        asset_id: asset.id,
+        inventory_item_id: item.id,
+        part_name: item.name,
+        installed_at: installedAt,
+        removed_at: null,
+        old_part_action: null,
+        replacement_of_id: oldPart?.id ?? null,
+        notes: request.notes?.trim() || null,
+        undone_at: null,
+        created_at: now,
+      };
+      save(database, "pc_part_installations", installation, false);
+      addInventoryMovement(
+        database,
+        String(item.id),
+        "use",
+        1,
+        installedAt,
+        oldPart
+          ? `تركيب ${item.name} بدل ${oldPart.part_name} في ${asset.name}`
+          : `تركيب ${item.name} في ${asset.name}`,
+      );
+      logActivity(database, "assets", asset.id, "part_install", {
+        installation_id: installation.id,
+        item_name: item.name,
+        replaced_part: oldPart?.part_name ?? null,
+        old_part_action: request.oldPartAction ?? null,
+      });
+      database.exec("COMMIT");
+      return installation;
+    }
+
+    const installation = recordFor(
+      database,
+      "pc_part_installations",
+      request.installationId,
+    );
+    if (!installation || installation.undone_at || installation.removed_at)
+      throw new Error("عملية تركيب القطعة غير متاحة للتراجع");
+    if (!installation.inventory_item_id)
+      throw new Error("قطعة الغيار الأصلية غير موجودة في المخزون");
+    database
+      .prepare(
+        "UPDATE inventory_items SET quantity = quantity + 1 WHERE id = ?",
+      )
+      .run(String(installation.inventory_item_id));
+    addInventoryMovement(
+      database,
+      String(installation.inventory_item_id),
+      "return",
+      1,
+      today,
+      `تراجع عن تركيب ${installation.part_name}`,
+    );
+    if (installation.replacement_of_id) {
+      const oldPart = recordFor(
+        database,
+        "pc_part_installations",
+        String(installation.replacement_of_id),
+      );
+      if (!oldPart) throw new Error("تعذر العثور على القطعة القديمة");
+      if (
+        oldPart.old_part_action === "return_to_stock" &&
+        oldPart.inventory_item_id
+      ) {
+        takeFromInventory(
+          database,
+          String(oldPart.inventory_item_id),
+          1,
+          String(oldPart.part_name),
+        );
+        addInventoryMovement(
+          database,
+          String(oldPart.inventory_item_id),
+          "use",
+          1,
+          today,
+          `إعادة تركيب ${oldPart.part_name} بعد التراجع عن الاستبدال`,
+        );
+      }
+      database
+        .prepare(
+          "UPDATE pc_part_installations SET removed_at = NULL, old_part_action = NULL WHERE id = ?",
+        )
+        .run(String(oldPart.id));
+    }
+    database
+      .prepare(
+        "UPDATE pc_part_installations SET removed_at = ?, undone_at = ? WHERE id = ?",
+      )
+      .run(today, now, String(installation.id));
+    logActivity(database, "assets", installation.asset_id, "part_undo", {
+      installation_id: installation.id,
+      item_name: installation.part_name,
+    });
+    database.exec("COMMIT");
+    return { ...installation, removed_at: today, undone_at: now };
   } catch (error) {
     database.exec("ROLLBACK");
     throw error;
@@ -575,6 +1093,14 @@ export async function handleLocalDataRequest(request: Request) {
     if (url.pathname === "/api/local-data/query" && request.method === "POST")
       return Response.json({
         data: await run((await request.json()) as Query),
+        error: null,
+      });
+    if (
+      url.pathname === "/api/local-data/hardware" &&
+      request.method === "POST"
+    )
+      return Response.json({
+        data: await runHardwareAction((await request.json()) as HardwareAction),
         error: null,
       });
     if (url.pathname === "/api/local-data/export" && request.method === "GET")
