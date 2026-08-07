@@ -20,7 +20,9 @@ import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedAssetsIndexRouteImport } from './routes/_authenticated/assets.index'
 import { Route as AuthenticatedAssetsIdRouteImport } from './routes/_authenticated/assets.$id'
+import { Route as AuthenticatedInventoryIdRouteImport } from './routes/_authenticated/inventory.$id'
 import { Route as AuthenticatedLicensesIdRouteImport } from './routes/_authenticated/licenses.$id'
+import { Route as AuthenticatedMaintenanceIdRouteImport } from './routes/_authenticated/maintenance.$id'
 import { Route as AuthenticatedPeopleDepartmentsIdRouteImport } from './routes/_authenticated/people-departments.$id'
 import { Route as AuthenticatedPeopleDepartmentsEmployeeIdRouteImport } from './routes/_authenticated/people-departments.employee.$id'
 
@@ -81,11 +83,23 @@ const AuthenticatedAssetsIdRoute = AuthenticatedAssetsIdRouteImport.update({
   path: '/assets/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedInventoryIdRoute =
+  AuthenticatedInventoryIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedInventoryRoute,
+  } as any)
 const AuthenticatedLicensesIdRoute = AuthenticatedLicensesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AuthenticatedLicensesRoute,
 } as any)
+const AuthenticatedMaintenanceIdRoute =
+  AuthenticatedMaintenanceIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedMaintenanceRoute,
+  } as any)
 const AuthenticatedPeopleDepartmentsIdRoute =
   AuthenticatedPeopleDepartmentsIdRouteImport.update({
     id: '/$id',
@@ -102,29 +116,33 @@ const AuthenticatedPeopleDepartmentsEmployeeIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
-  '/inventory': typeof AuthenticatedInventoryRoute
+  '/inventory': typeof AuthenticatedInventoryRouteWithChildren
   '/licenses': typeof AuthenticatedLicensesRouteWithChildren
-  '/maintenance': typeof AuthenticatedMaintenanceRoute
+  '/maintenance': typeof AuthenticatedMaintenanceRouteWithChildren
   '/people-departments': typeof AuthenticatedPeopleDepartmentsRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/assets/$id': typeof AuthenticatedAssetsIdRoute
+  '/inventory/$id': typeof AuthenticatedInventoryIdRoute
   '/licenses/$id': typeof AuthenticatedLicensesIdRoute
+  '/maintenance/$id': typeof AuthenticatedMaintenanceIdRoute
   '/people-departments/$id': typeof AuthenticatedPeopleDepartmentsIdRoute
   '/assets/': typeof AuthenticatedAssetsIndexRoute
   '/people-departments/employee/$id': typeof AuthenticatedPeopleDepartmentsEmployeeIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
-  '/inventory': typeof AuthenticatedInventoryRoute
+  '/inventory': typeof AuthenticatedInventoryRouteWithChildren
   '/licenses': typeof AuthenticatedLicensesRouteWithChildren
-  '/maintenance': typeof AuthenticatedMaintenanceRoute
+  '/maintenance': typeof AuthenticatedMaintenanceRouteWithChildren
   '/people-departments': typeof AuthenticatedPeopleDepartmentsRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/': typeof AuthenticatedIndexRoute
   '/assets/$id': typeof AuthenticatedAssetsIdRoute
+  '/inventory/$id': typeof AuthenticatedInventoryIdRoute
   '/licenses/$id': typeof AuthenticatedLicensesIdRoute
+  '/maintenance/$id': typeof AuthenticatedMaintenanceIdRoute
   '/people-departments/$id': typeof AuthenticatedPeopleDepartmentsIdRoute
   '/assets': typeof AuthenticatedAssetsIndexRoute
   '/people-departments/employee/$id': typeof AuthenticatedPeopleDepartmentsEmployeeIdRoute
@@ -133,15 +151,17 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
-  '/_authenticated/inventory': typeof AuthenticatedInventoryRoute
+  '/_authenticated/inventory': typeof AuthenticatedInventoryRouteWithChildren
   '/_authenticated/licenses': typeof AuthenticatedLicensesRouteWithChildren
-  '/_authenticated/maintenance': typeof AuthenticatedMaintenanceRoute
+  '/_authenticated/maintenance': typeof AuthenticatedMaintenanceRouteWithChildren
   '/_authenticated/people-departments': typeof AuthenticatedPeopleDepartmentsRouteWithChildren
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/assets/$id': typeof AuthenticatedAssetsIdRoute
+  '/_authenticated/inventory/$id': typeof AuthenticatedInventoryIdRoute
   '/_authenticated/licenses/$id': typeof AuthenticatedLicensesIdRoute
+  '/_authenticated/maintenance/$id': typeof AuthenticatedMaintenanceIdRoute
   '/_authenticated/people-departments/$id': typeof AuthenticatedPeopleDepartmentsIdRoute
   '/_authenticated/assets/': typeof AuthenticatedAssetsIndexRoute
   '/_authenticated/people-departments/employee/$id': typeof AuthenticatedPeopleDepartmentsEmployeeIdRoute
@@ -158,7 +178,9 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/assets/$id'
+    | '/inventory/$id'
     | '/licenses/$id'
+    | '/maintenance/$id'
     | '/people-departments/$id'
     | '/assets/'
     | '/people-departments/employee/$id'
@@ -173,7 +195,9 @@ export interface FileRouteTypes {
     | '/settings'
     | '/'
     | '/assets/$id'
+    | '/inventory/$id'
     | '/licenses/$id'
+    | '/maintenance/$id'
     | '/people-departments/$id'
     | '/assets'
     | '/people-departments/employee/$id'
@@ -189,7 +213,9 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/'
     | '/_authenticated/assets/$id'
+    | '/_authenticated/inventory/$id'
     | '/_authenticated/licenses/$id'
+    | '/_authenticated/maintenance/$id'
     | '/_authenticated/people-departments/$id'
     | '/_authenticated/assets/'
     | '/_authenticated/people-departments/employee/$id'
@@ -279,12 +305,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAssetsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/inventory/$id': {
+      id: '/_authenticated/inventory/$id'
+      path: '/$id'
+      fullPath: '/inventory/$id'
+      preLoaderRoute: typeof AuthenticatedInventoryIdRouteImport
+      parentRoute: typeof AuthenticatedInventoryRoute
+    }
     '/_authenticated/licenses/$id': {
       id: '/_authenticated/licenses/$id'
       path: '/$id'
       fullPath: '/licenses/$id'
       preLoaderRoute: typeof AuthenticatedLicensesIdRouteImport
       parentRoute: typeof AuthenticatedLicensesRoute
+    }
+    '/_authenticated/maintenance/$id': {
+      id: '/_authenticated/maintenance/$id'
+      path: '/$id'
+      fullPath: '/maintenance/$id'
+      preLoaderRoute: typeof AuthenticatedMaintenanceIdRouteImport
+      parentRoute: typeof AuthenticatedMaintenanceRoute
     }
     '/_authenticated/people-departments/$id': {
       id: '/_authenticated/people-departments/$id'
@@ -303,6 +343,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedInventoryRouteChildren {
+  AuthenticatedInventoryIdRoute: typeof AuthenticatedInventoryIdRoute
+}
+
+const AuthenticatedInventoryRouteChildren: AuthenticatedInventoryRouteChildren =
+  {
+    AuthenticatedInventoryIdRoute: AuthenticatedInventoryIdRoute,
+  }
+
+const AuthenticatedInventoryRouteWithChildren =
+  AuthenticatedInventoryRoute._addFileChildren(
+    AuthenticatedInventoryRouteChildren,
+  )
+
 interface AuthenticatedLicensesRouteChildren {
   AuthenticatedLicensesIdRoute: typeof AuthenticatedLicensesIdRoute
 }
@@ -314,6 +368,20 @@ const AuthenticatedLicensesRouteChildren: AuthenticatedLicensesRouteChildren = {
 const AuthenticatedLicensesRouteWithChildren =
   AuthenticatedLicensesRoute._addFileChildren(
     AuthenticatedLicensesRouteChildren,
+  )
+
+interface AuthenticatedMaintenanceRouteChildren {
+  AuthenticatedMaintenanceIdRoute: typeof AuthenticatedMaintenanceIdRoute
+}
+
+const AuthenticatedMaintenanceRouteChildren: AuthenticatedMaintenanceRouteChildren =
+  {
+    AuthenticatedMaintenanceIdRoute: AuthenticatedMaintenanceIdRoute,
+  }
+
+const AuthenticatedMaintenanceRouteWithChildren =
+  AuthenticatedMaintenanceRoute._addFileChildren(
+    AuthenticatedMaintenanceRouteChildren,
   )
 
 interface AuthenticatedPeopleDepartmentsRouteChildren {
@@ -335,9 +403,9 @@ const AuthenticatedPeopleDepartmentsRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedInventoryRoute: typeof AuthenticatedInventoryRoute
+  AuthenticatedInventoryRoute: typeof AuthenticatedInventoryRouteWithChildren
   AuthenticatedLicensesRoute: typeof AuthenticatedLicensesRouteWithChildren
-  AuthenticatedMaintenanceRoute: typeof AuthenticatedMaintenanceRoute
+  AuthenticatedMaintenanceRoute: typeof AuthenticatedMaintenanceRouteWithChildren
   AuthenticatedPeopleDepartmentsRoute: typeof AuthenticatedPeopleDepartmentsRouteWithChildren
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
@@ -347,9 +415,9 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedInventoryRoute: AuthenticatedInventoryRoute,
+  AuthenticatedInventoryRoute: AuthenticatedInventoryRouteWithChildren,
   AuthenticatedLicensesRoute: AuthenticatedLicensesRouteWithChildren,
-  AuthenticatedMaintenanceRoute: AuthenticatedMaintenanceRoute,
+  AuthenticatedMaintenanceRoute: AuthenticatedMaintenanceRouteWithChildren,
   AuthenticatedPeopleDepartmentsRoute:
     AuthenticatedPeopleDepartmentsRouteWithChildren,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,

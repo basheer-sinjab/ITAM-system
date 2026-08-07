@@ -142,14 +142,16 @@ const ENTITIES: Record<string, Entity> = {
       "quantity",
       "minimum_quantity",
       "location",
+      "image_url",
       "notes",
       "created_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'Consumable', color TEXT, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity >= 0), minimum_quantity REAL NOT NULL DEFAULT 1 CHECK(minimum_quantity >= 0), location TEXT NOT NULL DEFAULT 'المستودع IT', notes TEXT, created_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS inventory_items (id TEXT PRIMARY KEY, name TEXT NOT NULL, category TEXT NOT NULL DEFAULT 'Consumable', color TEXT, quantity REAL NOT NULL DEFAULT 0 CHECK(quantity >= 0), minimum_quantity REAL NOT NULL DEFAULT 1 CHECK(minimum_quantity >= 0), location TEXT NOT NULL DEFAULT 'المستودع IT', image_url TEXT, notes TEXT, created_at TEXT NOT NULL)",
   },
   asset_maintenance: {
     columns: [
       "id",
+      "reference_number",
       "asset_id",
       "maintenance_date",
       "maintenance_type",
@@ -164,10 +166,11 @@ const ENTITIES: Record<string, Entity> = {
       "source_id",
       "created_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS asset_maintenance (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, maintenance_date TEXT NOT NULL, maintenance_type TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'Closed' CHECK(status IN ('Open','Closed')), technician TEXT, cost REAL NOT NULL DEFAULT 0 CHECK(cost >= 0), problem_description TEXT, resolution TEXT, notes TEXT, used_items TEXT NOT NULL DEFAULT '[]', source_type TEXT, source_id TEXT, created_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS asset_maintenance (id TEXT PRIMARY KEY, reference_number TEXT UNIQUE, asset_id TEXT NOT NULL REFERENCES assets(id) ON DELETE CASCADE, maintenance_date TEXT NOT NULL, maintenance_type TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'Closed' CHECK(status IN ('Open','Closed')), technician TEXT, cost REAL NOT NULL DEFAULT 0 CHECK(cost >= 0), problem_description TEXT, resolution TEXT, notes TEXT, used_items TEXT NOT NULL DEFAULT '[]', source_type TEXT, source_id TEXT, created_at TEXT NOT NULL)",
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_maintenance_asset_date ON asset_maintenance(asset_id, maintenance_date DESC)",
       "CREATE INDEX IF NOT EXISTS idx_maintenance_status ON asset_maintenance(status)",
+      "CREATE UNIQUE INDEX IF NOT EXISTS idx_maintenance_reference ON asset_maintenance(reference_number) WHERE reference_number IS NOT NULL",
     ],
   },
   inventory_movements: {
@@ -256,9 +259,10 @@ const ENTITIES: Record<string, Entity> = {
       "seat_count",
       "expiration_date",
       "notes",
+      "image_url",
       "created_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS licenses (id TEXT PRIMARY KEY, license_name TEXT NOT NULL, product_name TEXT, license_type TEXT, license_key TEXT, contract_number TEXT, seat_count INTEGER NOT NULL DEFAULT 1 CHECK(seat_count >= 0), expiration_date TEXT, notes TEXT, created_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS licenses (id TEXT PRIMARY KEY, license_name TEXT NOT NULL, product_name TEXT, license_type TEXT, license_key TEXT, contract_number TEXT, seat_count INTEGER NOT NULL DEFAULT 1 CHECK(seat_count >= 0), expiration_date TEXT, notes TEXT, image_url TEXT, created_at TEXT NOT NULL)",
   },
   license_assignments: {
     columns: [
@@ -332,6 +336,12 @@ function migrateInventory(database: DatabaseSync) {
     .all() as Array<{ name: string }>;
   if (columns.length && !columns.some((column) => column.name === "color")) {
     database.exec("ALTER TABLE inventory_items ADD COLUMN color TEXT");
+  }
+  if (
+    columns.length &&
+    !columns.some((column) => column.name === "image_url")
+  ) {
+    database.exec("ALTER TABLE inventory_items ADD COLUMN image_url TEXT");
   }
 }
 function migrateColors(database: DatabaseSync) {
@@ -423,6 +433,32 @@ function migrateLocations(database: DatabaseSync) {
     )
     .run(IT_WAREHOUSE);
 }
+function nextMaintenanceReference(database: DatabaseSync) {
+  const references = database
+    .prepare(
+      "SELECT reference_number FROM asset_maintenance WHERE reference_number IS NOT NULL",
+    )
+    .all() as Array<{ reference_number?: string | null }>;
+  const highest = references.reduce((maximum, row) => {
+    const match = /^MNT-(\d+)$/.exec(String(row.reference_number || ""));
+    return match ? Math.max(maximum, Number(match[1])) : maximum;
+  }, 0);
+  return `MNT-${String(highest + 1).padStart(6, "0")}`;
+}
+
+function backfillMaintenanceReferences(database: DatabaseSync) {
+  const missing = database
+    .prepare(
+      "SELECT id FROM asset_maintenance WHERE reference_number IS NULL OR trim(reference_number) = '' ORDER BY created_at, id",
+    )
+    .all() as Array<{ id: string }>;
+  const update = database.prepare(
+    "UPDATE asset_maintenance SET reference_number = ? WHERE id = ?",
+  );
+  for (const row of missing)
+    update.run(nextMaintenanceReference(database), row.id);
+}
+
 function migrateSystemFields(database: DatabaseSync) {
   const departmentColumns = database
     .prepare("PRAGMA table_info(departments)")
@@ -460,6 +496,11 @@ function migrateSystemFields(database: DatabaseSync) {
     !licenseColumns.some((column) => column.name === "contract_number")
   )
     database.exec("ALTER TABLE licenses ADD COLUMN contract_number TEXT");
+  if (
+    licenseColumns.length &&
+    !licenseColumns.some((column) => column.name === "image_url")
+  )
+    database.exec("ALTER TABLE licenses ADD COLUMN image_url TEXT");
 
   const assignmentColumns = database
     .prepare("PRAGMA table_info(assignment_history)")
@@ -485,9 +526,14 @@ function migrateSystemFields(database: DatabaseSync) {
   const maintenanceColumns = database
     .prepare("PRAGMA table_info(asset_maintenance)")
     .all() as Array<{ name: string }>;
+  if (!maintenanceColumns.some((entry) => entry.name === "reference_number"))
+    database.exec(
+      "ALTER TABLE asset_maintenance ADD COLUMN reference_number TEXT",
+    );
   for (const column of ["source_type", "source_id"])
     if (!maintenanceColumns.some((entry) => entry.name === column))
       database.exec(`ALTER TABLE asset_maintenance ADD COLUMN ${column} TEXT`);
+  backfillMaintenanceReferences(database);
 
   for (const table of ["pc_part_installations", "toner_installations"]) {
     const installationColumns = database
@@ -611,6 +657,8 @@ function save(
   row: Row,
   upsert: boolean,
 ) {
+  if (table === "asset_maintenance" && !row.reference_number)
+    row.reference_number = nextMaintenanceReference(database);
   const { columns } = definition(table);
   if (!row.id) throw new Error("معرّف السجل مطلوب");
   const placeholders = columns.map(() => "?").join(",");

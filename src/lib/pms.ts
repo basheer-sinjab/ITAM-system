@@ -97,6 +97,14 @@ export async function uploadPrinterImage(file: File) {
   return body.path as string;
 }
 
+export async function uploadLicenseImage(file: File) {
+  return uploadPrinterImage(file);
+}
+
+export async function uploadInventoryImage(file: File) {
+  return uploadPrinterImage(file);
+}
+
 export async function deletePrinterImage(path?: string | null) {
   if (!path?.startsWith("/uploads/printers/")) return;
   const response = await fetch(

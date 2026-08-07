@@ -1,15 +1,24 @@
-import { createFileRoute } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  useNavigate,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
   Boxes,
+  ChevronLeft,
+  Droplets,
   History,
+  MapPin,
   Minus,
   Package,
   Pencil,
   Plus,
   Search,
+  Wrench,
   Trash2,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -43,6 +52,8 @@ import {
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import { IT_WAREHOUSE } from "@/lib/locations";
+import { PrinterImage } from "@/components/PrinterImage";
+import { uploadInventoryImage } from "@/lib/pms";
 
 export const Route = createFileRoute("/_authenticated/inventory")({
   component: Inventory,
@@ -69,7 +80,12 @@ const movementLabel: Record<string, string> = {
 
 function Inventory() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
   const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [record, setRecord] = useState<any>();
   const [movement, setMovement] = useState<{
     item: any;
@@ -106,14 +122,17 @@ function Inventory() {
   const threshold = Number(settings?.low_stock_threshold ?? 2);
   const filtered = useMemo(
     () =>
-      items.filter((item: any) =>
-        [item.name, item.location, categoryName(item.category)].some((value) =>
-          String(value || "")
-            .toLowerCase()
-            .includes(search.trim().toLowerCase()),
-        ),
+      items.filter(
+        (item: any) =>
+          (!categoryFilter || item.category === categoryFilter) &&
+          [item.name, item.location, categoryName(item.category)].some(
+            (value) =>
+              String(value || "")
+                .toLowerCase()
+                .includes(search.trim().toLowerCase()),
+          ),
       ),
-    [items, search],
+    [items, search, categoryFilter],
   );
   const lowStock = items.filter(
     (item: any) => Number(item.quantity) <= threshold,
@@ -136,6 +155,8 @@ function Inventory() {
     refresh();
     toast.success("تم حذف العنصر من المخزون");
   };
+
+  if (pathname !== "/inventory") return <Outlet />;
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
@@ -165,7 +186,85 @@ function Inventory() {
           tone="amber"
         />
       </section>
-      <section className="surface-panel overflow-hidden">
+      <section className="space-y-4">
+        <div className="surface-panel flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="font-semibold">عناصر المخزون</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              اضغط على أي بطاقة لعرض التفاصيل وسجل الحركة.
+            </p>
+          </div>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+            <div className="flex items-center gap-1 rounded-lg border bg-muted/20 p-1">
+              <CategoryFilterButton
+                icon={Droplets}
+                label="الأحبار"
+                active={categoryFilter === "Toner"}
+                onClick={() =>
+                  setCategoryFilter((current) =>
+                    current === "Toner" ? null : "Toner",
+                  )
+                }
+              />
+              <CategoryFilterButton
+                icon={Wrench}
+                label="القطع والأدوات"
+                active={categoryFilter === "Spare Part"}
+                onClick={() =>
+                  setCategoryFilter((current) =>
+                    current === "Spare Part" ? null : "Spare Part",
+                  )
+                }
+              />
+              <CategoryFilterButton
+                icon={Package}
+                label="المستهلكات"
+                active={categoryFilter === "Consumable"}
+                onClick={() =>
+                  setCategoryFilter((current) =>
+                    current === "Consumable" ? null : "Consumable",
+                  )
+                }
+              />
+            </div>
+            <div className="relative w-full sm:w-80">
+              <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                className="pr-9"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="ابحث بالاسم أو النوع أو الموقع"
+              />
+            </div>
+          </div>
+        </div>
+        {filtered.length ? (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {filtered.map((item: any) => (
+              <InventoryCard
+                key={item.id}
+                item={item}
+                threshold={threshold}
+                open={() =>
+                  navigate({ to: "/inventory/$id", params: { id: item.id } })
+                }
+                changeQuantity={(type) => setMovement({ item, type })}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="surface-panel flex flex-col items-center justify-center gap-3 py-14 text-center">
+            <Boxes className="size-10 text-muted-foreground/50" />
+            <div>
+              <p className="font-medium">لا توجد عناصر مطابقة</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                جرّب تغيير عبارة البحث أو أضف عنصرًا جديدًا.
+              </p>
+            </div>
+          </div>
+        )}
+      </section>
+      <section className="hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b p-4">
           <div>
             <h2 className="font-semibold">العناصر والكميات</h2>
@@ -185,7 +284,7 @@ function Inventory() {
         </div>
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader>
+            <TableHeader className="[&_th]:text-right">
               <TableRow>
                 <TableHead>العنصر</TableHead>
                 <TableHead>النوع</TableHead>
@@ -198,7 +297,25 @@ function Inventory() {
               {filtered.map((item: any) => {
                 const isLow = Number(item.quantity) <= threshold;
                 return (
-                  <TableRow key={item.id}>
+                  <TableRow
+                    key={item.id}
+                    role="link"
+                    tabIndex={0}
+                    className="cursor-pointer"
+                    onClick={() =>
+                      navigate({
+                        to: "/inventory/$id",
+                        params: { id: item.id },
+                      })
+                    }
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter")
+                        navigate({
+                          to: "/inventory/$id",
+                          params: { id: item.id },
+                        });
+                    }}
+                  >
                     <TableCell>
                       <p className="font-medium">{item.name}</p>
                       {item.notes && (
@@ -223,11 +340,14 @@ function Inventory() {
                     </TableCell>
                     <TableCell>{item.location || "—"}</TableCell>
                     <TableCell>
-                      <div className="flex flex-wrap justify-end gap-1">
+                      <div className="flex flex-wrap justify-end gap-1 [&>button:nth-child(n+3)]:hidden">
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => setMovement({ item, type: "add" })}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setMovement({ item, type: "add" });
+                          }}
                         >
                           <Plus className="ml-1 size-3.5" />
                           زود الكمية
@@ -236,7 +356,10 @@ function Inventory() {
                           size="sm"
                           variant="outline"
                           disabled={Number(item.quantity) <= 0}
-                          onClick={() => setMovement({ item, type: "use" })}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setMovement({ item, type: "use" });
+                          }}
                         >
                           <Minus className="ml-1 size-3.5" />
                           استخدم
@@ -315,7 +438,127 @@ function Inventory() {
   );
 }
 
-function ItemDialog({ item, initialCategory, close, saved }: any) {
+function CategoryFilterButton({ icon: Icon, label, active, onClick }: any) {
+  return (
+    <Button
+      type="button"
+      size="icon"
+      variant={active ? "default" : "ghost"}
+      className="size-9"
+      aria-label={label}
+      title={label}
+      onClick={onClick}
+    >
+      <Icon className="size-4" />
+    </Button>
+  );
+}
+
+function InventoryCard({ item, threshold, open, changeQuantity }: any) {
+  const quantity = Number(item.quantity || 0);
+  const isLow = quantity <= threshold;
+  const Icon =
+    item.category === "Toner"
+      ? Droplets
+      : item.category === "Spare Part"
+        ? Wrench
+        : Package;
+  const tonerColor = TONER_COLORS.find((color) => color.value === item.color);
+
+  return (
+    <article
+      role="link"
+      tabIndex={0}
+      onClick={open}
+      onKeyDown={(event) => event.key === "Enter" && open()}
+      className="surface-panel interactive-card group flex cursor-pointer flex-col overflow-hidden p-0 hover:interactive-card-hover"
+    >
+      <PrinterImage
+        path={item.image_url}
+        alt={item.name}
+        className="h-36 w-full border-b"
+        fallback={<Icon className="size-12 opacity-40" />}
+      />
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex items-start justify-between gap-3">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Icon className="size-6" />
+          </span>
+          <ChevronLeft className="mt-2 size-5 text-muted-foreground transition-transform group-hover:-translate-x-1" />
+        </div>
+        <div className="mt-4 min-w-0">
+          <h3 className="truncate text-lg font-semibold">{item.name}</h3>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <span className="rounded-md border bg-muted/40 px-2 py-1 text-xs text-muted-foreground">
+              {categoryName(item.category)}
+            </span>
+            {tonerColor && (
+              <span className="inline-flex items-center gap-1.5 rounded-md border bg-background px-2 py-1 text-xs font-medium">
+                <span
+                  className="size-3 rounded-full border border-black/15 shadow-sm"
+                  style={{ backgroundColor: tonerColor.swatch }}
+                />
+                {tonerColor.label}
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="mt-5 flex items-end justify-between gap-3 rounded-xl bg-muted/35 p-4">
+          <div>
+            <p className="text-xs text-muted-foreground">الكمية المتاحة</p>
+            <p
+              className={`mt-1 text-3xl font-bold ${isLow ? "text-amber-700" : "text-primary"}`}
+            >
+              {quantity}
+            </p>
+          </div>
+          <span
+            className={`rounded-full px-2.5 py-1 text-xs font-medium ${isLow ? "bg-amber-500/15 text-amber-700" : "bg-emerald-500/15 text-emerald-700"}`}
+          >
+            {isLow ? "كمية منخفضة" : "متوفر"}
+          </span>
+        </div>
+        <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+          <MapPin className="size-4 shrink-0" />
+          <span className="truncate">{item.location || "غير محدد"}</span>
+        </p>
+        {item.notes && (
+          <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+            {item.notes}
+          </p>
+        )}
+      </div>
+      <div className="grid grid-cols-2 gap-2 border-t bg-muted/20 p-3">
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={(event) => {
+            event.stopPropagation();
+            changeQuantity("add");
+          }}
+        >
+          <Plus className="ml-1.5 size-4" />
+          زود الكمية
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={quantity <= 0}
+          onClick={(event) => {
+            event.stopPropagation();
+            changeQuantity("use");
+          }}
+        >
+          <Minus className="ml-1.5 size-4" />
+          استخدام
+        </Button>
+      </div>
+    </article>
+  );
+}
+
+export function ItemDialog({ item, initialCategory, close, saved }: any) {
+  const [file, setFile] = useState<File | null>(null);
   const [form, setForm] = useState<any>({
     name: "",
     category: initialCategory || "Consumable",
@@ -323,6 +566,7 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
     location: IT_WAREHOUSE,
     notes: "",
     color: "",
+    image_url: null,
   });
   useEffect(() => {
     if (item)
@@ -337,12 +581,21 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
     if (!form.name?.trim()) return toast.error("اسم العنصر مطلوب");
     if (form.category === "Toner" && !TONER_COLOR_VALUES.includes(form.color))
       return toast.error("اختر لون الحبر");
+    let image_url = form.image_url || null;
+    try {
+      if (file) image_url = await uploadInventoryImage(file);
+    } catch (error) {
+      return toast.error(
+        error instanceof Error ? error.message : "تعذر رفع صورة المنتج",
+      );
+    }
     const payload = {
       name: form.name.trim(),
       category: form.category,
       color: form.category === "Toner" ? form.color : null,
       location: form.location?.trim() || IT_WAREHOUSE,
       notes: form.notes || null,
+      image_url,
     };
     if (item) {
       const result = await supabase
@@ -458,6 +711,40 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
               onChange={(event) => set("notes", event.target.value)}
             />
           </Field>
+          <Field label="صورة المنتج" className="sm:col-span-2">
+            <div className="flex flex-col gap-4 rounded-xl border border-dashed p-4 sm:flex-row sm:items-center">
+              <PrinterImage
+                path={file ? URL.createObjectURL(file) : form.image_url}
+                alt={form.name || "صورة المنتج"}
+                className="h-28 w-full rounded-lg sm:w-36"
+                fallback={<Package className="size-10 opacity-40" />}
+              />
+              <div className="flex-1 space-y-2">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  الصيغ المدعومة: JPG وPNG وWEBP، بحد أقصى 10 ميغابايت.
+                </p>
+                {(file || form.image_url) && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive"
+                    onClick={() => {
+                      setFile(null);
+                      set("image_url", null);
+                    }}
+                  >
+                    إزالة الصورة
+                  </Button>
+                )}
+              </div>
+            </div>
+          </Field>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={close}>
@@ -470,7 +757,7 @@ function ItemDialog({ item, initialCategory, close, saved }: any) {
   );
 }
 
-function MovementDialog({
+export function MovementDialog({
   item,
   type,
   close,

@@ -25,6 +25,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { PrinterImage } from "@/components/PrinterImage";
+import { uploadLicenseImage } from "@/lib/pms";
 
 export const Route = createFileRoute("/_authenticated/licenses/$id")({
   component: LicenseDetails,
@@ -145,6 +147,7 @@ function LicenseDetails() {
           </ConfirmButton>
         </div>
       </header>
+      <PrinterImage path={license.image_url} alt={license.license_name} className="h-72 w-full rounded-xl" fallback={<KeyRound className="size-20 opacity-60" />} />
       <section className="surface-panel grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-3">
         <Info label="نوع الترخيص" value={license.license_type} />
         <Info label="تاريخ الانتهاء" value={license.expiration_date} />
@@ -247,6 +250,7 @@ function LicenseDetails() {
   }
 
   function EditLicenseDialog({ license, close, saved }: any) {
+    const [file, setFile] = useState<File | null>(null);
     const [form, setForm] = useState({
       license_name: license.license_name ?? "",
       product_name: license.product_name ?? "",
@@ -256,6 +260,7 @@ function LicenseDetails() {
       seat_count: license.seat_count ?? 1,
       expiration_date: license.expiration_date ?? "",
       notes: license.notes ?? "",
+      image_url: license.image_url ?? null,
     });
     const set = (key: string, value: any) => setForm({ ...form, [key]: value });
     const save = async () => {
@@ -264,10 +269,12 @@ function LicenseDetails() {
         return toast.error(
           `لا يمكن تقليل المقاعد عن ${assignments.length} لأنها مستخدمة حاليًا`,
         );
+      const image_url = file ? await uploadLicenseImage(file) : form.image_url;
       const result = await supabase
         .from("licenses")
         .update({
           ...form,
+          image_url,
           license_name: form.license_name.trim(),
           seat_count: Number(form.seat_count || 0),
           expiration_date: form.expiration_date || null,
@@ -335,6 +342,21 @@ function LicenseDetails() {
                 value={form.notes}
                 onChange={(event) => set("notes", event.target.value)}
               />
+            </Field>
+            <Field label="صورة الترخيص" className="sm:col-span-2">
+              <div className="flex items-center gap-4 rounded-lg border border-dashed p-3">
+                <PrinterImage
+                  path={file ? URL.createObjectURL(file) : form.image_url}
+                  alt="صورة الترخيص"
+                  className="size-24 rounded-md"
+                  fallback={<KeyRound className="size-10 opacity-60" />}
+                />
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+                />
+              </div>
             </Field>
           </div>
           <DialogFooter>

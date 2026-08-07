@@ -1,7 +1,23 @@
-import { createFileRoute } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  useNavigate,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { CircleDot, Pencil, Plus, Search, Trash2, Wrench } from "lucide-react";
+import {
+  CalendarDays,
+  CheckCircle2,
+  ChevronLeft,
+  CircleDot,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+  UserCog,
+  Wrench,
+} from "lucide-react";
 import { runWorkflowAction, supabase } from "@/integrations/supabase/client";
 import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
@@ -51,6 +67,10 @@ function movementItems(items: any[] = []) {
 
 function Maintenance() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
   const [record, setRecord] = useState<any>();
   const [maintenanceSearch, setMaintenanceSearch] = useState("");
   const [activeStatus, setActiveStatus] = useState("all");
@@ -81,6 +101,7 @@ function Maintenance() {
   const openRecords = records.filter(
     (record: any) => record.status === "Open",
   ).length;
+  const closedRecords = records.length - openRecords;
   const visibleRecords = records.filter((maintenanceRecord: any) => {
     const asset = assets.find(
       (item: any) => item.id === maintenanceRecord.asset_id,
@@ -93,6 +114,7 @@ function Maintenance() {
         asset?.asset_id,
         maintenanceRecord.technician,
         maintenanceRecord.maintenance_type,
+        maintenanceRecord.reference_number,
         maintenanceRecord.resolution,
         maintenanceRecord.maintenance_date,
       ].some((value) =>
@@ -119,6 +141,7 @@ function Maintenance() {
     await qc.invalidateQueries();
     toast.success("تم حذف سجل الصيانة");
   };
+  if (pathname !== "/maintenance") return <Outlet />;
   return (
     <div className="mx-auto max-w-7xl space-y-6">
       <ManagementHeader
@@ -132,7 +155,7 @@ function Maintenance() {
           </Button>
         }
       />
-      <section className="grid gap-3 sm:grid-cols-2">
+      <section className="grid gap-3 sm:grid-cols-3">
         <MetricCard
           icon={Wrench}
           label="إجمالي السجلات"
@@ -143,6 +166,12 @@ function Maintenance() {
           label="صيانة مفتوحة"
           value={openRecords}
           tone="amber"
+        />
+        <MetricCard
+          icon={CheckCircle2}
+          label="صيانة مغلقة"
+          value={closedRecords}
+          tone="emerald"
         />
       </section>
       <div className="flex flex-col gap-3 rounded-lg border bg-muted/30 p-3 sm:flex-row-reverse sm:items-center sm:justify-between">
@@ -178,7 +207,90 @@ function Maintenance() {
           ))}
         </div>
       </div>
-      <div className="surface-panel overflow-hidden">
+      {visibleRecords.length ? (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {visibleRecords.map((maintenanceRecord: any) => {
+            const asset = assets.find(
+              (item: any) => item.id === maintenanceRecord.asset_id,
+            );
+            const closed = maintenanceRecord.status === "Closed";
+            return (
+              <article
+                key={maintenanceRecord.id}
+                role="link"
+                tabIndex={0}
+                className="surface-panel interactive-card group cursor-pointer overflow-hidden p-0 hover:interactive-card-hover"
+                onClick={() =>
+                  navigate({
+                    to: "/maintenance/$id",
+                    params: { id: maintenanceRecord.id },
+                  })
+                }
+                onKeyDown={(event) => {
+                  if (event.key === "Enter")
+                    navigate({
+                      to: "/maintenance/$id",
+                      params: { id: maintenanceRecord.id },
+                    });
+                }}
+              >
+                <div className="border-b bg-muted/25 p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-mono text-sm font-bold text-primary">
+                        {maintenanceRecord.reference_number || "MNT-—"}
+                      </p>
+                      <h2 className="mt-2 font-semibold">
+                        {asset?.name || "أصل غير متوفر"}
+                      </h2>
+                      <p className="mt-1 font-mono text-xs text-muted-foreground">
+                        {asset?.asset_id || asset?.serial_number || "—"}
+                      </p>
+                    </div>
+                    <ChevronLeft className="mt-1 size-5 text-muted-foreground transition-transform group-hover:-translate-x-1" />
+                  </div>
+                </div>
+                <div className="space-y-4 p-5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      className={`rounded-md px-2.5 py-1 text-xs font-medium ${closed ? "bg-emerald-500/10 text-emerald-700" : "bg-amber-500/10 text-amber-700"}`}
+                    >
+                      {closed ? "مغلقة" : "مفتوحة"}
+                    </span>
+                    <span className="rounded-md border bg-background px-2.5 py-1 text-xs text-muted-foreground">
+                      {MAINTENANCE_TYPES[maintenanceRecord.maintenance_type] ||
+                        maintenanceRecord.maintenance_type}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <MaintenanceMeta
+                      icon={CalendarDays}
+                      label="التاريخ"
+                      value={maintenanceRecord.maintenance_date || "—"}
+                    />
+                    <MaintenanceMeta
+                      icon={UserCog}
+                      label="الفني"
+                      value={maintenanceRecord.technician || "غير محدد"}
+                    />
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="surface-panel flex flex-col items-center justify-center gap-3 py-14 text-center">
+          <Wrench className="size-10 text-muted-foreground/50" />
+          <div>
+            <p className="font-medium">لا توجد سجلات صيانة مطابقة</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              غيّر البحث أو الحالة، أو أضف سجل صيانة جديدًا.
+            </p>
+          </div>
+        </div>
+      )}
+      <div className="hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b text-right text-muted-foreground">
@@ -289,7 +401,19 @@ function Maintenance() {
     </div>
   );
 }
-function MaintenanceForm({
+function MaintenanceMeta({ icon: Icon, label, value }: any) {
+  return (
+    <div className="flex min-w-0 items-start gap-2">
+      <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+      <div className="min-w-0">
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="mt-0.5 truncate font-medium">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+export function MaintenanceForm({
   record,
   assets,
   inventory,
@@ -323,7 +447,8 @@ function MaintenanceForm({
       return toast.error(
         `الكمية المتوفرة من ${inventory.find((item: any) => item.id === insufficient.itemId)?.name} لا تكفي`,
       );
-    const payload = { ...form, cost: Number(form.cost || 0) };
+    const payload = { ...form };
+    delete payload.cost;
     try {
       await runWorkflowAction({ action: "save-maintenance", record: payload });
     } catch (error) {
@@ -398,25 +523,14 @@ function MaintenanceForm({
               </SelectContent>
             </Select>
           </div>
-          {[
-            ["تاريخ الصيانة", "maintenance_date"],
-            ["التكلفة", "cost"],
-          ].map(([label, key]) => (
-            <div key={key} className="space-y-2">
-              <Label>{label}</Label>
-              <Input
-                type={
-                  key === "maintenance_date"
-                    ? "date"
-                    : key === "cost"
-                      ? "number"
-                      : undefined
-                }
-                value={form[key] || ""}
-                onChange={(e) => set(key, e.target.value)}
-              />
-            </div>
-          ))}
+          <div className="space-y-2">
+            <Label>تاريخ الصيانة</Label>
+            <Input
+              type="date"
+              value={form.maintenance_date || ""}
+              onChange={(event) => set("maintenance_date", event.target.value)}
+            />
+          </div>
           <div className="space-y-2">
             <Label>الفني</Label>
             <Select

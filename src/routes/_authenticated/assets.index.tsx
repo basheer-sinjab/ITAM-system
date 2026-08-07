@@ -1,7 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Boxes, Monitor, Plus, Search, UserRound } from "lucide-react";
+import {
+  Boxes,
+  Laptop,
+  Monitor,
+  PcCase,
+  Plus,
+  Printer,
+  Router,
+  Search,
+  Shapes,
+  Smartphone,
+  UserRound,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
@@ -28,6 +40,15 @@ import { ASSET_TYPES, uploadPrinterImage } from "@/lib/pms";
 import { toast } from "sonner";
 
 const NONE = "__none__";
+const ASSET_FILTERS = [
+  { value: "Printer", label: "الطابعات", icon: Printer },
+  { value: "Desktop PC", label: "أجهزة الكمبيوتر", icon: PcCase },
+  { value: "Laptop", label: "أجهزة اللابتوب", icon: Laptop },
+  { value: "Monitor", label: "الشاشات", icon: Monitor },
+  { value: "Mobile Phone", label: "الجوالات", icon: Smartphone },
+  { value: "Network Device", label: "أجهزة الشبكة", icon: Router },
+  { value: "Other", label: "أخرى", icon: Shapes },
+] as const;
 export const Route = createFileRoute("/_authenticated/assets/")({
   component: AssetsPage,
 });
@@ -115,8 +136,8 @@ function AssetsPage() {
           tone="amber"
         />
       </section>
-      <div className="surface-panel grid gap-3 p-4 md:grid-cols-3">
-        <div className="relative">
+      <div className="surface-panel flex flex-col gap-3 p-4 lg:flex-row lg:items-center">
+        <div className="relative min-w-0 flex-1">
           <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             className="pr-9"
@@ -125,28 +146,35 @@ function AssetsPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Select value={type} onValueChange={setType}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="__all__">كل الأنواع</SelectItem>
-            {ASSET_TYPES.map((item) => (
-              <SelectItem key={item} value={item}>
-                {item}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={scope} onValueChange={setScope}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="current">الأصول الحالية</SelectItem>
-            <SelectItem value="archived">الأرشيف</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex h-10 shrink-0 items-center gap-1 overflow-x-auto rounded-md border bg-muted/20 px-1">
+          {ASSET_FILTERS.map(({ value, label, icon: Icon }) => (
+            <Button
+              key={value}
+              type="button"
+              size="icon"
+              variant={type === value ? "default" : "ghost"}
+              className="size-8 shrink-0 rounded-md"
+              title={label}
+              aria-label={label}
+              onClick={() =>
+                setType((current) => (current === value ? "__all__" : value))
+              }
+            >
+              <Icon className="size-4" />
+            </Button>
+          ))}
+        </div>
+        <div className="w-full shrink-0 lg:w-52">
+          <Select value={scope} onValueChange={setScope}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="current">الأصول الحالية</SelectItem>
+              <SelectItem value="archived">الأرشيف</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {filtered.map((asset: any) => {
@@ -163,10 +191,7 @@ function AssetsPage() {
               key={asset.id}
               to="/assets/$id"
               params={{ id: asset.id }}
-              className="surface-panel interactive-card overflow-hidden border-t-4 hover:interactive-card-hover"
-              style={{
-                borderTopColor: department?.color || branch?.color || "#2563eb",
-              }}
+              className="surface-panel interactive-card overflow-hidden hover:interactive-card-hover"
             >
               <PrinterImage
                 path={asset.image_url}

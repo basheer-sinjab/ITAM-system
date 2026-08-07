@@ -31,6 +31,8 @@ export async function createLocalBackup() {
     ...new Set(
       (data.assets ?? [])
         .map((asset) => asset.image_url)
+        .concat((data.licenses ?? []).map((license) => license.image_url))
+        .concat((data.inventory_items ?? []).map((item) => item.image_url))
         .filter(
           (path): path is string =>
             typeof path === "string" && path.startsWith("/uploads/printers/"),
