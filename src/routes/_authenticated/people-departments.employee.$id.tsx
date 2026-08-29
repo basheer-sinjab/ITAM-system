@@ -1,36 +1,17 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowRight,
+  CalendarDays,
+  ChevronLeft,
+  ExternalLink,
   KeyRound,
   Mail,
   Monitor,
-  Pencil,
   Phone,
-  Trash2,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { ConfirmButton } from "@/components/ConfirmButton";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
 import { ScopeColorBadges } from "@/components/ScopeColorBadges";
 
 export const Route = createFileRoute(
@@ -39,9 +20,6 @@ export const Route = createFileRoute(
 
 function EmployeeDetails() {
   const { id } = Route.useParams();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const [editOpen, setEditOpen] = useState(false);
   const { data: employee, isLoading } = useQuery({
     queryKey: ["employee", id],
     queryFn: async () =>
@@ -52,11 +30,6 @@ function EmployeeDetails() {
     queryKey: ["departments"],
     queryFn: async () =>
       (await supabase.from("departments").select("*").order("name")).data ?? [],
-  });
-  const { data: branches = [] } = useQuery({
-    queryKey: ["branches"],
-    queryFn: async () =>
-      (await supabase.from("branches").select("*").order("name")).data ?? [],
   });
   const { data: assets = [] } = useQuery({
     queryKey: ["employee-assets", id],
@@ -87,61 +60,15 @@ function EmployeeDetails() {
   const department = departments.find(
     (item: any) => item.id === employee.department_id,
   );
-  const branchName =
-    branches.find((branch: any) => branch.id === department?.branch_id)?.name ||
-    branches.find((branch: any) => branch.name === department?.branch)?.name;
-  const departmentLabel = department
-    ? `${department.name} - ${branchName || "فرع غير محدد"}`
-    : "بدون قسم";
-  const branch = branches.find(
-    (item: any) =>
-      item.id === department?.branch_id ||
-      (!department?.branch_id && item.name === department?.branch),
-  );
+  const departmentLabel = department?.name || "بدون قسم";
   const assignedLicenses = assignments
-    .map((assignment: any) =>
-      licenses.find((license: any) => license.id === assignment.license_id),
-    )
+    .map((assignment: any) => {
+      const license = licenses.find(
+        (item: any) => item.id === assignment.license_id,
+      );
+      return license ? { assignment, license } : null;
+    })
     .filter(Boolean);
-  const remove = async () => {
-    const historyResult = await supabase
-      .from("assignment_history")
-      .update({
-        return_date: new Date().toISOString().slice(0, 10),
-        return_condition: "good",
-        return_notes: "تم إرجاع الأصل عند حذف الموظف",
-      })
-      .eq("employee_id", id)
-      .eq("return_date", null);
-    if (historyResult.error) {
-      toast.error(historyResult.error.message);
-      return;
-    }
-    const licensesResult = await supabase
-      .from("license_assignments")
-      .delete()
-      .eq("employee_id", id);
-    if (licensesResult.error) {
-      toast.error(licensesResult.error.message);
-      return;
-    }
-    const assetsResult = await supabase
-      .from("assets")
-      .update({ assigned_employee_id: null })
-      .eq("assigned_employee_id", id);
-    if (assetsResult.error) {
-      toast.error(assetsResult.error.message);
-      return;
-    }
-    const result = await supabase.from("employees").delete().eq("id", id);
-    if (result.error) {
-      toast.error(result.error.message);
-      return;
-    }
-    queryClient.invalidateQueries();
-    toast.success("تم حذف الموظف");
-    navigate({ to: "/people-departments", search: { tab: "employees" } });
-  };
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -160,26 +87,17 @@ function EmployeeDetails() {
             <h1 className="text-2xl font-bold">{employee.full_name}</h1>
             <p className="text-sm text-muted-foreground">{departmentLabel}</p>
             <div className="mt-2">
-              <ScopeColorBadges department={department} branch={branch} />
+              <ScopeColorBadges department={department} />
             </div>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setEditOpen(true)}>
-            <Pencil className="ml-2 size-4" />
-            تعديل
-          </Button>
-          <ConfirmButton
-            variant="outline"
-            className="text-destructive"
-            title="حذف الموظف؟"
-            description={`سيتم حذف ${employee.full_name} وإلغاء ربط أصوله وتراخيصه.`}
-            onConfirm={remove}
-          >
-            <Trash2 className="ml-2 size-4" />
-            حذف
-          </ConfirmButton>
-        </div>
+        <Button
+          variant="outline"
+          onClick={() => window.location.assign(`/odoo/employees/${id}`)}
+        >
+          <ExternalLink className="ml-2 size-4" />
+          فتح الموظف في Odoo
+        </Button>
       </header>
       <section className="surface-panel grid gap-4 p-6 sm:grid-cols-2 lg:grid-cols-4">
         <Info label="رقم الموظف" value={employee.employee_number} />
@@ -194,38 +112,58 @@ function EmployeeDetails() {
         <List
           title="الأصول المعيّنة"
           icon={Monitor}
+          count={assets.length}
           empty="لا توجد أصول معيّنة."
           items={assets.map((asset: any) => (
-            <div key={asset.id}>
-              <p className="font-medium">{asset.name}</p>
-              <p className="font-mono text-xs text-muted-foreground">
-                {asset.asset_id || "—"}
-              </p>
-            </div>
+            <Link
+              key={asset.id}
+              to="/assets/$id"
+              params={{ id: asset.id }}
+              className="group flex items-center justify-between gap-4"
+            >
+              <div className="min-w-0">
+                <p className="truncate font-medium">{asset.name}</p>
+                <p className="mt-1 font-mono text-xs text-muted-foreground">
+                  {asset.asset_id || "—"}
+                </p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {asset.asset_type || "نوع غير محدد"} ·{" "}
+                  {asset.location || "مكان غير محدد"}
+                </p>
+              </div>
+              <ChevronLeft className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-x-1 group-hover:text-primary" />
+            </Link>
           ))}
         />
         <List
           title="التراخيص المعيّنة"
           icon={KeyRound}
+          count={assignedLicenses.length}
           empty="لا توجد تراخيص معيّنة."
-          items={assignedLicenses.map((license: any) => (
-            <div key={license.id}>
-              <p className="font-medium">{license.license_name}</p>
-              <p className="text-xs text-muted-foreground">
-                {license.product_name || "—"}
-              </p>
-            </div>
+          items={assignedLicenses.map((item: any) => (
+            <Link
+              key={item.assignment.id}
+              to="/licenses/$id"
+              params={{ id: item.license.id }}
+              className="group flex items-center justify-between gap-4"
+            >
+              <div className="min-w-0">
+                <p className="truncate font-medium">
+                  {item.license.license_name}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {item.license.product_name || "بدون منتج محدد"}
+                </p>
+                <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <CalendarDays className="size-3.5" />
+                  تاريخ التعيين: {item.assignment.assignment_date || "—"}
+                </p>
+              </div>
+              <ChevronLeft className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-x-1 group-hover:text-primary" />
+            </Link>
           ))}
         />
       </section>
-      <EmployeeEdit
-        open={editOpen}
-        onOpenChange={setEditOpen}
-        employee={employee}
-        departments={departments}
-        branches={branches}
-        saved={() => queryClient.invalidateQueries()}
-      />
     </div>
   );
 }
@@ -253,11 +191,13 @@ function Info({
 function List({
   title,
   icon: Icon,
+  count,
   empty,
   items,
 }: {
   title: string;
   icon: React.ElementType;
+  count: number;
   empty: string;
   items: React.ReactNode[];
 }) {
@@ -266,6 +206,9 @@ function List({
       <div className="flex items-center gap-2 border-b p-5">
         <Icon className="size-4 text-primary" />
         <h2 className="font-semibold">{title}</h2>
+        <span className="ms-auto rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+          {count}
+        </span>
       </div>
       <div className="divide-y">
         {items.length ? (
@@ -279,149 +222,5 @@ function List({
         )}
       </div>
     </section>
-  );
-}
-
-function EmployeeEdit({
-  open,
-  onOpenChange,
-  employee,
-  departments,
-  branches,
-  saved,
-}: any) {
-  const [form, setForm] = useState<any>({});
-  useEffect(() => {
-    if (open)
-      setForm({
-        ...employee,
-        department_id: employee.department_id || "__none__",
-      });
-  }, [open, employee]);
-  const set = (key: string, value: any) => setForm({ ...form, [key]: value });
-  const save = async () => {
-    if (!form.full_name?.trim()) return toast.error("الاسم الكامل مطلوب");
-    const nextDepartmentId =
-      form.department_id === "__none__" ? null : form.department_id;
-    const departmentChanged =
-      (employee.department_id || null) !== (nextDepartmentId || null);
-    const result = await supabase
-      .from("employees")
-      .update({
-        ...form,
-        employee_number: form.employee_number?.trim() || null,
-        full_name: form.full_name.trim(),
-        department_id: nextDepartmentId,
-      })
-      .eq("id", employee.id);
-    if (result.error) return toast.error(result.error.message);
-    saved();
-    onOpenChange(false);
-    toast.success(
-      departmentChanged
-        ? "تم تعديل الموظف ونقل أصوله إلى القسم الجديد"
-        : "تم تعديل الموظف",
-    );
-  };
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>تعديل الموظف</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="رقم الموظف">
-            <Input
-              value={form.employee_number || ""}
-              onChange={(event) => set("employee_number", event.target.value)}
-            />
-          </Field>
-          <Field label="الاسم الكامل">
-            <Input
-              value={form.full_name || ""}
-              onChange={(event) => set("full_name", event.target.value)}
-            />
-          </Field>
-          <Field label="البريد الإلكتروني">
-            <Input
-              value={form.email || ""}
-              onChange={(event) => set("email", event.target.value)}
-            />
-          </Field>
-          <Field label="الهاتف">
-            <Input
-              value={form.phone || ""}
-              onChange={(event) => set("phone", event.target.value)}
-            />
-          </Field>
-          <Field label="القسم">
-            <Select
-              value={form.department_id || "__none__"}
-              onValueChange={(value) => set("department_id", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__none__">غير محدد</SelectItem>
-                {departments.map((department: any) => (
-                  <SelectItem key={department.id} value={department.id}>
-                    {department.name} -{" "}
-                    {branches.find(
-                      (branch: any) => branch.id === department.branch_id,
-                    )?.name ||
-                      department.branch ||
-                      "فرع غير محدد"}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Field>
-          <Field label="الحالة">
-            <Select
-              value={form.status || "active"}
-              onValueChange={(value) => set("status", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="active">نشط</SelectItem>
-                <SelectItem value="inactive">غير نشط</SelectItem>
-              </SelectContent>
-            </Select>
-          </Field>
-          <Field label="ملاحظات" className="sm:col-span-2">
-            <Textarea
-              value={form.notes || ""}
-              onChange={(event) => set("notes", event.target.value)}
-            />
-          </Field>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            إلغاء
-          </Button>
-          <Button onClick={save}>حفظ</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function Field({
-  label,
-  children,
-  className = "",
-}: {
-  label: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={`space-y-2 ${className}`}>
-      <Label>{label}</Label>
-      {children}
-    </div>
   );
 }

@@ -73,7 +73,10 @@ function InventoryItemDetails() {
       .from("inventory_items")
       .delete()
       .eq("id", item.id);
-    if (result.error) return toast.error(result.error.message);
+    if (result.error) {
+      toast.error(result.error.message);
+      return;
+    }
     queryClient.invalidateQueries();
     toast.success("تم حذف عنصر المخزون");
     navigate({ to: "/inventory" });

@@ -248,7 +248,9 @@ function Inventory() {
                 open={() =>
                   navigate({ to: "/inventory/$id", params: { id: item.id } })
                 }
-                changeQuantity={(type) => setMovement({ item, type })}
+                changeQuantity={(type: "add" | "use") =>
+                  setMovement({ item, type })
+                }
               />
             ))}
           </div>

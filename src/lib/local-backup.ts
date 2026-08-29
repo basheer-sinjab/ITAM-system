@@ -2,6 +2,7 @@ import {
   exportLocalData,
   restoreLocalData,
 } from "@/integrations/supabase/client";
+import { runtimeHeaders, runtimePath } from "./odoo-runtime";
 
 type BackupImage = {
   path: string;
@@ -35,7 +36,9 @@ export async function createLocalBackup() {
         .concat((data.inventory_items ?? []).map((item) => item.image_url))
         .filter(
           (path): path is string =>
-            typeof path === "string" && path.startsWith("/uploads/printers/"),
+            typeof path === "string" &&
+            (path.startsWith("/uploads/printers/") ||
+              path.startsWith("/itam_floss/image/")),
         ),
     ),
   ];
@@ -72,6 +75,7 @@ export async function restoreLocalBackup(file: File) {
     throw new Error("تنسيق النسخة الاحتياطية غير مدعوم");
   }
 
+  const restoredImagePaths = new Map<string, string>();
   for (const image of backup.images) {
     if (typeof image.path !== "string" || typeof image.dataUrl !== "string") {
       throw new Error("تحتوي النسخة الاحتياطية على صورة غير صالحة");
@@ -83,14 +87,28 @@ export async function restoreLocalBackup(file: File) {
       "backup-image",
     );
     formData.append("path", image.path);
-    const response = await fetch("/api/printer-images/restore", {
+    const response = await fetch(runtimePath("/api/printer-images/restore"), {
       method: "POST",
-      headers: { "x-itam-request": "1" },
+      headers: runtimeHeaders({ "x-itam-request": "1" }),
       body: formData,
     });
     if (!response.ok)
       throw new Error((await response.json()).message ?? "تعذر استعادة الصور");
+    const restored = (await response.json()) as { path?: string };
+    if (restored.path) restoredImagePaths.set(image.path, restored.path);
   }
 
-  await restoreLocalData(backup.data);
+  const restoredData = Object.fromEntries(
+    Object.entries(backup.data).map(([table, rows]) => [
+      table,
+      rows.map((row) => ({
+        ...row,
+        ...(typeof row.image_url === "string" &&
+        restoredImagePaths.has(row.image_url)
+          ? { image_url: restoredImagePaths.get(row.image_url) }
+          : {}),
+      })),
+    ]),
+  );
+  await restoreLocalData(restoredData);
 }

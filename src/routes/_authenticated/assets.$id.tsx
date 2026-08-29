@@ -43,7 +43,6 @@ import {
 import { formatDate } from "@/lib/pms";
 import { ScopeColorBadges } from "@/components/ScopeColorBadges";
 import { AssetHardwareTabs } from "@/components/asset/AssetHardwareTabs";
-import { buildAssignmentDocument } from "@/lib/assignment-document";
 import { IT_WAREHOUSE } from "@/lib/locations";
 
 export const Route = createFileRoute("/_authenticated/assets/$id")({
@@ -97,11 +96,6 @@ function AssetDetails() {
     queryFn: async () =>
       (await supabase.from("departments").select("*").order("name")).data ?? [],
   });
-  const { data: branches = [] } = useQuery({
-    queryKey: ["branches"],
-    queryFn: async () =>
-      (await supabase.from("branches").select("*").order("name")).data ?? [],
-  });
   const { data: history = [] } = useQuery({
     queryKey: ["assignment-history", id],
     queryFn: async () =>
@@ -136,17 +130,6 @@ function AssetDetails() {
           .order("created_at", { ascending: false })
       ).data ?? [],
   });
-  const { data: pcSpecs } = useQuery({
-    queryKey: ["pc-specs", id],
-    queryFn: async () =>
-      (
-        await supabase
-          .from("pc_specs")
-          .select("*")
-          .eq("asset_id", id)
-          .maybeSingle()
-      ).data,
-  });
   const archiveMutation = useMutation({
     mutationFn: (action: "archive-asset" | "restore-asset") =>
       runWorkflowAction({ action, assetId: id }),
@@ -171,6 +154,19 @@ function AssetDetails() {
     },
     onError: (error: Error) => toast.error(error.message),
   });
+  const deleteAssignmentMutation = useMutation({
+    mutationFn: (assignmentId: string) =>
+      runWorkflowAction({
+        action: "delete-assignment-history",
+        assetId: id,
+        assignmentId,
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries();
+      toast.success("تم حذف سجل التسليم والاستلام ونموذجه المحفوظ");
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
 
   if (!asset) return <p className="text-muted-foreground">جارٍ التحميل…</p>;
 
@@ -180,14 +176,7 @@ function AssetDetails() {
   const department = departments.find(
     (item: any) => item.id === asset.department_id,
   );
-  const branch = branches.find(
-    (item: any) =>
-      item.id === department?.branch_id ||
-      (!department?.branch_id && item.name === department?.branch),
-  );
-  const departmentLabel = [branch?.name || department?.branch, department?.name]
-    .filter(Boolean)
-    .join(" - ");
+  const departmentLabel = department?.name || "";
   const currentAssignment =
     history.find(
       (record: any) =>
@@ -208,53 +197,17 @@ function AssetDetails() {
       phone: record.employee_phone || livePerson?.phone,
     };
     const departmentName = record.department_name || liveDepartment?.name;
-    const branchName =
-      record.branch_name ||
-      branches.find((branch: any) => branch.id === liveDepartment?.branch_id)
-        ?.name ||
-      liveDepartment?.branch;
     const page = window.open("", "_blank");
     page?.document.write(
-      `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>نموذج تسليم أصل - ${escapeHtml(asset.asset_id)}</title><style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{margin:0;color:#17212b;font-family:Tahoma,Arial,sans-serif;font-size:12px;line-height:1.6}.document{border:1px solid #d6dde3;padding:28px}.header{display:flex;align-items:flex-start;justify-content:space-between;border-bottom:3px solid #0f766e;padding-bottom:18px}.brand{color:#0f766e;font-size:20px;font-weight:700}.subtitle{color:#5b6975;font-size:12px}.document-title{text-align:left}.document-title h1{margin:0;color:#17212b;font-size:22px}.document-number{color:#5b6975;font-family:monospace;margin-top:4px}.notice{background:#eef8f7;border-right:4px solid #0f766e;margin:22px 0;padding:12px 14px}.section{margin-top:22px}.section-title{border-bottom:1px solid #d6dde3;color:#0f766e;font-size:15px;font-weight:700;margin:0 0 10px;padding-bottom:7px}.grid{display:grid;grid-template-columns:repeat(2,1fr);border:1px solid #d6dde3}.field{border-left:1px solid #d6dde3;border-bottom:1px solid #d6dde3;padding:9px 11px;min-height:54px}.field:nth-child(2n){border-left:0}.label{color:#64748b;display:block;font-size:10px;margin-bottom:3px}.value{font-weight:700}.acknowledgement{border:1px solid #d6dde3;background:#fafcfc;margin-top:10px;padding:14px;text-align:justify}.signatures{display:grid;grid-template-columns:repeat(2,1fr);gap:48px;margin-top:52px}.signature{border-top:1px solid #64748b;padding-top:7px;text-align:center}.footer{border-top:1px solid #d6dde3;color:#64748b;font-size:10px;margin-top:30px;padding-top:9px;text-align:center}@media print{.document{border:0;padding:0}}</style></head><body><main class="document"><header class="header"><div><div class="brand">نظام إدارة الأصول التقنية</div><div class="subtitle">إدارة تقنية المعلومات</div></div><div class="document-title"><h1>نموذج تسليم واستلام أصل</h1><div class="document-number">رقم النموذج: ${escapeHtml(record.id)}</div></div></header><div class="notice">يوثق هذا النموذج تسليم الأصل الموضح أدناه إلى الموظف، ويُعد مرجعاً لسجل الأصول والتعيينات.</div><section class="section"><h2 class="section-title">بيانات الموظف</h2><div class="grid"><div class="field"><span class="label">الاسم الكامل</span><span class="value">${escapeHtml(person.full_name)}</span></div><div class="field"><span class="label">رقم الموظف</span><span class="value">${escapeHtml(person.employee_number)}</span></div><div class="field"><span class="label">القسم</span><span class="value">${escapeHtml(departmentName)}</span></div><div class="field"><span class="label">الفرع</span><span class="value">${escapeHtml(branchName)}</span></div><div class="field"><span class="label">البريد الإلكتروني</span><span class="value">${escapeHtml(person.email)}</span></div><div class="field"><span class="label">رقم الهاتف</span><span class="value">${escapeHtml(person.phone)}</span></div></div></section><section class="section"><h2 class="section-title">بيانات الأصل</h2><div class="grid"><div class="field"><span class="label">اسم الأصل</span><span class="value">${escapeHtml(asset.name)}</span></div><div class="field"><span class="label">رقم الأصل</span><span class="value">${escapeHtml(asset.asset_id)}</span></div><div class="field"><span class="label">النوع</span><span class="value">${escapeHtml(asset.asset_type)}</span></div><div class="field"><span class="label">المصنّع والموديل</span><span class="value">${escapeHtml([asset.manufacturer, asset.model].filter(Boolean).join(" - "))}</span></div><div class="field"><span class="label">الرقم التسلسلي</span><span class="value">${escapeHtml(asset.serial_number)}</span></div><div class="field"><span class="label">تاريخ التعيين</span><span class="value">${escapeHtml(formatDate(record.assignment_date))}</span></div></div></section><section class="section"><h2 class="section-title">إقرار الاستلام</h2><div class="acknowledgement">أقر أنا ${escapeHtml(person.full_name)} بأنني استلمت الأصل الموضح أعلاه بحالة صالحة للاستخدام، وأتعهد بالمحافظة عليه واستخدامه لأغراض العمل فقط وإعادته عند الطلب أو عند انتهاء العلاقة الوظيفية. ${record.notes ? `ملاحظات التسليم: ${escapeHtml(record.notes)}` : ""}</div></section><section class="signatures"><div class="signature">توقيع الموظف المستلم<br><br>الاسم: ${escapeHtml(person.full_name)}<br>التاريخ: ________________</div><div class="signature">توقيع ممثل تقنية المعلومات<br><br>الاسم: ________________<br>التاريخ: ________________</div></section><footer class="footer">تم إنشاء هذا النموذج من نظام إدارة الأصول التقنية</footer></main><script>window.print()</script></body></html>`,
+      `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>نموذج تسليم أصل - ${escapeHtml(asset.asset_id)}</title><style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{margin:0;color:#17212b;font-family:Tahoma,Arial,sans-serif;font-size:12px;line-height:1.6}.document{border:1px solid #d6dde3;padding:28px}.header{display:flex;align-items:flex-start;justify-content:space-between;border-bottom:3px solid #0f766e;padding-bottom:18px}.brand{color:#0f766e;font-size:20px;font-weight:700}.subtitle{color:#5b6975;font-size:12px}.document-title{text-align:left}.document-title h1{margin:0;color:#17212b;font-size:22px}.document-number{color:#5b6975;font-family:monospace;margin-top:4px}.notice{background:#eef8f7;border-right:4px solid #0f766e;margin:22px 0;padding:12px 14px}.section{margin-top:22px}.section-title{border-bottom:1px solid #d6dde3;color:#0f766e;font-size:15px;font-weight:700;margin:0 0 10px;padding-bottom:7px}.grid{display:grid;grid-template-columns:repeat(2,1fr);border:1px solid #d6dde3}.field{border-left:1px solid #d6dde3;border-bottom:1px solid #d6dde3;padding:9px 11px;min-height:54px}.field:nth-child(2n){border-left:0}.label{color:#64748b;display:block;font-size:10px;margin-bottom:3px}.value{font-weight:700}.acknowledgement{border:1px solid #d6dde3;background:#fafcfc;margin-top:10px;padding:14px;text-align:justify}.signatures{display:grid;grid-template-columns:repeat(2,1fr);gap:48px;margin-top:52px}.signature{border-top:1px solid #64748b;padding-top:7px;text-align:center}.footer{border-top:1px solid #d6dde3;color:#64748b;font-size:10px;margin-top:30px;padding-top:9px;text-align:center}@media print{.document{border:0;padding:0}}</style></head><body><main class="document"><header class="header"><div><div class="brand">نظام إدارة الأصول التقنية</div><div class="subtitle">إدارة تقنية المعلومات</div></div><div class="document-title"><h1>نموذج تسليم واستلام أصل</h1><div class="document-number">رقم النموذج: ${escapeHtml(record.id)}</div></div></header><div class="notice">يوثق هذا النموذج تسليم الأصل الموضح أدناه إلى الموظف، ويُعد مرجعاً لسجل الأصول والتعيينات.</div><section class="section"><h2 class="section-title">بيانات الموظف</h2><div class="grid"><div class="field"><span class="label">الاسم الكامل</span><span class="value">${escapeHtml(person.full_name)}</span></div><div class="field"><span class="label">رقم الموظف</span><span class="value">${escapeHtml(person.employee_number)}</span></div><div class="field"><span class="label">القسم</span><span class="value">${escapeHtml(departmentName)}</span></div><div class="field"><span class="label">البريد الإلكتروني</span><span class="value">${escapeHtml(person.email)}</span></div><div class="field"><span class="label">رقم الهاتف</span><span class="value">${escapeHtml(person.phone)}</span></div></div></section><section class="section"><h2 class="section-title">بيانات الأصل</h2><div class="grid"><div class="field"><span class="label">اسم الأصل</span><span class="value">${escapeHtml(asset.name)}</span></div><div class="field"><span class="label">رقم الأصل</span><span class="value">${escapeHtml(asset.asset_id)}</span></div><div class="field"><span class="label">النوع</span><span class="value">${escapeHtml(asset.asset_type)}</span></div><div class="field"><span class="label">المصنّع والموديل</span><span class="value">${escapeHtml([asset.manufacturer, asset.model].filter(Boolean).join(" - "))}</span></div><div class="field"><span class="label">الرقم التسلسلي</span><span class="value">${escapeHtml(asset.serial_number)}</span></div><div class="field"><span class="label">تاريخ التعيين</span><span class="value">${escapeHtml(formatDate(record.assignment_date))}</span></div></div></section><section class="section"><h2 class="section-title">إقرار الاستلام</h2><div class="acknowledgement">أقر أنا ${escapeHtml(person.full_name)} بأنني استلمت الأصل الموضح أعلاه بحالة صالحة للاستخدام، وأتعهد بالمحافظة عليه واستخدامه لأغراض العمل فقط وإعادته عند الطلب أو عند انتهاء العلاقة الوظيفية. ${record.notes ? `ملاحظات التسليم: ${escapeHtml(record.notes)}` : ""}</div></section><section class="signatures"><div class="signature">توقيع الموظف المستلم<br><br>الاسم: ${escapeHtml(person.full_name)}<br>التاريخ: ________________</div><div class="signature">توقيع ممثل تقنية المعلومات<br><br>الاسم: ________________<br>التاريخ: ________________</div></section><footer class="footer">تم إنشاء هذا النموذج من نظام إدارة الأصول التقنية</footer></main><script>window.print()</script></body></html>`,
     );
     page?.document.close();
   };
 
   const printAssignment = (record: any) => {
-    const livePerson = employee(record.employee_id);
-    const liveDepartment = departments.find(
-      (item: any) => item.id === livePerson?.department_id,
-    );
-    const person = {
-      full_name: record.employee_name || livePerson?.full_name,
-      employee_number: record.employee_number || livePerson?.employee_number,
-      email: record.employee_email || livePerson?.email,
-      phone: record.employee_phone || livePerson?.phone,
-    };
-    const departmentName = record.department_name || liveDepartment?.name;
-    const branchName =
-      record.branch_name ||
-      branches.find((branch: any) => branch.id === liveDepartment?.branch_id)
-        ?.name ||
-      liveDepartment?.branch;
-    const snapshot = record.asset_snapshot || {};
-    const page = window.open("", "_blank");
-    if (!page) return toast.error("اسمح بفتح نافذة الطباعة من المتصفح");
-    page.document.write(
-      buildAssignmentDocument({
-        asset: { ...asset, ...snapshot },
-        record,
-        person,
-        departmentName,
-        branchName,
-        specs: snapshot.specs || pcSpecs,
-        logoUrl: new URL(
-          "/printersfloss-header-logo.png",
-          window.location.origin,
-        ).href,
-      }),
-    );
-    page.document.close();
+    const pdfUrl = `/itam_floss/assignment/${encodeURIComponent(record.id)}/handover.pdf`;
+    const page = window.open(pdfUrl, "_blank", "noopener,noreferrer");
+    if (!page) toast.error("اسمح بفتح ملف نموذج التسليم من المتصفح");
   };
 
   const timeline = buildTimeline(
@@ -408,16 +361,27 @@ function AssetDetails() {
         </dl>
       </div>
 
-      {(department || branch) && (
+      {department && (
         <section className="surface-panel flex flex-wrap items-center gap-3 p-4">
-          <span className="text-sm text-muted-foreground">القسم والفرع:</span>
-          <ScopeColorBadges department={department} branch={branch} />
+          <span className="text-sm text-muted-foreground">القسم:</span>
+          <ScopeColorBadges department={department} />
         </section>
       )}
 
       {!asset.archived_at && <AssetHardwareTabs asset={asset} />}
 
-      <Timeline events={timeline} printAssignment={printAssignment} />
+      <Timeline
+        events={timeline}
+        printAssignment={printAssignment}
+        deleteAssignment={(assignmentId: string) =>
+          deleteAssignmentMutation.mutateAsync(assignmentId)
+        }
+        deletingAssignmentId={
+          deleteAssignmentMutation.isPending
+            ? deleteAssignmentMutation.variables
+            : undefined
+        }
+      />
 
       <AssetForm
         open={editOpen}
@@ -688,6 +652,7 @@ function buildTimeline(
       id: `created-${asset.id}`,
       type: "created",
       date: asset.created_at,
+      occurredAt: asset.created_at,
       title: `تم استلام الأصل في ${creationLocation}`,
       description: `تم تسجيل ${asset.name} برقم ${asset.asset_id} وإضافته إلى عهدة ${creationLocation}.`,
     },
@@ -712,17 +677,22 @@ function buildTimeline(
         id: `assignment-${record.id}`,
         type: "assignment",
         date: record.assignment_date,
+        occurredAt: record.created_at,
         title: `تم تسليم الأصل إلى ${personName}`,
-        description: `${record.asset_snapshot?.source_location || IT_WAREHOUSE} ← ${record.asset_snapshot?.delivery_location || [record.department_name, record.branch_name].filter(Boolean).join(" - ") || personName}${record.notes ? ` · ${record.notes}` : ""}`,
+        description: `${record.asset_snapshot?.source_location || IT_WAREHOUSE} ← ${record.asset_snapshot?.delivery_location || record.department_name || personName}${record.notes ? ` · ${record.notes}` : ""}`,
         record,
+        deleteAssignmentRecord: !record.return_date,
       });
     if (record.return_date && !returnActivityIds.has(String(record.id)))
       events.push({
         id: `return-${record.id}`,
         type: "return",
         date: record.return_date,
+        occurredAt: record.updated_at || record.created_at,
         title: `تم إرجاع الأصل من ${personName}`,
         description: `${RETURN_CONDITIONS[record.return_condition] || "تم الإرجاع"} · أُعيد إلى ${IT_WAREHOUSE}${record.return_notes ? ` · ${record.return_notes}` : ""}`,
+        record,
+        deleteAssignmentRecord: true,
       });
   }
   for (const record of maintenance)
@@ -730,6 +700,7 @@ function buildTimeline(
       id: `maintenance-${record.id}`,
       type: "maintenance",
       date: record.maintenance_date,
+      occurredAt: record.created_at,
       title: `صيانة ${record.maintenance_type === "Preventive" ? "وقائية" : "تصحيحية"}`,
       description:
         record.resolution || record.problem_description || "سجل صيانة للأصل.",
@@ -742,7 +713,8 @@ function buildTimeline(
       events.push({
         id: `status-${entry.id}`,
         type: "status",
-        date: entry.created_at,
+        date: entry.details?.event_date || entry.created_at,
+        occurredAt: entry.created_at,
         title: "تم تغيير حالة الأصل",
         description: `${STATUS_LABELS[change.from] || change.from || "غير محدد"} ← ${STATUS_LABELS[change.to] || change.to || "غير محدد"}`,
       });
@@ -750,7 +722,8 @@ function buildTimeline(
       events.push({
         id: `location-${entry.id}`,
         type: "location",
-        date: entry.created_at,
+        date: entry.details?.event_date || entry.created_at,
+        occurredAt: entry.created_at,
         title: "تم تحديث موقع الأصل",
         description: `${locationChange.from || IT_WAREHOUSE} ← ${locationChange.to || IT_WAREHOUSE}`,
       });
@@ -773,10 +746,12 @@ function buildTimeline(
       events.push({
         id: `activity-assignment-${entry.id}`,
         type: "assignment",
-        date: entry.created_at,
+        date: details.event_date || record?.assignment_date || entry.created_at,
+        occurredAt: entry.created_at,
         title: `تم تسليم الأصل إلى ${personName}`,
         description: `من ${fromLocation} إلى ${toLocation}${record?.notes ? ` · ${record.notes}` : ""}`,
         record,
+        deleteAssignmentRecord: Boolean(record && !record.return_date),
       });
     } else if (entry.action === "return") {
       const details = entry.details || {};
@@ -793,31 +768,55 @@ function buildTimeline(
       events.push({
         id: `activity-return-${entry.id}`,
         type: "return",
-        date: entry.created_at,
+        date: details.event_date || record?.return_date || entry.created_at,
+        occurredAt: entry.created_at,
         title: `تم إرجاع الأصل من ${personName}`,
         description: `${RETURN_CONDITIONS[condition] || "تم الإرجاع"} · من ${fromLocation} إلى ${toLocation}${notes ? ` · ${notes}` : ""}`,
+        record,
+        deleteAssignmentRecord: Boolean(record?.return_date),
       });
-    } else if (entry.action === "toner_install")
+    } else if (entry.action === "toner_install") {
+      const linkedMaintenance = maintenance.find(
+        (record: any) =>
+          String(record.source_id || "") ===
+            String(entry.details?.installation_id || "") &&
+          String(record.source_type || "").startsWith("toner_installation"),
+      );
       events.push({
         id: `toner-${entry.id}`,
         type: "toner",
-        date: entry.created_at,
+        date:
+          entry.details?.event_date ||
+          linkedMaintenance?.maintenance_date ||
+          entry.created_at,
+        occurredAt: entry.created_at,
         title: "تم تركيب حبر",
         description: `${entry.details?.item_name || "حبر"}${entry.details?.quantity ? ` · الكمية ${entry.details.quantity}` : ""}`,
       });
-    else if (entry.action === "toner_undo")
+    } else if (entry.action === "toner_undo")
       events.push({
         id: `toner-undo-${entry.id}`,
         type: "undo",
-        date: entry.created_at,
+        date: entry.details?.event_date || entry.created_at,
+        occurredAt: entry.created_at,
         title: "تم التراجع عن تركيب حبر",
         description: entry.details?.item_name || "تمت إعادة الحبر للمخزون.",
       });
-    else if (entry.action === "part_install")
+    else if (entry.action === "part_install") {
+      const linkedMaintenance = maintenance.find(
+        (record: any) =>
+          String(record.source_id || "") ===
+            String(entry.details?.installation_id || "") &&
+          String(record.source_type || "").startsWith("part_installation"),
+      );
       events.push({
         id: `part-${entry.id}`,
         type: "part",
-        date: entry.created_at,
+        date:
+          entry.details?.event_date ||
+          linkedMaintenance?.maintenance_date ||
+          entry.created_at,
+        occurredAt: entry.created_at,
         title: entry.details?.replaced_part
           ? "تم استبدال قطعة"
           : "تم تركيب قطعة",
@@ -825,22 +824,48 @@ function buildTimeline(
           ? `${entry.details.replaced_part} ← ${entry.details.item_name}`
           : entry.details?.item_name || "قطعة غيار",
       });
-    else if (entry.action === "part_undo")
+    } else if (entry.action === "part_undo")
       events.push({
         id: `part-undo-${entry.id}`,
         type: "undo",
-        date: entry.created_at,
+        date: entry.details?.event_date || entry.created_at,
+        occurredAt: entry.created_at,
         title: "تم التراجع عن تركيب قطعة",
         description: entry.details?.item_name || "تمت إعادة القطعة للمخزون.",
       });
   }
-  return events.sort(
-    (left, right) =>
-      new Date(right.date || 0).getTime() - new Date(left.date || 0).getTime(),
-  );
+  return events.sort(compareTimelineEvents);
 }
 
-function Timeline({ events, printAssignment }: any) {
+function timelineDay(value: unknown) {
+  return String(value || "").slice(0, 10);
+}
+
+function timelineTimestamp(value: unknown) {
+  const timestamp = Date.parse(String(value || ""));
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
+function compareTimelineEvents(left: any, right: any) {
+  const dayComparison = timelineDay(right.date).localeCompare(
+    timelineDay(left.date),
+  );
+  if (dayComparison) return dayComparison;
+
+  const occurrenceComparison =
+    timelineTimestamp(right.occurredAt || right.date) -
+    timelineTimestamp(left.occurredAt || left.date);
+  if (occurrenceComparison) return occurrenceComparison;
+
+  return String(right.id).localeCompare(String(left.id));
+}
+
+function Timeline({
+  events,
+  printAssignment,
+  deleteAssignment,
+  deletingAssignmentId,
+}: any) {
   const icons: Record<string, React.ElementType> = {
     created: Warehouse,
     assignment: UserCheck,
@@ -892,15 +917,47 @@ function Timeline({ events, printAssignment }: any) {
                   </time>
                 </div>
                 {event.record && (
-                  <Button
-                    className="mt-3"
-                    size="sm"
-                    variant="outline"
-                    onClick={() => printAssignment(event.record)}
-                  >
-                    <Printer className="ml-2 size-4" />
-                    طباعة نموذج التسليم
-                  </Button>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {event.type === "assignment" && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => printAssignment(event.record)}
+                      >
+                        <Printer className="ml-2 size-4" />
+                        طباعة نموذج التسليم
+                      </Button>
+                    )}
+                    {event.deleteAssignmentRecord && (
+                      <ConfirmButton
+                        size="sm"
+                        variant="outline"
+                        className="border-destructive/40 text-destructive hover:bg-destructive/5 hover:text-destructive"
+                        disabled={deletingAssignmentId === event.record.id}
+                        title={
+                          event.record.return_date
+                            ? "حذف سجل التسليم والاستلام؟"
+                            : "إلغاء التسليم الخاطئ؟"
+                        }
+                        description={
+                          event.record.return_date
+                            ? `سيُحذف سجل تسليم الأصل إلى ${event.record.employee_name || "الموظف"} وسجل إرجاعه ونموذج التسليم المحفوظ نهائيًا. لن تتأثر حالة الأصل الحالية أو سجلات الصيانة.`
+                            : `سيُلغى تسليم الأصل إلى ${event.record.employee_name || "الموظف"}، ويعود الأصل إلى موقعه وحالته السابقة، كما سيُحذف نموذج التسليم والسجل من الخط الزمني نهائيًا.`
+                        }
+                        confirmLabel={
+                          event.record.return_date
+                            ? "حذف السجل"
+                            : "إلغاء التسليم"
+                        }
+                        onConfirm={() => deleteAssignment(event.record.id)}
+                      >
+                        <Trash2 className="ml-2 size-4" />
+                        {event.record.return_date
+                          ? "حذف السجل"
+                          : "إلغاء التسليم"}
+                      </ConfirmButton>
+                    )}
+                  </div>
                 )}
               </div>
             </div>

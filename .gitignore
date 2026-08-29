@@ -9,3 +9,6 @@ data/*.db-shm
 data/*.db-wal
 uploads/printers/*
 !uploads/printers/.gitkeep
+__pycache__/
+*.py[cod]
+artifacts/

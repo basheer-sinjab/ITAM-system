@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { languageDirection } from "@/lib/odoo-runtime";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +26,6 @@ import { ManagementHeader } from "@/components/ManagementVisuals";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { downloadCsv, parseCsv } from "@/lib/csv";
 import { AssetTemplatesSettings } from "@/components/AssetTemplatesSettings";
-import { COLOR_PALETTE, ColorField } from "@/components/ColorField";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,7 +37,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-type LookupTable = "branches" | "technicians";
+type LookupTable = "technicians";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
@@ -45,7 +45,7 @@ export const Route = createFileRoute("/_authenticated/settings")({
       { title: "الإعدادات — ITAMFloss" },
       {
         name: "description",
-        content: "إدارة الفروع والفنيين والتنبيهات والبيانات المحلية.",
+        content: "إدارة الفنيين والتنبيهات والبيانات المحلية.",
       },
       { property: "og:title", content: "الإعدادات — ITAMFloss" },
       {
@@ -66,14 +66,12 @@ function SettingsPage() {
         description="القوائم الأساسية وتنبيهات النظام والنسخ الاحتياطي"
       />
 
-      <Tabs defaultValue="branches" dir="rtl" className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-4 lg:grid-cols-7">
-          <TabsTrigger
-            className="h-auto min-h-9 whitespace-normal text-center leading-5"
-            value="branches"
-          >
-            الفروع
-          </TabsTrigger>
+      <Tabs
+        defaultValue="technicians"
+        dir={languageDirection()}
+        className="w-full"
+      >
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-3 lg:grid-cols-6">
           <TabsTrigger
             className="h-auto min-h-9 whitespace-normal text-center leading-5"
             value="technicians"
@@ -112,9 +110,6 @@ function SettingsPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="branches" className="mt-4">
-          <LookupManager table="branches" title="الفروع" />
-        </TabsContent>
         <TabsContent value="technicians" className="mt-4">
           <LookupManager table="technicians" title="الفنيون" />
         </TabsContent>
@@ -231,8 +226,8 @@ function BackupSettings() {
           }
         }}
       >
-        <AlertDialogContent dir="rtl">
-          <AlertDialogHeader className="text-right sm:text-right">
+        <AlertDialogContent dir={languageDirection()}>
+          <AlertDialogHeader className="text-start sm:text-start">
             <AlertDialogTitle>استعادة النسخة الاحتياطية؟</AlertDialogTitle>
             <AlertDialogDescription>
               ستستبدل النسخة المختارة جميع البيانات الحالية. سينزّل النظام أولًا
@@ -266,10 +261,8 @@ function LookupManager({
 }) {
   const qc = useQueryClient();
   const [name, setName] = useState("");
-  const [color, setColor] = useState(COLOR_PALETTE[0]);
   const [editId, setEditId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
-  const [editColor, setEditColor] = useState(COLOR_PALETTE[0]);
 
   const { data: rows } = useQuery({
     queryKey: [table],
@@ -282,17 +275,12 @@ function LookupManager({
       if (!name.trim()) throw new Error("الاسم مطلوب");
       const { error } = await supabase.from(table).insert({
         name: name.trim(),
-        ...(table === "branches" ? { color } : {}),
       });
       if (error) throw error;
     },
     onSuccess: () => {
       qc.invalidateQueries();
       setName("");
-      if (table === "branches")
-        setColor(
-          COLOR_PALETTE[((rows?.length ?? 0) + 1) % COLOR_PALETTE.length],
-        );
       toast.success("تمت الإضافة");
     },
     onError: (e: Error) => toast.error(e.message),
@@ -304,7 +292,6 @@ function LookupManager({
         .from(table)
         .update({
           name: editName.trim(),
-          ...(table === "branches" ? { color: editColor } : {}),
         })
         .eq("id", editId!);
       if (error) throw error;
@@ -344,7 +331,6 @@ function LookupManager({
           إضافة
         </Button>
       </div>
-      {table === "branches" && <ColorField value={color} onChange={setColor} />}
       <ul className="divide-y rounded-lg border">
         {(rows ?? []).length === 0 && (
           <li className="p-4 text-center text-sm text-muted-foreground">
@@ -363,9 +349,6 @@ function LookupManager({
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
                   />
-                  {table === "branches" && (
-                    <ColorField value={editColor} onChange={setEditColor} />
-                  )}
                 </div>
                 <div className="flex gap-1">
                   <Button
@@ -386,15 +369,7 @@ function LookupManager({
               </>
             ) : (
               <>
-                <span className="flex items-center gap-2">
-                  {table === "branches" && (
-                    <span
-                      className="size-3 rounded-full"
-                      style={{ backgroundColor: r.color || COLOR_PALETTE[0] }}
-                    />
-                  )}
-                  {r.name}
-                </span>
+                <span className="flex items-center gap-2">{r.name}</span>
                 <div className="flex gap-1">
                   <Button
                     variant="ghost"
@@ -402,7 +377,6 @@ function LookupManager({
                     onClick={() => {
                       setEditId(r.id);
                       setEditName(r.name);
-                      setEditColor(r.color || COLOR_PALETTE[0]);
                     }}
                   >
                     <Pencil className="size-4" />
@@ -444,25 +418,21 @@ function DataTransferSettings() {
       employees: [],
       inventory: [],
       departments: [],
-      branches: [],
     },
   } = useQuery({
     queryKey: ["data-transfer"],
     queryFn: async () => {
-      const [assets, employees, inventory, departments, branches] =
-        await Promise.all([
-          supabase.from("assets").select("*"),
-          supabase.from("employees").select("*"),
-          supabase.from("inventory_items").select("*"),
-          supabase.from("departments").select("*"),
-          supabase.from("branches").select("*"),
-        ]);
+      const [assets, employees, inventory, departments] = await Promise.all([
+        supabase.from("assets").select("*"),
+        supabase.from("employees").select("*"),
+        supabase.from("inventory_items").select("*"),
+        supabase.from("departments").select("*"),
+      ]);
       return {
         assets: assets.data ?? [],
         employees: employees.data ?? [],
         inventory: inventory.data ?? [],
         departments: departments.data ?? [],
-        branches: branches.data ?? [],
       };
     },
   });
@@ -470,12 +440,7 @@ function DataTransferSettings() {
     const department = data.departments.find(
       (item: any) => item.id === departmentId,
     );
-    if (!department) return "";
-    const branch =
-      data.branches.find((item: any) => item.id === department.branch_id)
-        ?.name ||
-      data.branches.find((item: any) => item.name === department.branch)?.name;
-    return `${department.name}${branch ? ` - ${branch}` : ""}`;
+    return department?.name || "";
   };
   const exportRows = () => {
     const date = new Date().toISOString().slice(0, 10);
@@ -610,6 +575,10 @@ function DataTransferSettings() {
     )?.id || null;
   const importFile = async (file?: File) => {
     if (!file) return;
+    if (kind === "employees") {
+      toast.error("تتم إدارة الموظفين والأقسام من تطبيق الموظفين في Odoo");
+      return;
+    }
     setWorking(true);
     try {
       const rows = parseCsv(await file.text());
@@ -656,38 +625,6 @@ function DataTransferSettings() {
               )?.id || null,
             purchase_date: row["تاريخ الشراء"] || null,
             warranty_expiry: row["انتهاء الضمان"] || null,
-            notes: row["ملاحظات"] || null,
-          };
-        } else if (kind === "employees") {
-          if (!row["الاسم الكامل"]?.trim()) {
-            skipped += 1;
-            continue;
-          }
-          if (
-            row["رقم الموظف"] &&
-            data.employees.some(
-              (item: any) => item.employee_number === row["رقم الموظف"],
-            )
-          ) {
-            skipped += 1;
-            continue;
-          }
-          table = "employees";
-          payload = {
-            employee_number: row["رقم الموظف"] || null,
-            full_name: row["الاسم الكامل"],
-            email: row["البريد الإلكتروني"] || null,
-            phone: row["الهاتف"] || null,
-            department_id: resolveDepartment(row["القسم"]),
-            status:
-              (
-                { نشط: "active", "غير نشط": "inactive" } as Record<
-                  string,
-                  string
-                >
-              )[row["الحالة"]] ||
-              row["الحالة"] ||
-              "active",
             notes: row["ملاحظات"] || null,
           };
         } else {
@@ -780,18 +717,22 @@ function DataTransferSettings() {
             <Download className="ml-2 size-4" />
             تصدير البيانات
           </Button>
-          <Button variant="outline" onClick={template}>
-            <FileSpreadsheet className="ml-2 size-4" />
-            تنزيل نموذج فارغ
-          </Button>
-          <Button
-            variant="outline"
-            disabled={working}
-            onClick={() => fileRef.current?.click()}
-          >
-            <Upload className="ml-2 size-4" />
-            استيراد ملف
-          </Button>
+          {kind !== "employees" && (
+            <>
+              <Button variant="outline" onClick={template}>
+                <FileSpreadsheet className="ml-2 size-4" />
+                تنزيل نموذج فارغ
+              </Button>
+              <Button
+                variant="outline"
+                disabled={working}
+                onClick={() => fileRef.current?.click()}
+              >
+                <Upload className="ml-2 size-4" />
+                استيراد ملف
+              </Button>
+            </>
+          )}
           <Input
             ref={fileRef}
             className="hidden"
@@ -802,8 +743,9 @@ function DataTransferSettings() {
         </div>
       </div>
       <p className="text-xs text-muted-foreground">
-        عند الاستيراد، يتجاوز النظام السجلات المكررة أو الصفوف الناقصة ويعرض لك
-        ملخصًا واضحًا.
+        {kind === "employees"
+          ? "قائمة الموظفين للعرض والتصدير فقط؛ الإضافة والتعديل تتم من تطبيق الموظفين في Odoo."
+          : "عند الاستيراد، يتجاوز النظام السجلات المكررة أو الصفوف الناقصة ويعرض لك ملخصًا واضحًا."}
       </p>
     </div>
   );
@@ -825,7 +767,6 @@ function ActivityLog() {
     assets: "أصل",
     employees: "موظف",
     departments: "قسم",
-    branches: "فرع",
     technicians: "فني",
     inventory_items: "عنصر مخزون",
     inventory_movements: "حركة مخزون",

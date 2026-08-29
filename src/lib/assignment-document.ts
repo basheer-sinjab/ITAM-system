@@ -1,4 +1,6 @@
 import { IT_WAREHOUSE } from "./locations";
+import { isArabicLanguage, odooRuntime } from "./odoo-runtime";
+import { localizeUiValue, uiText } from "./ui-localization";
 
 type RowValue = string | number | boolean | null | undefined | Row;
 interface Row {
@@ -10,7 +12,6 @@ type AssignmentDocumentInput = {
   record: Row;
   person: Row;
   departmentName?: string | null;
-  branchName?: string | null;
   specs?: Row | null;
   logoUrl: string;
 };
@@ -30,15 +31,23 @@ function formatDate(value: unknown) {
   if (!text) return "—";
   const date = new Date(`${text.slice(0, 10)}T12:00:00`);
   if (Number.isNaN(date.getTime())) return escapeHtml(text);
-  return new Intl.DateTimeFormat("ar-SA-u-ca-gregory", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
+  return new Intl.DateTimeFormat(
+    isArabicLanguage() ? "ar-SA-u-ca-gregory" : "en-GB",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    },
+  ).format(date);
 }
 
-function field(label: string, value: unknown, wide = false) {
-  return `<div class="info-card${wide ? " info-card--wide" : ""}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`;
+function field(
+  label: string,
+  value: unknown,
+  wide = false,
+  leftToRight = false,
+) {
+  return `<div class="info-card${wide ? " info-card--wide" : ""}${leftToRight ? " info-card--ltr" : ""}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`;
 }
 
 function isComputer(assetType: unknown) {
@@ -61,144 +70,137 @@ export function buildAssignmentDocument({
   record,
   person,
   departmentName,
-  branchName,
   specs,
   logoUrl,
 }: AssignmentDocumentInput) {
+  const arabic = isArabicLanguage();
+  const t = uiText;
+  const representativeName = odooRuntime()?.username?.trim() || "";
   const reference = String(record.id ?? "")
     .replaceAll("-", "")
     .slice(0, 10)
     .toUpperCase();
-  const destination = [departmentName, branchName].filter(Boolean).join(" - ");
-  const sourceLocation = asset.source_location || IT_WAREHOUSE;
-  const assignmentLocation =
-    asset.delivery_location ||
-    destination ||
-    `لدى ${person.full_name || "الموظف"}`;
+  const rawSourceLocation = String(
+    asset.source_location || IT_WAREHOUSE,
+  ).trim();
+  const sourceLocation = ["IT Warehouse", "المستودع IT"].includes(
+    rawSourceLocation,
+  )
+    ? "IT Warehouse"
+    : localizeUiValue(rawSourceLocation);
   const assetFields = [
-    field("اسم الأصل", asset.name),
-    field("رقم الأصل", asset.asset_id),
-    field("نوع الجهاز", asset.asset_type),
-    field("الشركة المصنّعة", asset.manufacturer),
-    field("الموديل", asset.model),
-    field("الرقم التسلسلي", asset.serial_number),
+    field(t("اسم الأصل", "Asset name"), asset.name),
+    field(t("رقم الأصل", "Asset ID"), asset.asset_id),
+    field(
+      t("نوع الجهاز", "Device type"),
+      localizeUiValue(String(asset.asset_type || "")),
+    ),
+    field(t("الشركة المصنّعة", "Manufacturer"), asset.manufacturer),
+    field(t("الموديل", "Model"), asset.model),
+    field(t("الرقم التسلسلي", "Serial number"), asset.serial_number),
   ].join("");
   const employeeFields = [
-    field("اسم الموظف", person.full_name),
-    field("الرقم الوظيفي", person.employee_number),
-    field("القسم", departmentName),
-    field("الفرع", branchName),
-    field("البريد الإلكتروني", person.email),
-    field("رقم التواصل", person.phone),
+    field(t("اسم الموظف", "Employee name"), person.full_name, true),
+    field(t("الرقم الوظيفي", "Employee number"), person.employee_number),
+    field(t("القسم", "Department"), departmentName),
+    field(t("البريد الإلكتروني", "Email"), person.email),
+    field(t("رقم التواصل", "Contact number"), person.phone, false, true),
   ].join("");
   const specsSection = isComputer(asset.asset_type)
-    ? `<section class="section"><div class="section-heading"><span class="section-number">03</span><div><h2>المواصفات التقنية</h2><p>المواصفات المسجلة للجهاز وقت التسليم</p></div></div><div class="spec-grid">${[
-        field("المعالج", specs?.processor),
-        field("الذاكرة", specs?.memory),
-        field("التخزين", specs?.storage),
-        field("كرت الشاشة", specs?.graphics_card),
-        field("نظام التشغيل", specs?.operating_system, true),
+    ? `<section class="section"><div class="section-heading"><h2>${t("المواصفات التقنية", "Technical specifications")}</h2><p>${t("المواصفات المسجلة للجهاز وقت التسليم", "Specifications recorded at the time of handover")}</p></div><div class="spec-grid">${[
+        field(t("المعالج", "Processor"), specs?.processor),
+        field(t("الذاكرة", "Memory"), specs?.memory),
+        field(t("التخزين", "Storage"), specs?.storage),
+        field(t("كرت الشاشة", "Graphics card"), specs?.graphics_card),
+        field(
+          t("نظام التشغيل", "Operating system"),
+          specs?.operating_system,
+          true,
+        ),
       ].join(
         "",
-      )}</div>${specs?.notes ? `<div class="spec-note"><span>ملاحظات المواصفات</span><strong>${escapeHtml(specs.notes)}</strong></div>` : ""}</section>`
+      )}</div>${specs?.notes ? `<div class="spec-note"><span>${t("ملاحظات المواصفات", "Specification notes")}</span><strong>${escapeHtml(specs.notes)}</strong></div>` : ""}</section>`
     : "";
-  const acknowledgementNumber = isComputer(asset.asset_type) ? "04" : "03";
   const notes = String(record.notes ?? "").trim();
 
   return `<!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="${arabic ? "ar" : "en"}" dir="${arabic ? "rtl" : "ltr"}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>نموذج تسليم ${escapeHtml(asset.asset_id)}</title>
+  <title>${t("نموذج تسليم", "Asset handover")} ${escapeHtml(asset.asset_id)}</title>
   <style>
     @page{size:A4;margin:0}
-    :root{--blue:#0b5cab;--blue-2:#2563eb;--ink:#14213d;--muted:#64748b;--line:#dbe4ef;--soft:#f4f8fd}
+    :root{--accent:#315d80;--accent-soft:#eef4f8;--ink:#18232d;--muted:#66727d;--line:#cbd4dc;--panel:#f7f9fb}
     *{box-sizing:border-box}
-    body{margin:0;background:#e8eef6;color:var(--ink);font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-size:10.5px;line-height:1.55;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{margin:0;background:#edf1f4;color:var(--ink);font-family:Tahoma,"Segoe UI",Arial,sans-serif;font-size:11.5px;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .toolbar{display:flex;justify-content:center;padding:14px}
-    .toolbar button{border:0;border-radius:10px;background:var(--blue);color:white;cursor:pointer;font:700 13px Tahoma;padding:10px 24px}
-    .sheet{position:relative;width:210mm;min-height:277mm;margin:0 auto 24px;overflow:hidden;background:white;border-radius:18px;box-shadow:0 20px 55px rgba(15,42,75,.16);padding:16mm 15mm 11mm}
-    .sheet:before{content:"";position:absolute;inset:0 0 auto;height:7px;background:linear-gradient(90deg,var(--blue),#38bdf8)}
-    .header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-    .brand{display:flex;align-items:center;gap:11px}
-    .logo{display:grid;width:48px;height:48px;place-items:center;border:1px solid #d8e6f6;border-radius:14px;background:#f8fbff}
-    .logo img{width:35px;height:35px;object-fit:contain}
-    .brand strong{display:block;color:var(--blue);font-size:15px}
-    .brand span{display:block;margin-top:2px;color:var(--muted);font-size:9.5px}
-    .document-badge{text-align:left}
-    .document-badge span{display:inline-flex;border-radius:999px;background:#e8f2ff;color:var(--blue);font-weight:700;padding:5px 10px}
-    .document-badge small{display:block;margin-top:5px;color:var(--muted);font-family:Consolas,monospace;letter-spacing:.4px}
-    .hero{display:grid;grid-template-columns:1.4fr .8fr;gap:14px;margin:16px 0}
-    .hero-main{border-radius:16px;background:linear-gradient(135deg,#0b5cab,#1d72c9);color:white;padding:17px 19px}
-    .hero-main p{margin:0 0 4px;opacity:.78;font-size:9px;font-weight:700;letter-spacing:.5px}
-    .hero-main h1{margin:0;font-size:23px;line-height:1.35}
-    .hero-main div{margin-top:7px;opacity:.85;font-size:10px}
-    .hero-meta{display:grid;gap:8px}
-    .meta-card{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:12px;background:var(--soft);padding:9px 11px}
-    .meta-card span{color:var(--muted);font-size:9px}
-    .meta-card strong{font-size:10px}
-    .route{display:flex;align-items:center;justify-content:center;gap:9px;border:1px solid #bfdbfe;border-radius:12px;background:#eff6ff;color:#174b7d;padding:9px 12px;font-weight:700}
-    .route i{font-style:normal;color:#60a5fa;font-size:16px}
-    .section{margin-top:13px;break-inside:avoid}
-    .section-heading{display:flex;align-items:center;gap:9px;margin-bottom:8px}
-    .section-number{display:grid;width:28px;height:28px;place-items:center;border-radius:8px;background:var(--blue);color:white;font:700 9px Consolas,monospace}
-    .section-heading h2{margin:0;font-size:13px}
-    .section-heading p{margin:1px 0 0;color:var(--muted);font-size:8.5px}
-    .info-grid,.spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-    .info-card{min-height:49px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:white}
-    .info-card--wide{grid-column:span 2}
-    .info-card span,.spec-note span{display:block;margin-bottom:3px;color:var(--muted);font-size:8px}
-    .info-card strong,.spec-note strong{display:block;font-size:10px;overflow-wrap:anywhere}
-    .spec-grid .info-card{background:#f8fbff;border-color:#d8e6f6}
-    .spec-note{margin-top:7px;border-right:3px solid #60a5fa;border-radius:8px;background:#f8fbff;padding:7px 10px}
-    .acknowledgement{border:1px solid #bfdbfe;border-radius:12px;background:#eff6ff;padding:11px 13px;text-align:justify}
-    .acknowledgement strong{color:var(--blue)}
-    .delivery-notes{margin-top:7px;border-radius:9px;background:white;padding:7px 9px}
-    .signatures{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;margin-top:18px;break-inside:avoid}
-    .signature{position:relative;min-height:76px;border:1px dashed #9fb1c5;border-radius:12px;padding:10px 12px}
-    .signature strong{display:block;color:var(--blue);font-size:10px}
-    .signature span{display:block;margin-top:5px;color:var(--muted);font-size:9px}
-    .signature-line{position:absolute;right:12px;left:12px;bottom:13px;border-top:1px solid #9fb1c5;padding-top:4px;text-align:center;color:var(--muted);font-size:8px}
-    .footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;border-top:1px solid var(--line);padding-top:7px;color:var(--muted);font-size:8px}
-    .footer strong{color:var(--blue)}
+    .toolbar button{border:0;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;font:700 12px Tahoma;padding:9px 24px;box-shadow:0 3px 10px rgba(49,93,128,.18)}
+    .sheet{width:210mm;min-height:297mm;margin:0 auto 24px;background:#fff;border-radius:12px;box-shadow:0 12px 36px rgba(24,35,45,.14);padding:13mm 14mm 10mm}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:9px;border-bottom:2px solid var(--accent)}
+    .logo{display:grid;width:44px;height:44px;place-items:center;border:1px solid var(--line);border-radius:9px;background:#fff}
+    .logo img{width:34px;height:34px;object-fit:contain}
+    .header-department{text-align:${arabic ? "left" : "right"}}
+    .header-department strong{display:block;color:var(--accent);font-size:13.5px}
+    .header-department span{display:block;margin-top:2px;color:var(--muted);font-size:9.5px}
+    .title-block{text-align:center;padding:12px 0 10px;border-bottom:1px solid var(--line)}
+    .title-block h1{margin:0;color:var(--accent);font-size:21px;line-height:1.35}
+    .title-block span{display:block;margin-top:3px;color:var(--muted);font-size:9.5px}
+    .control-table{display:grid;grid-template-columns:repeat(3,1fr);margin-top:11px;overflow:hidden;border:1px solid var(--line);border-radius:8px}
+    .control-item{display:grid;grid-template-columns:auto 1fr;align-items:stretch;min-height:35px;border-${arabic ? "left" : "right"}:1px solid var(--line)}
+    .control-item:last-child{border-${arabic ? "left" : "right"}:0}
+    .control-item span{display:flex;align-items:center;border-${arabic ? "left" : "right"}:1px solid var(--line);background:var(--panel);padding:5px 7px;color:var(--muted);font-size:8.8px}
+    .control-item strong{display:flex;align-items:center;padding:5px 7px;font-size:10px;overflow-wrap:anywhere}
+    .intro{margin:10px 0 0;text-align:justify;font-size:10px}
+    .section{margin-top:11px;break-inside:avoid}
+    .section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:0;border:1px solid var(--line);border-${arabic ? "right" : "left"}:3px solid var(--accent);border-radius:7px 7px 0 0;background:var(--panel);padding:5px 7px}
+    .section-heading h2{margin:0;color:var(--accent);font-size:12.5px}
+    .section-heading p{margin:0;color:var(--muted);font-size:8.5px}
+    .info-grid,.spec-grid{display:grid;grid-template-columns:repeat(2,1fr);overflow:hidden;border-${arabic ? "right" : "left"}:1px solid var(--line);border-radius:0 0 7px 7px}
+    .info-card{display:grid;grid-template-columns:36% 64%;min-height:37px;border-${arabic ? "left" : "right"}:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .info-card--wide{grid-column:span 2;grid-template-columns:18% 82%}
+    .info-card span{display:flex;align-items:center;border-${arabic ? "left" : "right"}:1px solid var(--line);background:var(--panel);padding:6px 8px;color:var(--muted);font-size:8.8px}
+    .info-card strong{display:flex;align-items:center;padding:6px 8px;font-size:10.3px;overflow-wrap:anywhere}
+    .info-card--ltr strong{direction:ltr;unicode-bidi:embed;justify-content:flex-start;text-align:left}
+    .spec-note{display:grid;grid-template-columns:18% 1fr;border:1px solid var(--line);border-top:0;border-radius:0 0 7px 7px}
+    .spec-note span{border-${arabic ? "left" : "right"}:1px solid var(--line);background:var(--panel);padding:6px 8px;color:var(--muted);font-size:8.8px}
+    .spec-note strong{padding:6px 8px;font-size:10px}
+    .acknowledgement{border:1px solid var(--line);border-top:0;border-radius:0 0 7px 7px;background:var(--accent-soft);padding:9px 11px;text-align:justify;line-height:1.8}
+    .acknowledgement>strong{color:var(--accent)}
+    .delivery-notes{margin-top:7px;border-top:1px solid var(--line);padding-top:6px}
+    .signatures{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:13px;break-inside:avoid}
+    .signature{min-height:90px;overflow:hidden;border:1px solid var(--line);border-radius:8px;background:#fff}
+    .signature strong{display:block;border-bottom:1px solid var(--line);background:var(--panel);color:var(--accent);padding:5px 8px;text-align:center;font-size:10px}
+    .signature span{display:block;padding:7px 9px;color:var(--muted);font-size:9px}
+    .signature-line{margin:22px 12px 0;border-top:1px solid var(--line);padding-top:4px;text-align:center;color:var(--muted);font-size:8.5px}
+    .footer{display:flex;align-items:flex-end;justify-content:flex-start;margin-top:12px;border-top:1px solid var(--line);padding-top:6px;color:var(--muted);font-size:8.5px}
     @media print{
-      html,body{width:210mm;min-height:297mm;background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-      *,*:before,*:after{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      html,body{width:210mm;min-height:297mm;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
       .toolbar{display:none}
-      .sheet{display:flex;flex-direction:column;width:210mm;min-height:297mm;margin:0;overflow:visible;border-radius:0;box-shadow:none;padding:14mm 15mm 10mm}
-      .sheet:before{top:0;right:0;left:0;height:7px}
-      .header{padding-bottom:16px}
-      .hero{margin:20px 0}
-      .section{margin-top:18px;break-inside:avoid}
-      .info-card{min-height:55px;padding:10px 11px}
-      .acknowledgement{padding:14px 16px}
-      .signatures{gap:36px;margin-top:auto;min-height:44mm;padding-top:18mm}
-      .signature{min-height:88px;padding:12px 14px}
-      .footer{margin-top:12mm;padding-top:9px}
+      .sheet{display:flex;flex-direction:column;width:210mm;min-height:297mm;margin:0;box-shadow:none;padding:13mm 14mm 10mm}
+      .section{break-inside:avoid}
+      .signatures{margin-top:auto}
+      .footer{margin-top:9mm}
     }
   </style>
 </head>
 <body>
-  <div class="toolbar"><button onclick="window.print()">طباعة النموذج</button></div>
+  <div class="toolbar"><button id="itam-print-button" type="button">${t("طباعة النموذج", "Print form")}</button></div>
   <main class="sheet">
     <header class="header">
-      <div class="brand"><div class="logo"><img src="${escapeHtml(logoUrl, "")}" alt="شعار النظام"></div><div><strong>إدارة تقنية المعلومات</strong><span>نظام إدارة الأصول التقنية</span></div></div>
-      <div class="document-badge"><span>نموذج موثّق</span><small>REF: ${escapeHtml(reference || asset.asset_id)}</small></div>
+      <div class="logo"><img src="${escapeHtml(logoUrl, "")}" alt="${t("شعار النظام", "System logo")}"></div>
+      <div class="header-department"><strong>${t("إدارة تقنية المعلومات", "Information Technology")}</strong><span>${t("نظام إدارة الأصول التقنية", "IT Asset Management System")}</span></div>
     </header>
-    <section class="hero">
-      <div class="hero-main"><p>ASSET HANDOVER FORM</p><h1>نموذج تسليم واستلام أصل</h1><div>توثيق تسليم العهدة التقنية للموظف المستلم</div></div>
-      <div class="hero-meta"><div class="meta-card"><span>تاريخ التسليم</span><strong>${formatDate(record.assignment_date)}</strong></div><div class="meta-card"><span>رقم الأصل</span><strong>${escapeHtml(asset.asset_id)}</strong></div></div>
-    </section>
-    <div class="route"><span>${escapeHtml(sourceLocation)}</span><i>←</i><span>${escapeHtml(person.full_name)}</span><i>·</i><span>${escapeHtml(assignmentLocation)}</span></div>
-    <section class="section"><div class="section-heading"><span class="section-number">01</span><div><h2>بيانات الموظف المستلم</h2><p>معلومات صاحب العهدة وقت التسليم</p></div></div><div class="info-grid">${employeeFields}</div></section>
-    <section class="section"><div class="section-heading"><span class="section-number">02</span><div><h2>بيانات الأصل</h2><p>بيانات التعريف الأساسية للجهاز</p></div></div><div class="info-grid">${assetFields}</div></section>
+    <section class="title-block"><h1>${t("نموذج استلام وتسليم أصل تقني", "IT Asset Receipt and Handover Form")}</h1><span>${t("وثيقة استلام ومسؤولية عهدة", "Asset receipt and custody record")}</span></section>
+    <section class="control-table"><div class="control-item"><span>${t("مرجع النموذج", "Reference")}</span><strong>${escapeHtml(reference || asset.asset_id)}</strong></div><div class="control-item"><span>${t("تاريخ التسليم", "Handover date")}</span><strong>${formatDate(record.assignment_date)}</strong></div><div class="control-item"><span>${t("رقم الأصل", "Asset ID")}</span><strong>${escapeHtml(asset.asset_id)}</strong></div></section>
+    <p class="intro">${t("يوثق هذا النموذج تسليم الأصل التقني الموضح أدناه إلى الموظف المستلم، ويُعد جزءًا من سجل العهد والأصول لدى إدارة تقنية المعلومات.", "This form documents the handover of the IT asset described below to the receiving employee and forms part of the Information Technology asset custody register.")}</p>
+    <section class="section"><div class="section-heading"><h2>${t("بيانات الموظف المستلم", "Receiving employee details")}</h2><p>${t("بيانات صاحب العهدة وقت التسليم", "Custodian details at handover")}</p></div><div class="info-grid">${employeeFields}</div></section>
+    <section class="section"><div class="section-heading"><h2>${t("بيانات الأصل", "Asset details")}</h2><p>${t("بيانات التعريف الأساسية للجهاز", "Asset identification details")}</p></div><div class="info-grid">${assetFields}</div></section>
     ${specsSection}
-    <section class="section"><div class="section-heading"><span class="section-number">${acknowledgementNumber}</span><div><h2>إقرار الاستلام والمحافظة على العهدة</h2><p>إقرار الموظف باستلام الجهاز الموضح أعلاه</p></div></div><div class="acknowledgement">أقر أنا <strong>${escapeHtml(person.full_name)}</strong> باستلام الأصل الموضح في هذا النموذج بحالة صالحة للاستخدام، وأتعهد بالمحافظة عليه واستخدامه لأغراض العمل، وعدم تسليمه للغير، وإعادته إلى إدارة تقنية المعلومات عند الطلب أو عند انتهاء الحاجة إليه.${notes ? `<div class="delivery-notes"><strong>ملاحظات التسليم:</strong> ${escapeHtml(notes)}</div>` : ""}</div></section>
-    <section class="signatures"><div class="signature"><strong>الموظف المستلم</strong><span>الاسم: ${escapeHtml(person.full_name)}</span><div class="signature-line">التوقيع والتاريخ</div></div><div class="signature"><strong>ممثل إدارة تقنية المعلومات</strong><span>الاسم: ______________________________</span><div class="signature-line">التوقيع والتاريخ</div></div></section>
-    <footer class="footer"><span>تم إنشاء النموذج آليًا بواسطة <strong>نظام إدارة الأصول التقنية</strong></span><span>مصدر الأصل: ${escapeHtml(sourceLocation)}</span></footer>
+    <section class="section"><div class="section-heading"><h2>${t("إقرار الاستلام والمحافظة على العهدة", "Receipt and custody acknowledgement")}</h2><p>${t("إقرار الموظف ومسؤوليته عن الأصل", "Employee custody acknowledgement")}</p></div><div class="acknowledgement">${t("أقر أنا", "I,")} <strong>${escapeHtml(person.full_name)}</strong> ${t("باستلام الأصل الموضح في هذا النموذج بحالة صالحة للاستخدام، وأتعهد بالمحافظة عليه واستخدامه لأغراض العمل، وعدم تسليمه للغير، وإعادته إلى إدارة تقنية المعلومات عند الطلب أو عند انتهاء الحاجة إليه.", "acknowledge receipt of the asset described in this form in usable condition. I agree to safeguard it, use it for work purposes, not transfer it to others, and return it to Information Technology when requested or when it is no longer needed.")}${notes ? `<div class="delivery-notes"><strong>${t("ملاحظات التسليم:", "Handover notes:")}</strong> ${escapeHtml(notes)}</div>` : ""}</div></section>
+    <section class="signatures"><div class="signature"><strong>${t("الموظف المستلم", "Receiving employee")}</strong><span>${t("الاسم:", "Name:")} ${escapeHtml(person.full_name)}</span><div class="signature-line">${t("التوقيع والتاريخ", "Signature and date")}</div></div><div class="signature"><strong>${t("إدارة تقنية المعلومات", "Information Technology")}</strong><span>${t("الاسم:", "Name:")} ${escapeHtml(representativeName)}</span><div class="signature-line">${t("التوقيع والتاريخ", "Signature and date")}</div></div></section>
+    <footer class="footer"><span>${t("مصدر الأصل:", "Asset source:")} ${escapeHtml(sourceLocation)}</span></footer>
   </main>
-  <script>window.addEventListener("load",()=>setTimeout(()=>window.print(),250));</script>
 </body>
 </html>`;
 }

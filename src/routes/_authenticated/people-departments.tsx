@@ -4,32 +4,23 @@ import {
   Outlet,
   useMatchRoute,
 } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Building2, Plus, Search, UsersRound } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  ExternalLink,
+  KeyRound,
+  Monitor,
+  Search,
+  UsersRound,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
-import { COLOR_PALETTE, ColorField } from "@/components/ColorField";
+import { COLOR_PALETTE } from "@/components/ColorField";
 
 export const Route = createFileRoute("/_authenticated/people-departments")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -57,27 +48,31 @@ function PeopleDepartmentsRoute() {
 
 function PeopleDepartments() {
   const { tab } = Route.useSearch();
-  const queryClient = useQueryClient();
-  const [employeeOpen, setEmployeeOpen] = useState(false);
-  const [departmentOpen, setDepartmentOpen] = useState(false);
   const [employeeSearch, setEmployeeSearch] = useState("");
   const [departmentSearch, setDepartmentSearch] = useState("");
   const { data: employees = [] } = useQuery({
     queryKey: ["employees"],
-    queryFn: async () =>
-      (await supabase.from("employees").select("*").order("full_name")).data ??
-      [],
+    queryFn: async () => {
+      const result = await supabase
+        .from("employees")
+        .select("*")
+        .order("full_name");
+      if (result.error) throw result.error;
+      return result.data ?? [];
+    },
+    throwOnError: true,
   });
   const { data: departments = [] } = useQuery({
     queryKey: ["departments"],
-    queryFn: async () =>
-      (await supabase.from("departments").select("*").order("branch")).data ??
-      [],
-  });
-  const { data: branches = [] } = useQuery({
-    queryKey: ["branches"],
-    queryFn: async () =>
-      (await supabase.from("branches").select("*").order("name")).data ?? [],
+    queryFn: async () => {
+      const result = await supabase
+        .from("departments")
+        .select("*")
+        .order("name");
+      if (result.error) throw result.error;
+      return result.data ?? [];
+    },
+    throwOnError: true,
   });
   const { data: technicians = [] } = useQuery({
     queryKey: ["technicians"],
@@ -109,19 +104,11 @@ function PeopleDepartments() {
       )
     );
   });
-  const departmentBranchName = (department: any) =>
-    branches.find((branch: any) => branch.id === department.branch_id)?.name ||
-    branches.find((branch: any) => branch.name === department.branch)?.name ||
-    "";
   const filteredDepartments = departments.filter((department: any) => {
     const search = departmentSearch.trim().toLowerCase();
     return (
       !search ||
-      [
-        department.name,
-        departmentBranchName(department),
-        department.notes,
-      ].some((value) =>
+      [department.name, department.notes].some((value) =>
         String(value ?? "")
           .toLowerCase()
           .includes(search),
@@ -134,9 +121,7 @@ function PeopleDepartments() {
     );
   const employeeDepartmentLabel = (employee: any) => {
     const department = employeeDepartment(employee);
-    return department
-      ? `${department.name} - ${departmentBranchName(department) || "فرع غير محدد"}`
-      : "قسم غير محدد";
+    return department?.name || "قسم غير محدد";
   };
   const groupedEmployees = [...filteredEmployees].sort((a: any, b: any) =>
     String(employeeDepartment(a)?.name ?? "").localeCompare(
@@ -148,8 +133,26 @@ function PeopleDepartments() {
       <ManagementHeader
         icon={UsersRound}
         title="الأشخاص والأقسام"
-        description="إدارة الموظفين والأقسام والتراخيص المعيّنة"
+        description="بيانات مباشرة من تطبيق الموظفين والأقسام في Odoo"
       />
+      <section className="surface-panel flex flex-wrap items-center justify-between gap-3 border-s-4 border-s-primary p-4">
+        <div>
+          <p className="font-semibold">
+            الموظفون والأقسام مُدارة مركزيًا في Odoo
+          </p>
+          <p className="text-sm text-muted-foreground">
+            اضغط على أي موظف لعرض أصوله وتراخيصه. الإضافة والتعديل تتم من تطبيق
+            الموظفين في Odoo وتظهر هنا تلقائيًا.
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() => window.location.assign("/odoo/employees")}
+        >
+          <ExternalLink className="ml-2 size-4" />
+          فتح تطبيق الموظفين
+        </Button>
+      </section>
       <section className="grid gap-3 sm:grid-cols-2">
         <MetricCard
           icon={UsersRound}
@@ -167,7 +170,6 @@ function PeopleDepartments() {
         <TabsList>
           <TabsTrigger value="employees">الموظفون</TabsTrigger>
           <TabsTrigger value="departments">الأقسام</TabsTrigger>
-          <TabsTrigger value="branches">الفروع</TabsTrigger>
           <TabsTrigger value="technicians">الفنيون</TabsTrigger>
         </TabsList>
         <TabsContent value="employees" className="space-y-4">
@@ -181,9 +183,12 @@ function PeopleDepartments() {
                 className="pr-9"
               />
             </div>
-            <Button onClick={() => setEmployeeOpen(true)}>
-              <Plus className="ml-2 size-4" />
-              إضافة موظف
+            <Button
+              variant="outline"
+              onClick={() => window.location.assign("/odoo/employees")}
+            >
+              <ExternalLink className="ml-2 size-4" />
+              إدارة الموظفين في Odoo
             </Button>
           </div>
           <div className="space-y-3">
@@ -202,17 +207,10 @@ function PeopleDepartments() {
                       <span
                         className="size-3 rounded-full"
                         style={{
-                          backgroundColor:
-                            department.color ||
-                            branches.find(
-                              (branch: any) =>
-                                branch.id === department.branch_id,
-                            )?.color ||
-                            COLOR_PALETTE[0],
+                          backgroundColor: department.color || COLOR_PALETTE[0],
                         }}
                       />
-                      {department.name} -{" "}
-                      {departmentBranchName(department) || "فرع غير محدد"}
+                      {department.name}
                       <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
                         {departmentEmployees.length}
                       </span>
@@ -223,50 +221,23 @@ function PeopleDepartments() {
                   </summary>
                   <div className="grid gap-4 p-4 md:grid-cols-2">
                     {departmentEmployees.map((employee: any) => (
-                      <Link
+                      <EmployeeCard
                         key={employee.id}
-                        to="/people-departments/employee/$id"
-                        params={{ id: employee.id }}
-                        search={{ tab: "employees" }}
-                        className="surface-panel interactive-card p-5 hover:interactive-card-hover"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                            <UsersRound className="size-5" />
-                          </span>
-                          <span
-                            className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs ${employee.status === "active" ? "bg-emerald-500/10 text-emerald-700" : "bg-muted text-muted-foreground"}`}
-                          >
-                            <span
-                              className={`size-2 rounded-full ${employee.status === "active" ? "bg-emerald-500" : "bg-muted-foreground"}`}
-                            />
-                            {employee.status === "active" ? "نشط" : "غير نشط"}
-                          </span>
-                        </div>
-                        <h2 className="mt-4 font-semibold">
-                          {employee.full_name}
-                        </h2>
-                        {employee.employee_number && (
-                          <p className="mt-1 font-mono text-xs text-muted-foreground">
-                            {employee.employee_number}
-                          </p>
-                        )}
-                        <p className="text-sm text-muted-foreground">
-                          {employee.email || "—"} · {employee.phone || "—"}
-                        </p>
-                        <p className="mt-2 text-xs font-medium text-primary">
-                          {employeeDepartmentLabel(employee)}
-                        </p>
-                        <p className="mt-3 text-sm">
-                          التراخيص:{" "}
-                          {
-                            licenseAssignments.filter(
-                              (assignment: any) =>
-                                assignment.employee_id === employee.id,
-                            ).length
-                          }
-                        </p>
-                      </Link>
+                        employee={employee}
+                        departmentLabel={employeeDepartmentLabel(employee)}
+                        assetCount={
+                          assets.filter(
+                            (asset: any) =>
+                              asset.assigned_employee_id === employee.id,
+                          ).length
+                        }
+                        licenseCount={
+                          licenseAssignments.filter(
+                            (assignment: any) =>
+                              assignment.employee_id === employee.id,
+                          ).length
+                        }
+                      />
                     ))}
                     {!departmentEmployees.length && (
                       <p className="p-2 text-sm text-muted-foreground">
@@ -288,18 +259,23 @@ function PeopleDepartments() {
                   {groupedEmployees
                     .filter((employee: any) => !employee.department_id)
                     .map((employee: any) => (
-                      <Link
+                      <EmployeeCard
                         key={employee.id}
-                        to="/people-departments/employee/$id"
-                        params={{ id: employee.id }}
-                        search={{ tab: "employees" }}
-                        className="surface-panel interactive-card p-5 hover:interactive-card-hover"
-                      >
-                        <h2 className="font-semibold">{employee.full_name}</h2>
-                        <p className="text-sm text-muted-foreground">
-                          {employee.email || "—"} · {employee.phone || "—"}
-                        </p>
-                      </Link>
+                        employee={employee}
+                        departmentLabel="قسم غير محدد"
+                        assetCount={
+                          assets.filter(
+                            (asset: any) =>
+                              asset.assigned_employee_id === employee.id,
+                          ).length
+                        }
+                        licenseCount={
+                          licenseAssignments.filter(
+                            (assignment: any) =>
+                              assignment.employee_id === employee.id,
+                          ).length
+                        }
+                      />
                     ))}
                 </div>
               </details>
@@ -318,175 +294,54 @@ function PeopleDepartments() {
               <Input
                 value={departmentSearch}
                 onChange={(event) => setDepartmentSearch(event.target.value)}
-                placeholder="ابحث باسم القسم أو الفرع"
+                placeholder="ابحث باسم القسم"
                 className="pr-9"
               />
             </div>
-            <Button onClick={() => setDepartmentOpen(true)}>
-              <Plus className="ml-2 size-4" />
-              إضافة قسم
+            <Button
+              variant="outline"
+              onClick={() =>
+                window.location.assign("/odoo/employees/departments")
+              }
+            >
+              <ExternalLink className="ml-2 size-4" />
+              إدارة الأقسام في Odoo
             </Button>
           </div>
-          <div className="space-y-4">
-            {branches.map((branch: any) => (
-              <details
-                key={branch.id}
-                open
-                className="surface-panel overflow-hidden group"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between border-b p-5 marker:hidden">
-                  <span className="flex items-center gap-3 text-lg font-semibold">
-                    <span
-                      className="size-4 rounded-full"
-                      style={{
-                        backgroundColor: branch.color || COLOR_PALETTE[0],
-                      }}
-                    />
-                    {branch.name}
-                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
-                      {
-                        filteredDepartments.filter(
-                          (department: any) =>
-                            department.branch_id === branch.id ||
-                            (!department.branch_id &&
-                              department.branch === branch.name),
-                        ).length
-                      }{" "}
-                      أقسام
-                    </span>
-                  </span>
-                  <span className="text-muted-foreground transition-transform group-open:rotate-180">
-                    ⌄
-                  </span>
-                </summary>
-                <div className="grid gap-4 p-4 md:grid-cols-2">
-                  {filteredDepartments
-                    .filter(
-                      (department: any) =>
-                        department.branch_id === branch.id ||
-                        (!department.branch_id &&
-                          department.branch === branch.name),
-                    )
-                    .map((department: any) => {
-                      const people = employees.filter(
-                        (employee: any) =>
-                          employee.department_id === department.id,
-                      );
-                      const assetCount = assets.filter((asset: any) =>
-                        people.some(
-                          (employee: any) =>
-                            employee.id === asset.assigned_employee_id,
-                        ),
-                      ).length;
-                      return (
-                        <Link
-                          key={department.id}
-                          to="/people-departments/$id"
-                          params={{ id: department.id }}
-                          search={{ tab: "departments" }}
-                          className="surface-panel interactive-card p-5 hover:interactive-card-hover"
-                          style={{
-                            borderTopWidth: 4,
-                            borderTopColor:
-                              department.color ||
-                              branch.color ||
-                              COLOR_PALETTE[0],
-                          }}
-                        >
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-700">
-                              <Building2 className="size-5" />
-                            </div>
-                            <span className="rounded-md bg-sky-500/10 px-2 py-1 text-xs font-medium text-sky-700">
-                              {departmentBranchName(department) ||
-                                "فرع غير محدد"}
-                            </span>
-                          </div>
-                          <h2 className="mt-4 font-semibold">
-                            {department.name}
-                          </h2>
-                          <p className="text-sm text-muted-foreground">
-                            {department.notes || "—"}
-                          </p>
-                          <p className="mt-3 text-sm">
-                            الموظفون: {people.length} · الأصول: {assetCount}
-                          </p>
-                        </Link>
-                      );
-                    })}
-                </div>
-              </details>
-            ))}
-            {filteredDepartments.filter(
-              (department: any) => !departmentBranchName(department),
-            ).length > 0 && (
-              <details open className="surface-panel overflow-hidden group">
-                <summary className="flex cursor-pointer list-none items-center justify-between border-b p-5 marker:hidden">
-                  <span className="font-semibold">أقسام بدون فرع</span>
-                  <span className="text-muted-foreground">⌄</span>
-                </summary>
-                <div className="grid gap-4 p-4 md:grid-cols-2">
-                  {filteredDepartments
-                    .filter(
-                      (department: any) => !departmentBranchName(department),
-                    )
-                    .map((department: any) => {
-                      const people = employees.filter(
-                        (employee: any) =>
-                          employee.department_id === department.id,
-                      );
-                      return (
-                        <Link
-                          key={department.id}
-                          to="/people-departments/$id"
-                          params={{ id: department.id }}
-                          search={{ tab: "departments" }}
-                          className="surface-panel interactive-card p-5 hover:interactive-card-hover"
-                        >
-                          <h2 className="font-semibold">{department.name}</h2>
-                          <p className="mt-3 text-sm">
-                            الموظفون: {people.length}
-                          </p>
-                        </Link>
-                      );
-                    })}
-                </div>
-              </details>
-            )}
-          </div>
-        </TabsContent>
-        <TabsContent value="branches" className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {branches.map((branch: any) => (
-              <div
-                key={branch.id}
-                className="surface-panel border-t-4 p-5"
-                style={{
-                  borderTopColor: branch.color || COLOR_PALETTE[0],
-                }}
-              >
-                <h2 className="flex items-center gap-2 font-semibold">
-                  <span
-                    className="size-3 rounded-full"
-                    style={{
-                      backgroundColor: branch.color || COLOR_PALETTE[0],
-                    }}
-                  />
-                  {branch.name}
-                </h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  الأقسام:{" "}
-                  {
-                    departments.filter(
-                      (department: any) =>
-                        department.branch_id === branch.id ||
-                        (!department.branch_id &&
-                          department.branch === branch.name),
-                    ).length
-                  }
-                </p>
-              </div>
-            ))}
+          <div className="grid gap-4 md:grid-cols-2">
+            {filteredDepartments.map((department: any) => {
+              const people = employees.filter(
+                (employee: any) => employee.department_id === department.id,
+              );
+              const assetCount = assets.filter((asset: any) =>
+                people.some(
+                  (employee: any) => employee.id === asset.assigned_employee_id,
+                ),
+              ).length;
+              return (
+                <Link
+                  key={department.id}
+                  to="/people-departments/$id"
+                  params={{ id: department.id }}
+                  search={{ tab: "departments" }}
+                  className="surface-panel interactive-card border-t-4 p-5 hover:interactive-card-hover"
+                  style={{
+                    borderTopColor: department.color || COLOR_PALETTE[0],
+                  }}
+                >
+                  <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-700">
+                    <Building2 className="size-5" />
+                  </div>
+                  <h2 className="mt-4 font-semibold">{department.name}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {department.notes || "—"}
+                  </p>
+                  <p className="mt-3 text-sm">
+                    الموظفون: {people.length} · الأصول: {assetCount}
+                  </p>
+                </Link>
+              );
+            })}
           </div>
         </TabsContent>
         <TabsContent value="technicians" className="space-y-4">
@@ -503,208 +358,70 @@ function PeopleDepartments() {
           </div>
         </TabsContent>
       </Tabs>
-      {employeeOpen && (
-        <EmployeeForm
-          departments={departments}
-          branches={branches}
-          close={() => setEmployeeOpen(false)}
-          saved={() => queryClient.invalidateQueries()}
-        />
-      )}
-      {departmentOpen && (
-        <DepartmentForm
-          branches={branches}
-          close={() => setDepartmentOpen(false)}
-          saved={() => queryClient.invalidateQueries()}
-        />
-      )}
     </div>
   );
 }
 
-function EmployeeForm({ departments, branches = [], close, saved }: any) {
-  const [form, setForm] = useState<any>({ status: "active" });
-  const set = (key: string, value: any) => setForm({ ...form, [key]: value });
-  return (
-    <Dialog open onOpenChange={close}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>إضافة موظف</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4">
-          <Field label="رقم الموظف">
-            <Input
-              value={form.employee_number || ""}
-              onChange={(event) => set("employee_number", event.target.value)}
-              placeholder="مثال: EMP-001"
-            />
-          </Field>
-          <Field label="الاسم الكامل">
-            <Input
-              value={form.full_name || ""}
-              onChange={(event) => set("full_name", event.target.value)}
-            />
-          </Field>
-          <Field label="البريد الإلكتروني">
-            <Input
-              value={form.email || ""}
-              onChange={(event) => set("email", event.target.value)}
-            />
-          </Field>
-          <Field label="الهاتف">
-            <Input
-              value={form.phone || ""}
-              onChange={(event) => set("phone", event.target.value)}
-            />
-          </Field>
-          <Field label="القسم">
-            <Select
-              value={form.department_id || "__none__"}
-              onValueChange={(value) =>
-                set("department_id", value === "__none__" ? null : value)
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__none__">غير محدد</SelectItem>
-                {departments.map((department: any) => (
-                  <SelectItem key={department.id} value={department.id}>
-                    {department.name} —{" "}
-                    {branches.find(
-                      (branch: any) => branch.id === department.branch_id,
-                    )?.name ||
-                      department.branch ||
-                      "غير محدد"}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Field>
-          <Field label="ملاحظات">
-            <Textarea
-              value={form.notes || ""}
-              onChange={(event) => set("notes", event.target.value)}
-            />
-          </Field>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={close}>
-            إلغاء
-          </Button>
-          <Button
-            onClick={async () => {
-              if (!form.full_name?.trim())
-                return toast.error("الاسم الكامل مطلوب");
-              const result = await supabase.from("employees").insert({
-                ...form,
-                full_name: form.full_name.trim(),
-                employee_number: form.employee_number?.trim() || null,
-              });
-              if (result.error) return toast.error(result.error.message);
-              saved();
-              close();
-              toast.success("تمت إضافة الموظف");
-            }}
-          >
-            حفظ
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-function DepartmentForm({ close, saved, branches = [] }: any) {
-  const [name, setName] = useState("");
-  const [branchId, setBranchId] = useState("");
-  const [color, setColor] = useState(
-    COLOR_PALETTE[branches.length % COLOR_PALETTE.length],
-  );
-  const [notes, setNotes] = useState("");
-  return (
-    <Dialog open onOpenChange={close}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>إضافة قسم</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <Field label="اسم القسم">
-            <Input
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </Field>
-          <Field label="الفرع">
-            <Select
-              value={branchId || "__none__"}
-              onValueChange={(value) =>
-                setBranchId(value === "__none__" ? "" : value)
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="اختر الفرع" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__none__">فرع غير محدد</SelectItem>
-                {branches.map((item: any) => (
-                  <SelectItem key={item.id} value={item.id}>
-                    {item.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Field>
-          <Field label="الوصف">
-            <Textarea
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-            />
-          </Field>
-          <Field label="لون القسم">
-            <ColorField value={color} onChange={setColor} />
-          </Field>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={close}>
-            إلغاء
-          </Button>
-          <Button
-            onClick={async () => {
-              if (!name.trim()) return toast.error("اسم القسم مطلوب");
-              const result = await supabase.from("departments").insert({
-                name: name.trim(),
-                branch_id: branchId || null,
-                branch:
-                  branches.find((item: any) => item.id === branchId)?.name ||
-                  "",
-                color,
-                notes,
-              });
-              if (result.error) return toast.error(result.error.message);
-              saved();
-              close();
-              toast.success("تمت إضافة القسم");
-            }}
-          >
-            حفظ
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-function Field({
-  label,
-  children,
+function EmployeeCard({
+  employee,
+  departmentLabel,
+  assetCount,
+  licenseCount,
 }: {
-  label: string;
-  children: React.ReactNode;
+  employee: any;
+  departmentLabel: string;
+  assetCount: number;
+  licenseCount: number;
 }) {
+  const active = employee.status !== "inactive";
   return (
-    <div className="space-y-2">
-      <Label>{label}</Label>
-      {children}
-    </div>
+    <Link
+      to="/people-departments/employee/$id"
+      params={{ id: employee.id }}
+      search={{ tab: "employees" }}
+      className="surface-panel interactive-card group/card p-5 hover:interactive-card-hover"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <UsersRound className="size-5" />
+        </span>
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs ${active ? "bg-emerald-500/10 text-emerald-700" : "bg-muted text-muted-foreground"}`}
+        >
+          <span
+            className={`size-2 rounded-full ${active ? "bg-emerald-500" : "bg-muted-foreground"}`}
+          />
+          {active ? "نشط" : "غير نشط"}
+        </span>
+      </div>
+      <h2 className="mt-4 font-semibold">{employee.full_name}</h2>
+      <p className="mt-1 font-mono text-xs text-muted-foreground">
+        {employee.employee_number || "بدون رقم وظيفي"}
+      </p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        {employee.email || "—"} · {employee.phone || "—"}
+      </p>
+      <p className="mt-2 text-xs font-medium text-primary">{departmentLabel}</p>
+      <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+        <span className="flex items-center justify-between rounded-lg bg-muted/60 px-3 py-2">
+          <span className="flex items-center gap-1.5 text-muted-foreground">
+            <Monitor className="size-4" />
+            الأصول
+          </span>
+          <strong>{assetCount}</strong>
+        </span>
+        <span className="flex items-center justify-between rounded-lg bg-muted/60 px-3 py-2">
+          <span className="flex items-center gap-1.5 text-muted-foreground">
+            <KeyRound className="size-4" />
+            التراخيص
+          </span>
+          <strong>{licenseCount}</strong>
+        </span>
+      </div>
+      <span className="mt-4 flex items-center justify-between border-t pt-3 text-sm font-medium text-primary">
+        عرض ملف الموظف
+        <ArrowLeft className="size-4 transition-transform group-hover/card:-translate-x-1" />
+      </span>
+    </Link>
   );
 }

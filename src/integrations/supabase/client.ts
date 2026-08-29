@@ -1,17 +1,17 @@
 /**
- * Local data adapter.
+ * ITAM data adapter.
  *
  * The UI was originally generated against Supabase.  This small compatibility
- * layer keeps that UI intact while storing records in the local SQLite file.
- * Printer image files are kept separately in uploads/printers.
+ * layer keeps that UI intact while using either the standalone local API or
+ * the PostgreSQL-backed API provided by the ITAMFloss Odoo module.
  */
 import { IT_WAREHOUSE } from "@/lib/locations";
+import { odooRuntime, runtimeHeaders, runtimePath } from "@/lib/odoo-runtime";
 
 type Row = Record<string, any>;
 type Result = { data: any; error: Error | null };
 
 const TABLES = [
-  "branches",
   "technicians",
   "departments",
   "employees",
@@ -43,9 +43,9 @@ const ASSET_PREFIXES: Record<string, string> = {
 };
 
 async function api<T>(path: string, init?: RequestInit) {
-  const headers = new Headers(init?.headers);
+  const headers = runtimeHeaders(init?.headers);
   headers.set("x-itam-request", "1");
-  const response = await fetch(`/api/local-data${path}`, {
+  const response = await fetch(runtimePath(`/api/local-data${path}`), {
     ...init,
     headers,
   });
@@ -148,6 +148,8 @@ function nextAssetId(assetType: string | undefined, assets: Row[]) {
 async function applyInsertDefaults(table: string, payload: Row | Row[]) {
   const values = Array.isArray(payload) ? payload : [payload];
   if (table !== "assets") return values.map((value) => defaults(table, value));
+
+  if (odooRuntime()) return values.map((value) => defaults(table, value));
 
   const knownAssets = await getRows("assets");
   const prepared: Row[] = [];

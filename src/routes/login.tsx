@@ -5,6 +5,11 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  appPath,
+  runtimeHeaders,
+  runtimePath,
+} from "@/lib/odoo-runtime";
 
 export const Route = createFileRoute("/login")({ component: LoginPage });
 
@@ -16,10 +21,10 @@ function LoginPage() {
   const [working, setWorking] = useState(false);
 
   useEffect(() => {
-    fetch("/api/auth/status", { cache: "no-store" })
+    fetch(runtimePath("/api/auth/status"), { cache: "no-store" })
       .then((response) => response.json())
       .then((state) => {
-        if (state.authenticated) window.location.replace("/");
+        if (state.authenticated) window.location.replace(appPath("/"));
         else {
           setConfigured(Boolean(state.configured));
           if (state.username) setUsername(state.username);
@@ -32,13 +37,13 @@ function LoginPage() {
     setWorking(true);
     try {
       const response = await fetch(
-        configured ? "/api/auth/login" : "/api/auth/setup",
+        runtimePath(configured ? "/api/auth/login" : "/api/auth/setup"),
         {
           method: "POST",
-          headers: {
+          headers: runtimeHeaders({
             "content-type": "application/json",
             "x-itam-request": "1",
-          },
+          }),
           body: JSON.stringify(
             configured
               ? { username: username.trim(), password }
@@ -48,7 +53,7 @@ function LoginPage() {
       );
       const body = await response.json();
       if (!response.ok) throw new Error(body.message || "تعذر تسجيل الدخول");
-      window.location.replace("/");
+      window.location.replace(appPath("/"));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "تعذر تسجيل الدخول");
     } finally {

@@ -80,11 +80,6 @@ function AssetsPage() {
     queryFn: async () =>
       (await supabase.from("departments").select("*").order("name")).data ?? [],
   });
-  const { data: branches = [] } = useQuery({
-    queryKey: ["branches"],
-    queryFn: async () =>
-      (await supabase.from("branches").select("*").order("name")).data ?? [],
-  });
   const currentAssets = assets.filter((asset: any) => !asset.archived_at);
   const filtered = assets.filter(
     (asset: any) =>
@@ -181,11 +176,6 @@ function AssetsPage() {
           const department = departments.find(
             (item: any) => item.id === asset.department_id,
           );
-          const branch = branches.find(
-            (item: any) =>
-              item.id === department?.branch_id ||
-              (!department?.branch_id && item.name === department?.branch),
-          );
           return (
             <Link
               key={asset.id}
@@ -214,7 +204,7 @@ function AssetsPage() {
                     : "متوفر"}
                 </p>
                 {department ? (
-                  <ScopeColorBadges department={department} branch={branch} />
+                  <ScopeColorBadges department={department} />
                 ) : (
                   <p className="text-xs text-muted-foreground">قسم غير محدد</p>
                 )}

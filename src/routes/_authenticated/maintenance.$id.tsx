@@ -57,11 +57,6 @@ function MaintenanceDetails() {
       (await supabase.from("inventory_items").select("*").order("name")).data ??
       [],
   });
-  const { data: technicians = [] } = useQuery({
-    queryKey: ["technicians"],
-    queryFn: async () =>
-      (await supabase.from("technicians").select("*").order("name")).data ?? [],
-  });
 
   if (isLoading) return <p className="text-muted-foreground">جارٍ التحميل…</p>;
   if (!record)
@@ -232,7 +227,6 @@ function MaintenanceDetails() {
           record={record}
           assets={assets}
           inventory={inventory}
-          technicians={technicians}
           close={() => setEditOpen(false)}
           saved={refresh}
         />

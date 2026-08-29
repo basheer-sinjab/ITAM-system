@@ -1,3 +1,5 @@
+import { runtimeHeaders, runtimePath } from "./odoo-runtime";
+
 export const PRINTER_STATUS = {
   active: "نشطة",
   maintenance: "تحت الصيانة",
@@ -87,9 +89,9 @@ export async function resolveImage(path?: string | null) {
 export async function uploadPrinterImage(file: File) {
   const formData = new FormData();
   formData.append("image", file);
-  const response = await fetch("/api/printer-images", {
+  const response = await fetch(runtimePath("/api/printer-images"), {
     method: "POST",
-    headers: { "x-itam-request": "1" },
+    headers: runtimeHeaders({ "x-itam-request": "1" }),
     body: formData,
   });
   const body = await response.json();
@@ -106,10 +108,17 @@ export async function uploadInventoryImage(file: File) {
 }
 
 export async function deletePrinterImage(path?: string | null) {
-  if (!path?.startsWith("/uploads/printers/")) return;
+  if (
+    !path?.startsWith("/uploads/printers/") &&
+    !path?.startsWith("/itam_floss/image/")
+  )
+    return;
   const response = await fetch(
-    `/api/printer-images?path=${encodeURIComponent(path)}`,
-    { method: "DELETE", headers: { "x-itam-request": "1" } },
+    `${runtimePath("/api/printer-images")}?path=${encodeURIComponent(path)}`,
+    {
+      method: "DELETE",
+      headers: runtimeHeaders({ "x-itam-request": "1" }),
+    },
   );
   if (!response.ok) throw new Error("تعذر حذف الصورة القديمة");
 }

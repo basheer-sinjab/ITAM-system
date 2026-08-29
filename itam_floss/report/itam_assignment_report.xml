@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Odoo registration only. The complete visual template lives in
+         report/itam_assignment_report.html. -->
+    <record id="paperformat_itam_assignment_handover" model="report.paperformat">
+        <field name="name">ITAMFloss Asset Handover</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">9</field>
+        <field name="margin_right">9</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_itam_assignment_handover" model="ir.actions.report">
+        <field name="name">IT Asset Handover</field>
+        <field name="model">itam.assignment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">itam_floss.report_itam_assignment_handover</field>
+        <field name="report_file">itam_floss.report_itam_assignment_handover</field>
+        <field name="paperformat_id" ref="paperformat_itam_assignment_handover"/>
+        <field name="print_report_name">'ITAM-Handover-%s' % (object.asset_id.asset_id or object.id)</field>
+    </record>
+</odoo>

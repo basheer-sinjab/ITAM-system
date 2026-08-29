@@ -1,5 +1,6 @@
 import type { ComponentProps, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { languageDirection } from "@/lib/odoo-runtime";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,8 +34,8 @@ export function ConfirmButton({
       <AlertDialogTrigger asChild>
         <Button {...buttonProps}>{children}</Button>
       </AlertDialogTrigger>
-      <AlertDialogContent dir="rtl">
-        <AlertDialogHeader className="text-right sm:text-right">
+      <AlertDialogContent dir={languageDirection()}>
+        <AlertDialogHeader className="text-start sm:text-start">
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>

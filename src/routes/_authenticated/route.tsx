@@ -10,6 +10,7 @@ import {
   Users,
   Settings,
   FileBarChart,
+  Grid2X2,
   LogOut,
   UserCircle2,
 } from "lucide-react";
@@ -22,6 +23,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  loginPath,
+  odooRuntime,
+  runtimeHeaders,
+  runtimePath,
+  staticAsset,
+  languageDirection,
+} from "@/lib/odoo-runtime";
+import { uiText } from "@/lib/ui-localization";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -49,9 +59,10 @@ const SECONDARY_NAV = [
 
 function AppLayout() {
   const [username, setUsername] = useState("Basheer");
+  const inOdoo = Boolean(odooRuntime());
 
   useEffect(() => {
-    fetch("/api/auth/status", { cache: "no-store" })
+    fetch(runtimePath("/api/auth/status"), { cache: "no-store" })
       .then((response) => response.json())
       .then((state) => {
         if (state.username) setUsername(state.username);
@@ -60,20 +71,27 @@ function AppLayout() {
   }, []);
 
   const logout = async () => {
-    await fetch("/api/auth/logout", {
+    await fetch(runtimePath("/api/auth/logout"), {
       method: "POST",
-      headers: { "x-itam-request": "1", "content-type": "application/json" },
+      headers: runtimeHeaders({
+        "x-itam-request": "1",
+        "content-type": "application/json",
+      }),
       body: "{}",
     });
-    window.location.replace("/login");
+    window.location.replace(loginPath());
+  };
+
+  const returnToOdoo = () => {
+    window.location.assign("/odoo");
   };
 
   return (
     <div className="flex min-h-screen bg-background">
-      <aside className="no-print sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-l border-sidebar-border/70 bg-sidebar text-sidebar-foreground lg:flex">
+      <aside className="no-print sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-e border-sidebar-border/70 bg-sidebar text-sidebar-foreground lg:flex">
         <div className="flex items-center gap-3 px-6 py-7">
           <img
-            src="/printersfloss-logo.png"
+            src={staticAsset("/printersfloss-logo.png")}
             alt="ITAMFloss"
             className="size-11 shrink-0 object-contain"
           />
@@ -106,7 +124,7 @@ function AppLayout() {
               {item.label}
             </Link>
           ))}
-          <DropdownMenu dir="rtl">
+          <DropdownMenu dir={languageDirection()}>
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
@@ -115,7 +133,7 @@ function AppLayout() {
                 <span className="flex size-[18px] items-center justify-center rounded-full bg-sidebar-primary/15 text-sidebar-primary">
                   <UserCircle2 className="size-[18px]" />
                 </span>
-                <span className="min-w-0 flex-1 truncate text-right">
+                <span className="min-w-0 flex-1 truncate text-start">
                   {username}
                 </span>
                 <ChevronUp className="size-4 shrink-0 opacity-60" />
@@ -126,10 +144,20 @@ function AppLayout() {
               align="start"
               className="w-52"
             >
-              <DropdownMenuLabel className="text-right">
+              <DropdownMenuLabel className="text-start">
                 الحساب
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              {inOdoo && (
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onSelect={returnToOdoo}
+                >
+                  <Grid2X2 className="size-4" />
+                  {uiText("العودة إلى تطبيقات Odoo", "Back to Odoo Apps")}
+                </DropdownMenuItem>
+              )}
+              {inOdoo && <DropdownMenuSeparator />}
               <DropdownMenuItem
                 className="cursor-pointer text-destructive focus:text-destructive"
                 onSelect={() => void logout()}
@@ -157,7 +185,7 @@ function AppLayout() {
           </nav>
           <GlobalSearch />
           <img
-            src="/printersfloss-header-logo.png"
+            src={staticAsset("/printersfloss-header-logo.png")}
             alt="ITAMFloss"
             className="size-10 shrink-0 object-contain"
           />

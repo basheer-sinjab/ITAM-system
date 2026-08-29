@@ -199,11 +199,13 @@ const ENTITIES: Record<string, Entity> = {
       "storage",
       "graphics_card",
       "operating_system",
+      "screen_size",
+      "display_technology",
       "notes",
       "created_at",
       "updated_at",
     ],
-    sql: "CREATE TABLE IF NOT EXISTS pc_specs (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE REFERENCES assets(id) ON DELETE CASCADE, processor TEXT, memory TEXT, storage TEXT, graphics_card TEXT, operating_system TEXT, notes TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
+    sql: "CREATE TABLE IF NOT EXISTS pc_specs (id TEXT PRIMARY KEY, asset_id TEXT NOT NULL UNIQUE REFERENCES assets(id) ON DELETE CASCADE, processor TEXT, memory TEXT, storage TEXT, graphics_card TEXT, operating_system TEXT, screen_size TEXT, display_technology TEXT, notes TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)",
     indexes: [
       "CREATE INDEX IF NOT EXISTS idx_pc_specs_asset ON pc_specs(asset_id)",
     ],
@@ -534,6 +536,16 @@ function migrateSystemFields(database: DatabaseSync) {
     if (!maintenanceColumns.some((entry) => entry.name === column))
       database.exec(`ALTER TABLE asset_maintenance ADD COLUMN ${column} TEXT`);
   backfillMaintenanceReferences(database);
+
+  const pcSpecColumns = database
+    .prepare("PRAGMA table_info(pc_specs)")
+    .all() as Array<{ name: string }>;
+  for (const column of ["screen_size", "display_technology"])
+    if (
+      pcSpecColumns.length &&
+      !pcSpecColumns.some((entry) => entry.name === column)
+    )
+      database.exec(`ALTER TABLE pc_specs ADD COLUMN ${column} TEXT`);
 
   for (const table of ["pc_part_installations", "toner_installations"]) {
     const installationColumns = database
@@ -939,6 +951,7 @@ type HardwareAction =
       notes?: string;
     }
   | { action: "undo-toner"; installationId: string }
+  | { action: "delete-toner"; installationId: string }
   | {
       action: "install-part";
       assetId: string;
@@ -948,7 +961,8 @@ type HardwareAction =
       oldInstallationId?: string;
       oldPartAction?: "damaged" | "return_to_stock" | "disposed";
     }
-  | { action: "undo-part"; installationId: string };
+  | { action: "undo-part"; installationId: string }
+  | { action: "delete-part"; installationId: string };
 
 function recordFor(
   database: DatabaseSync,
@@ -1097,6 +1111,56 @@ function markLinkedMaintenanceUndone(
     note,
   });
 }
+
+function deleteHardwareRecords(
+  database: DatabaseSync,
+  installation: Row,
+  installationTable: "toner_installations" | "pc_part_installations",
+  activityActions: string[],
+) {
+  const installationId = String(installation.id);
+  const assetId = String(installation.asset_id);
+  const placeholders = activityActions.map(() => "?").join(", ");
+  const activity = database
+    .prepare(
+      `SELECT id, details FROM activity_log WHERE entity_type = 'assets' AND entity_id = ? AND action IN (${placeholders})`,
+    )
+    .all(assetId, ...activityActions) as Array<{
+    id: string;
+    details?: string;
+  }>;
+  const deleteActivity = database.prepare(
+    "DELETE FROM activity_log WHERE id = ?",
+  );
+  for (const entry of activity) {
+    let details: Record<string, unknown> = {};
+    try {
+      details = entry.details ? JSON.parse(entry.details) : {};
+    } catch {
+      details = {};
+    }
+    if (String(details.installation_id ?? "") === installationId)
+      deleteActivity.run(entry.id);
+  }
+  if (installation.maintenance_id) {
+    const maintenanceId = String(installation.maintenance_id);
+    database
+      .prepare("DELETE FROM inventory_movements WHERE maintenance_id = ?")
+      .run(maintenanceId);
+    database
+      .prepare(
+        "DELETE FROM activity_log WHERE entity_type = 'asset_maintenance' AND entity_id = ?",
+      )
+      .run(maintenanceId);
+    database
+      .prepare("DELETE FROM asset_maintenance WHERE id = ?")
+      .run(maintenanceId);
+  }
+  database
+    .prepare(`DELETE FROM ${installationTable} WHERE id = ?`)
+    .run(installationId);
+}
+
 function takeFromInventory(
   database: DatabaseSync,
   itemId: string,
@@ -1167,6 +1231,7 @@ async function runHardwareAction(request: HardwareAction) {
         installation_id: installation.id,
         item_name: item.name,
         quantity,
+        event_date: installedAt,
       });
       database.exec("COMMIT");
       return installation;
@@ -1212,9 +1277,34 @@ async function runHardwareAction(request: HardwareAction) {
       logActivity(database, "assets", installation.asset_id, "toner_undo", {
         installation_id: installation.id,
         item_name: installation.toner_name,
+        event_date: today,
       });
       database.exec("COMMIT");
       return { ...installation, undone_at: now };
+    }
+
+    if (request.action === "delete-toner") {
+      const installation = recordFor(
+        database,
+        "toner_installations",
+        request.installationId,
+      );
+      if (!installation) throw new Error("سجل تركيب الحبر غير موجود");
+      if (!installation.undone_at && installation.inventory_item_id)
+        database
+          .prepare(
+            "UPDATE inventory_items SET quantity = quantity + ? WHERE id = ?",
+          )
+          .run(
+            Number(installation.quantity),
+            String(installation.inventory_item_id),
+          );
+      deleteHardwareRecords(database, installation, "toner_installations", [
+        "toner_install",
+        "toner_undo",
+      ]);
+      database.exec("COMMIT");
+      return { id: request.installationId };
     }
 
     if (request.action === "install-part") {
@@ -1333,9 +1423,59 @@ async function runHardwareAction(request: HardwareAction) {
         item_name: item.name,
         replaced_part: oldPart?.part_name ?? null,
         old_part_action: request.oldPartAction ?? null,
+        event_date: installedAt,
       });
       database.exec("COMMIT");
       return installation;
+    }
+
+    if (request.action === "delete-part") {
+      const installation = recordFor(
+        database,
+        "pc_part_installations",
+        request.installationId,
+      );
+      if (!installation) throw new Error("سجل تركيب القطعة غير موجود");
+      if (installation.removed_at && !installation.undone_at)
+        throw new Error("احذف أو تراجع عن القطعة البديلة أولًا");
+      if (!installation.undone_at) {
+        if (installation.inventory_item_id)
+          database
+            .prepare(
+              "UPDATE inventory_items SET quantity = quantity + 1 WHERE id = ?",
+            )
+            .run(String(installation.inventory_item_id));
+        if (installation.replacement_of_id) {
+          const oldPart = recordFor(
+            database,
+            "pc_part_installations",
+            String(installation.replacement_of_id),
+          );
+          if (oldPart) {
+            if (
+              oldPart.old_part_action === "return_to_stock" &&
+              oldPart.inventory_item_id
+            )
+              takeFromInventory(
+                database,
+                String(oldPart.inventory_item_id),
+                1,
+                String(oldPart.part_name),
+              );
+            database
+              .prepare(
+                "UPDATE pc_part_installations SET removed_at = NULL, old_part_action = NULL WHERE id = ?",
+              )
+              .run(String(oldPart.id));
+          }
+        }
+      }
+      deleteHardwareRecords(database, installation, "pc_part_installations", [
+        "part_install",
+        "part_undo",
+      ]);
+      database.exec("COMMIT");
+      return { id: request.installationId };
     }
 
     const installation = recordFor(
@@ -1409,6 +1549,7 @@ async function runHardwareAction(request: HardwareAction) {
     logActivity(database, "assets", installation.asset_id, "part_undo", {
       installation_id: installation.id,
       item_name: installation.part_name,
+      event_date: today,
     });
     database.exec("COMMIT");
     return { ...installation, removed_at: today, undone_at: now };
@@ -1436,6 +1577,11 @@ type WorkflowAction =
       returnDate: string;
       condition: "good" | "maintenance" | "damaged";
       notes?: string;
+    }
+  | {
+      action: "delete-assignment-history";
+      assetId: string;
+      assignmentId: string;
     }
   | { action: "save-maintenance"; record: Row }
   | { action: "delete-maintenance"; maintenanceId: string };
@@ -1682,7 +1828,7 @@ function assignmentAssetSnapshot(
 ) {
   const specs = database
     .prepare(
-      "SELECT processor, memory, storage, graphics_card, operating_system, notes FROM pc_specs WHERE asset_id = ? LIMIT 1",
+      "SELECT processor, memory, storage, graphics_card, operating_system, screen_size, display_technology, notes FROM pc_specs WHERE asset_id = ? LIMIT 1",
     )
     .get(String(asset.id)) as Row | undefined;
   return {
@@ -1693,6 +1839,9 @@ function assignmentAssetSnapshot(
     model: asset.model,
     serial_number: asset.serial_number,
     source_location: sourceLocation,
+    source_status: asset.status || "active",
+    source_employee_id: asset.assigned_employee_id || null,
+    source_department_id: asset.department_id || null,
     delivery_location: deliveryLocation,
     specs: specs ?? null,
   };
@@ -1791,6 +1940,7 @@ async function runWorkflowAction(request: WorkflowAction) {
         employee_name: person.full_name,
         from_location: sourceLocation,
         to_location: deliveryLocation,
+        event_date: assignmentDate,
       });
       database.exec("COMMIT");
       return assignment;
@@ -1877,6 +2027,7 @@ async function runWorkflowAction(request: WorkflowAction) {
         from_location: asset.location,
         to_location: IT_WAREHOUSE,
         condition: request.condition,
+        event_date: returnDate,
       });
       database.exec("COMMIT");
       return {
@@ -1885,6 +2036,66 @@ async function runWorkflowAction(request: WorkflowAction) {
         return_condition: request.condition,
         return_notes: request.notes?.trim() || null,
       };
+    }
+
+    if (request.action === "delete-assignment-history") {
+      const asset = recordFor(database, "assets", request.assetId);
+      const assignment = recordFor(
+        database,
+        "assignment_history",
+        request.assignmentId,
+      );
+      if (!asset || !assignment)
+        throw new Error("سجل التسليم والاستلام غير موجود");
+      if (String(assignment.asset_id) !== request.assetId)
+        throw new Error("سجل التسليم لا يتبع الأصل المحدد");
+      if (
+        !assignment.return_date &&
+        String(asset.assigned_employee_id || "") ===
+          String(assignment.employee_id || "")
+      ) {
+        const snapshot = (assignment.asset_snapshot || {}) as Row;
+        database
+          .prepare(
+            "UPDATE assets SET assigned_employee_id = ?, department_id = ?, location = ?, status = ?, updated_at = ? WHERE id = ?",
+          )
+          .run(
+            snapshot.source_employee_id
+              ? String(snapshot.source_employee_id)
+              : null,
+            snapshot.source_department_id
+              ? String(snapshot.source_department_id)
+              : null,
+            String(snapshot.source_location || IT_WAREHOUSE),
+            String(snapshot.source_status || "active"),
+            now,
+            request.assetId,
+          );
+      }
+
+      const relatedActivity = database
+        .prepare(
+          "SELECT id, details FROM activity_log WHERE entity_type = 'assets' AND entity_id = ? AND action IN ('assignment', 'return')",
+        )
+        .all(request.assetId) as Array<{ id: string; details?: string }>;
+      const deleteActivity = database.prepare(
+        "DELETE FROM activity_log WHERE id = ?",
+      );
+      for (const entry of relatedActivity) {
+        let details: Record<string, unknown> = {};
+        try {
+          details = entry.details ? JSON.parse(entry.details) : {};
+        } catch {
+          details = {};
+        }
+        if (String(details.assignment_id ?? "") === request.assignmentId)
+          deleteActivity.run(entry.id);
+      }
+      database
+        .prepare("DELETE FROM assignment_history WHERE id = ?")
+        .run(request.assignmentId);
+      database.exec("COMMIT");
+      return asset;
     }
 
     if (request.action === "archive-asset") {

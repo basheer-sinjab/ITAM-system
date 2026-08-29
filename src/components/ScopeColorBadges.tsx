@@ -28,19 +28,14 @@ function ScopeBadge({
   );
 }
 
-export function ScopeColorBadges({ department, branch }: any) {
-  if (!department && !branch) return null;
+export function ScopeColorBadges({ department }: any) {
+  if (!department) return null;
   return (
     <span className="flex flex-wrap gap-1.5">
-      {department && (
-        <ScopeBadge
-          label={department.name}
-          color={department.color || "#2563eb"}
-        />
-      )}
-      {branch && (
-        <ScopeBadge label={branch.name} color={branch.color || "#0f766e"} />
-      )}
+      <ScopeBadge
+        label={department.name}
+        color={department.color || "#2563eb"}
+      />
     </span>
   );
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="itam_settings_default" model="itam.settings">
+        <field name="name">default</field>
+        <field name="low_stock_threshold">2</field>
+        <field name="dashboard_alerts_enabled">True</field>
+        <field name="warranty_alert_days">30</field>
+    </record>
+</odoo>

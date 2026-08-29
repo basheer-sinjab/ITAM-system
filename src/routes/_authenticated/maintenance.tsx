@@ -23,6 +23,7 @@ import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { inventoryAdjustment } from "@/lib/data-rules.mjs";
+import { odooRuntime } from "@/lib/odoo-runtime";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -92,11 +93,6 @@ function Maintenance() {
     queryKey: ["inventory"],
     queryFn: async () =>
       (await supabase.from("inventory_items").select("*")).data ?? [],
-  });
-  const { data: technicians = [] } = useQuery({
-    queryKey: ["technicians"],
-    queryFn: async () =>
-      (await supabase.from("technicians").select("*").order("name")).data ?? [],
   });
   const openRecords = records.filter(
     (record: any) => record.status === "Open",
@@ -393,7 +389,6 @@ function Maintenance() {
           record={record}
           assets={assets}
           inventory={inventory}
-          technicians={technicians}
           close={() => setRecord(undefined)}
           saved={() => qc.invalidateQueries()}
         />
@@ -417,11 +412,11 @@ export function MaintenanceForm({
   record,
   assets,
   inventory,
-  technicians = [],
   close,
   saved,
 }: any) {
   const [inventorySearch, setInventorySearch] = useState("");
+  const currentUsername = odooRuntime()?.username?.trim() || "";
   const [form, setForm] = useState<any>({
     asset_id: "",
     maintenance_date: new Date().toISOString().slice(0, 10),
@@ -429,6 +424,9 @@ export function MaintenanceForm({
     status: "Closed",
     used_items: [],
     ...record,
+    technician: record.id
+      ? record.technician || currentUsername
+      : currentUsername,
   });
   const set = (key: string, value: any) => setForm({ ...form, [key]: value });
   const save = async () => {
@@ -533,24 +531,12 @@ export function MaintenanceForm({
           </div>
           <div className="space-y-2">
             <Label>الفني</Label>
-            <Select
-              value={form.technician || "__none__"}
-              onValueChange={(value) =>
-                set("technician", value === "__none__" ? "" : value)
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="اختر الفني" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__none__">غير محدد</SelectItem>
-                {technicians.map((technician: any) => (
-                  <SelectItem key={technician.id} value={technician.name}>
-                    {technician.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Input value={form.technician || currentUsername} readOnly />
+            <p className="text-xs text-muted-foreground">
+              {form.id
+                ? "المستخدم الذي أنشأ سجل الصيانة."
+                : "يُحدد تلقائيًا من مستخدم Odoo الحالي."}
+            </p>
           </div>
           <div className="space-y-2">
             <Label>نوع الصيانة</Label>

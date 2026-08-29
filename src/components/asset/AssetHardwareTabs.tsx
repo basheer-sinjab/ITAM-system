@@ -5,14 +5,17 @@ import {
   Cpu,
   History,
   MemoryStick,
+  Monitor,
   PackagePlus,
   Pencil,
   Printer,
   RotateCcw,
+  Trash2,
   Wrench,
 } from "lucide-react";
 import { toast } from "sonner";
 import { runHardwareAction, supabase } from "@/integrations/supabase/client";
+import { languageDirection } from "@/lib/odoo-runtime";
 import { formatDate } from "@/lib/pms";
 import { ConfirmButton } from "@/components/ConfirmButton";
 import { Button } from "@/components/ui/button";
@@ -46,13 +49,17 @@ function assetKind(assetType: unknown) {
     .trim()
     .toLowerCase();
   if (type === "printer" || type.includes("طابعة")) return "printer";
+  if (type === "monitor" || type.includes("screen") || type.includes("شاشة"))
+    return "monitor";
   if (
     type === "desktop pc" ||
     type === "pc" ||
     type === "laptop" ||
     type.includes("notebook") ||
     type.includes("desktop") ||
-    type.includes("كمبيوتر مكتبي")
+    type.includes("كمبيوتر") ||
+    type.includes("حاسب") ||
+    type.includes("لابتوب")
   )
     return "pc";
   return null;
@@ -64,7 +71,7 @@ export function AssetHardwareTabs({ asset }: { asset: any }) {
   if (kind === "printer")
     return (
       <section className="surface-panel overflow-hidden">
-        <Tabs defaultValue="toner" dir="rtl">
+        <Tabs defaultValue="toner" dir={languageDirection()}>
           <TabsList className="m-4 mb-0">
             <TabsTrigger value="toner" className="gap-2">
               <Printer className="size-4" />
@@ -77,9 +84,25 @@ export function AssetHardwareTabs({ asset }: { asset: any }) {
         </Tabs>
       </section>
     );
+  if (kind === "monitor")
+    return (
+      <section className="surface-panel overflow-hidden">
+        <Tabs defaultValue="specs" dir={languageDirection()}>
+          <TabsList className="m-4 mb-0">
+            <TabsTrigger value="specs" className="gap-2">
+              <Monitor className="size-4" />
+              مواصفات الشاشة
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="specs" className="m-0 p-4">
+            <PcSpecsPanel asset={asset} mode="monitor" />
+          </TabsContent>
+        </Tabs>
+      </section>
+    );
   return (
     <section className="surface-panel overflow-hidden">
-      <Tabs defaultValue="specs" dir="rtl">
+      <Tabs defaultValue="specs" dir={languageDirection()}>
         <TabsList className="m-4 mb-0">
           <TabsTrigger value="specs" className="gap-2">
             <Cpu className="size-4" />
@@ -101,7 +124,8 @@ export function AssetHardwareTabs({ asset }: { asset: any }) {
   );
 }
 
-function PcSpecsPanel({ asset }: any) {
+function PcSpecsPanel({ asset, mode = "computer" }: any) {
+  const isMonitor = mode === "monitor";
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
   const { data: specs } = useQuery({
@@ -115,19 +139,27 @@ function PcSpecsPanel({ asset }: any) {
           .maybeSingle()
       ).data,
   });
-  const fields = [
-    ["المعالج", specs?.processor, Cpu],
-    ["الذاكرة", specs?.memory, MemoryStick],
-    ["التخزين", specs?.storage, Boxes],
-    ["كرت الشاشة", specs?.graphics_card, Cpu],
-    ["نظام التشغيل", specs?.operating_system, Wrench],
-    ["ملاحظات", specs?.notes, History],
-  ] as const;
+  const fields = isMonitor
+    ? ([
+        ["حجم الشاشة", specs?.screen_size, Monitor],
+        ["تقنية العرض", specs?.display_technology, Cpu],
+        ["ملاحظات", specs?.notes, History],
+      ] as const)
+    : ([
+        ["المعالج", specs?.processor, Cpu],
+        ["الذاكرة", specs?.memory, MemoryStick],
+        ["التخزين", specs?.storage, Boxes],
+        ["كرت الشاشة", specs?.graphics_card, Cpu],
+        ["نظام التشغيل", specs?.operating_system, Wrench],
+        ["ملاحظات", specs?.notes, History],
+      ] as const);
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="font-semibold">مواصفات الجهاز</h2>
+          <h2 className="font-semibold">
+            {isMonitor ? "مواصفات الشاشة" : "مواصفات الجهاز"}
+          </h2>
           <p className="text-sm text-muted-foreground">
             مواصفات مختصرة يتم تحديثها يدويًا عند الحاجة.
           </p>
@@ -152,6 +184,7 @@ function PcSpecsPanel({ asset }: any) {
         <PcSpecsDialog
           asset={asset}
           specs={specs}
+          monitor={isMonitor}
           close={() => setEditing(false)}
           saved={() => {
             queryClient.invalidateQueries({
@@ -165,15 +198,23 @@ function PcSpecsPanel({ asset }: any) {
   );
 }
 
-function PcSpecsDialog({ asset, specs, close, saved }: any) {
-  const [form, setForm] = useState<any>({
-    processor: specs?.processor || "",
-    memory: specs?.memory || "",
-    storage: specs?.storage || "",
-    graphics_card: specs?.graphics_card || "",
-    operating_system: specs?.operating_system || "",
-    notes: specs?.notes || "",
-  });
+function PcSpecsDialog({ asset, specs, close, saved, monitor = false }: any) {
+  const [form, setForm] = useState<any>(
+    monitor
+      ? {
+          screen_size: specs?.screen_size || "",
+          display_technology: specs?.display_technology || "",
+          notes: specs?.notes || "",
+        }
+      : {
+          processor: specs?.processor || "",
+          memory: specs?.memory || "",
+          storage: specs?.storage || "",
+          graphics_card: specs?.graphics_card || "",
+          operating_system: specs?.operating_system || "",
+          notes: specs?.notes || "",
+        },
+  );
   const [saving, setSaving] = useState(false);
   const set = (key: string, value: string) =>
     setForm((current: any) => ({ ...current, [key]: value }));
@@ -197,56 +238,91 @@ function PcSpecsDialog({ asset, specs, close, saved }: any) {
         });
     setSaving(false);
     if (result.error) return toast.error(result.error.message);
-    toast.success("تم حفظ مواصفات الكمبيوتر");
+    toast.success(
+      monitor ? "تم حفظ مواصفات الشاشة" : "تم حفظ مواصفات الكمبيوتر",
+    );
     saved();
   };
   return (
     <Dialog open onOpenChange={close}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>مواصفات {asset.name}</DialogTitle>
+          <DialogTitle>
+            {monitor ? "مواصفات الشاشة" : "مواصفات"} {asset.name}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="المعالج">
-            <Input
-              value={form.processor}
-              onChange={(event) => set("processor", event.target.value)}
-              placeholder="مثال: Intel Core i5"
-            />
-          </Field>
-          <Field label="الذاكرة">
-            <Input
-              value={form.memory}
-              onChange={(event) => set("memory", event.target.value)}
-              placeholder="مثال: 16 GB"
-            />
-          </Field>
-          <Field label="التخزين">
-            <Input
-              value={form.storage}
-              onChange={(event) => set("storage", event.target.value)}
-              placeholder="مثال: SSD 512 GB"
-            />
-          </Field>
-          <Field label="كرت الشاشة">
-            <Input
-              value={form.graphics_card}
-              onChange={(event) => set("graphics_card", event.target.value)}
-            />
-          </Field>
-          <Field label="نظام التشغيل" className="sm:col-span-2">
-            <Input
-              value={form.operating_system}
-              onChange={(event) => set("operating_system", event.target.value)}
-              placeholder="مثال: Windows 11 Pro"
-            />
-          </Field>
-          <Field label="ملاحظات" className="sm:col-span-2">
-            <Textarea
-              value={form.notes}
-              onChange={(event) => set("notes", event.target.value)}
-            />
-          </Field>
+          {monitor ? (
+            <>
+              <Field label="حجم الشاشة" className="sm:col-span-2">
+                <Input
+                  value={form.screen_size}
+                  onChange={(event) => set("screen_size", event.target.value)}
+                  placeholder="مثال: 27 بوصة"
+                />
+              </Field>
+              <Field label="تقنية العرض" className="sm:col-span-2">
+                <Input
+                  value={form.display_technology}
+                  onChange={(event) =>
+                    set("display_technology", event.target.value)
+                  }
+                  placeholder="مثال: IPS أو OLED"
+                />
+              </Field>
+              <Field label="ملاحظات" className="sm:col-span-2">
+                <Textarea
+                  value={form.notes}
+                  onChange={(event) => set("notes", event.target.value)}
+                />
+              </Field>
+            </>
+          ) : (
+            <>
+              <Field label="المعالج">
+                <Input
+                  value={form.processor}
+                  onChange={(event) => set("processor", event.target.value)}
+                  placeholder="مثال: Intel Core i5"
+                />
+              </Field>
+              <Field label="الذاكرة">
+                <Input
+                  value={form.memory}
+                  onChange={(event) => set("memory", event.target.value)}
+                  placeholder="مثال: 16 GB"
+                />
+              </Field>
+              <Field label="التخزين">
+                <Input
+                  value={form.storage}
+                  onChange={(event) => set("storage", event.target.value)}
+                  placeholder="مثال: SSD 512 GB"
+                />
+              </Field>
+              <Field label="كرت الشاشة">
+                <Input
+                  value={form.graphics_card}
+                  onChange={(event) => set("graphics_card", event.target.value)}
+                />
+              </Field>
+              <Field label="نظام التشغيل" className="sm:col-span-2">
+                <Input
+                  value={form.operating_system}
+                  onChange={(event) =>
+                    set("operating_system", event.target.value)
+                  }
+                  placeholder="مثال: Windows 11 Pro"
+                />
+              </Field>
+              <Field label="ملاحظات" className="sm:col-span-2">
+                <Textarea
+                  value={form.notes}
+                  onChange={(event) => set("notes", event.target.value)}
+                />
+              </Field>
+            </>
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={close}>
@@ -313,6 +389,18 @@ function PcPartsPanel({ asset }: any) {
       toast.error(error instanceof Error ? error.message : "تعذر التراجع");
     }
   };
+  const remove = async (installation: any) => {
+    try {
+      await runHardwareAction({
+        action: "delete-part",
+        installationId: installation.id,
+      });
+      await refresh();
+      toast.success("تم حذف تركيب القطعة وتحديث المخزون");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "تعذر حذف التركيب");
+    }
+  };
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -365,6 +453,18 @@ function PcPartsPanel({ asset }: any) {
                 <RotateCcw className="ml-2 size-4" />
                 تراجع
               </ConfirmButton>
+              <ConfirmButton
+                size="sm"
+                variant="outline"
+                className="border-destructive/40 text-destructive hover:bg-destructive/5 hover:text-destructive"
+                title="حذف تركيب القطعة؟"
+                description="سيُحذف سجل التركيب والصيانة المرتبطة نهائيًا، وتعود القطعة إلى المخزون. وإذا كانت بديلة فستعود القطعة السابقة إلى الجهاز."
+                confirmLabel="حذف التركيب"
+                onConfirm={() => remove(installation)}
+              >
+                <Trash2 className="ml-2 size-4" />
+                حذف
+              </ConfirmButton>
             </div>
           </article>
         ))}
@@ -386,15 +486,31 @@ function PcPartsPanel({ asset }: any) {
               className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/40 p-3 text-sm"
             >
               <span>{installation.part_name}</span>
-              <span className="text-xs text-muted-foreground">
-                {installation.undone_at
-                  ? "تم التراجع عن تركيبها"
-                  : OLD_PART_ACTIONS[installation.old_part_action] ||
-                    "تمت إزالتها"}
-                {installation.removed_at
-                  ? ` · ${formatDate(installation.removed_at)}`
-                  : ""}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">
+                  {installation.undone_at
+                    ? "تم التراجع عن تركيبها"
+                    : OLD_PART_ACTIONS[installation.old_part_action] ||
+                      "تمت إزالتها"}
+                  {installation.removed_at
+                    ? ` · ${formatDate(installation.removed_at)}`
+                    : ""}
+                </span>
+                {installation.undone_at && (
+                  <ConfirmButton
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive hover:text-destructive"
+                    title="حذف سجل القطعة؟"
+                    description="تمت إعادة القطعة إلى المخزون مسبقًا. سيُحذف الآن سجل التركيب والصيانة المرتبطة نهائيًا."
+                    confirmLabel="حذف السجل"
+                    onConfirm={() => remove(installation)}
+                  >
+                    <Trash2 className="size-4" />
+                    حذف
+                  </ConfirmButton>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -561,6 +677,18 @@ function PrinterTonerPanel({ asset }: any) {
       toast.error(error instanceof Error ? error.message : "تعذر التراجع");
     }
   };
+  const remove = async (installation: any) => {
+    try {
+      await runHardwareAction({
+        action: "delete-toner",
+        installationId: installation.id,
+      });
+      await refresh();
+      toast.success("تم حذف تركيب الحبر وتحديث المخزون");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "تعذر حذف التركيب");
+    }
+  };
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -589,22 +717,40 @@ function PrinterTonerPanel({ asset }: any) {
                 {installation.notes ? ` · ${installation.notes}` : ""}
               </p>
             </div>
-            {installation.undone_at ? (
-              <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
-                تم التراجع
-              </span>
-            ) : (
+            <div className="flex flex-wrap items-center gap-2">
+              {installation.undone_at ? (
+                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  تم التراجع
+                </span>
+              ) : (
+                <ConfirmButton
+                  size="sm"
+                  variant="outline"
+                  title="التراجع عن تركيب الحبر؟"
+                  description="ستعود الكمية إلى المخزون ويبقى سجل العملية محفوظًا."
+                  onConfirm={() => undo(installation)}
+                >
+                  <RotateCcw className="ml-2 size-4" />
+                  تراجع
+                </ConfirmButton>
+              )}
               <ConfirmButton
                 size="sm"
                 variant="outline"
-                title="التراجع عن تركيب الحبر؟"
-                description="ستعود الكمية إلى المخزون ويبقى سجل العملية محفوظًا."
-                onConfirm={() => undo(installation)}
+                className="border-destructive/40 text-destructive hover:bg-destructive/5 hover:text-destructive"
+                title="حذف تركيب الحبر؟"
+                description={
+                  installation.undone_at
+                    ? "سيُحذف سجل تركيب الحبر والصيانة المرتبطة نهائيًا. تمت إعادة الكمية إلى المخزون مسبقًا."
+                    : "سيُحذف سجل تركيب الحبر والصيانة المرتبطة نهائيًا، وتعود الكمية إلى المخزون تلقائيًا."
+                }
+                confirmLabel="حذف التركيب"
+                onConfirm={() => remove(installation)}
               >
-                <RotateCcw className="ml-2 size-4" />
-                تراجع
+                <Trash2 className="ml-2 size-4" />
+                حذف
               </ConfirmButton>
-            )}
+            </div>
           </article>
         ))}
         {!installations.length && (

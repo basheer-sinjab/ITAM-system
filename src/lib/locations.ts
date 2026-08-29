@@ -1,4 +1,6 @@
-export const IT_WAREHOUSE = "المستودع IT";
+import { odooRuntime } from "./odoo-runtime";
+
+export const IT_WAREHOUSE = odooRuntime() ? "IT Warehouse" : "المستودع IT";
 
 export function employeeAssetLocation(
   departmentName?: unknown,
@@ -10,5 +12,6 @@ export function employeeAssetLocation(
     .filter(Boolean);
   if (scope.length) return scope.join(" - ");
   const employee = String(employeeName ?? "").trim();
-  return employee ? `لدى ${employee}` : IT_WAREHOUSE;
+  if (!employee) return IT_WAREHOUSE;
+  return odooRuntime() ? `With ${employee}` : `لدى ${employee}`;
 }
