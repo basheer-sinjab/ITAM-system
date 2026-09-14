@@ -1,0 +1,27 @@
+{
+    "name": "ITAMFloss",
+    "summary": "IT asset, inventory, maintenance, and license management",
+    "version": "18.0.1.16.0",
+    "category": "Operations/Inventory",
+    "author": "Basheer",
+    "maintainer": "Basheer",
+    "support": "basheersinjab@gmail.com",
+    "license": "OPL-1",
+    "depends": ["base", "web", "hr"],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/itam_sequences.xml",
+        "data/itam_settings.xml",
+        "views/hr_department_views.xml",
+        "views/itam_menu.xml",
+        "report/itam_assignment_report.xml",
+    ],
+    "demo": ["demo/itam_demo.xml"],
+    "images": [
+        "static/description/banner.png",
+        "static/description/icon.png",
+    ],
+    "application": True,
+    "installable": True,
+    "auto_install": False,
+}

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="{{ language }}" dir="{{ direction }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ reference }}</title>
+    <style>
+        @page { size: A4; margin: 0; }
+
+        @font-face {
+            font-family: "ITAM Tajawal";
+            src: url("{{ font_regular_data_uri }}") format("truetype");
+            font-style: normal;
+            font-weight: 400;
+        }
+        @font-face {
+            font-family: "ITAM Tajawal";
+            src: url("{{ font_bold_data_uri }}") format("truetype");
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
+        body {
+            background: #ffffff;
+            color: #17263b;
+            font-family: "ITAM Tajawal", "DejaVu Sans", Arial, sans-serif;
+            font-size: 12.5px;
+            line-height: 1.42;
+            -webkit-print-color-adjust: exact;
+        }
+        table { border-collapse: collapse; width: 100%; }
+
+        .document { width: 100%; }
+        .page-layout { width: 100%; }
+        .page-content { width: 100%; }
+        .page-bottom {
+            margin-top: 8px;
+            page-break-inside: avoid;
+            width: 100%;
+        }
+
+        .top-rule {
+            background: #0b63a9;
+            border-radius: 0 0 5px 5px;
+            height: 5px;
+        }
+
+        .header {
+            border-bottom: 1px solid #d5e0eb;
+            margin-top: 10px;
+            padding: 0 4px 10px;
+        }
+        .header-table { direction: ltr; }
+        .header-table td {
+            border: 0;
+            padding: 0;
+            vertical-align: middle;
+        }
+        .department-copy {
+            text-align: left;
+            width: 82%;
+        }
+        .ar .department-copy {
+            direction: rtl;
+            text-align: left;
+        }
+        .department-title {
+            color: #0b63a9;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+        .department-subtitle {
+            color: #6a7c90;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+        .logo-cell {
+            text-align: right;
+            width: 18%;
+        }
+        .logo {
+            height: 44px;
+            max-width: 50px;
+            object-fit: contain;
+        }
+
+        .title-panel {
+            background: #0b5ea8;
+            border: 1px solid #0b5ea8;
+            border-radius: 13px;
+            color: #ffffff;
+            margin-top: 13px;
+            padding: 16px 18px;
+        }
+        .title-kicker {
+            color: #dceeff;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        .document-title {
+            color: #ffffff;
+            font-size: 25px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin: 3px 0 2px;
+        }
+        .document-subtitle {
+            color: #edf7ff;
+            font-size: 11.5px;
+            line-height: 1.45;
+        }
+
+        .metadata {
+            border-collapse: separate;
+            border-spacing: 7px 0;
+            margin-top: 8px;
+            table-layout: fixed;
+        }
+        .metadata td {
+            background: #f3f8fd;
+            border: 1px solid #cfdeec;
+            border-radius: 9px;
+            height: 52px;
+            padding: 8px 11px;
+            vertical-align: middle;
+            width: 33.333%;
+        }
+        .meta-label {
+            color: #6a7c90;
+            display: block;
+            font-size: 9.5px;
+            line-height: 1.15;
+            margin-bottom: 3px;
+        }
+        .meta-value {
+            color: #124d80;
+            display: block;
+            font-size: 13.5px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .section {
+            margin-top: 13px;
+            page-break-inside: avoid;
+        }
+        .section-heading {
+            margin-bottom: 6px;
+            table-layout: auto;
+        }
+        .section-heading td {
+            border: 0;
+            padding: 0;
+            vertical-align: middle;
+        }
+        .section-index {
+            background: #0b63a9;
+            border-radius: 7px;
+            color: #ffffff;
+            font-family: "DejaVu Sans Mono", monospace;
+            font-size: 9px;
+            font-weight: 700;
+            height: 31px;
+            text-align: center;
+            width: 31px;
+        }
+        .section-copy {
+            padding-left: 9px !important;
+            padding-right: 9px !important;
+            white-space: nowrap;
+            width: 1%;
+        }
+        .section-title {
+            color: #17263b;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.15;
+        }
+        .section-caption {
+            color: #718399;
+            font-size: 9px;
+            line-height: 1.25;
+            margin-top: 2px;
+        }
+        .section-line {
+            border-top: 1px solid #cbd9e7 !important;
+            width: 100%;
+        }
+
+        .data-grid {
+            border-collapse: separate;
+            border-spacing: 6px 5px;
+            table-layout: fixed;
+        }
+        .data-grid td.datum {
+            background: #ffffff;
+            border: 1px solid #d3deea;
+            border-radius: 8px;
+            height: 52px;
+            padding: 9px 11px;
+            vertical-align: top;
+        }
+        .data-grid td.datum-soft {
+            background: #f5f9fd;
+            border-color: #cedeec;
+        }
+        .datum-label {
+            color: #708196;
+            display: block;
+            font-size: 9.5px;
+            line-height: 1.15;
+            margin-bottom: 4px;
+        }
+        .datum-value {
+            color: #17263b;
+            display: block;
+            font-size: 13.5px;
+            font-weight: 700;
+            line-height: 1.32;
+            word-wrap: break-word;
+        }
+        .datum-value-primary {
+            color: #104d81;
+            font-size: 14.5px;
+        }
+
+        .data-grid td.inline-specs-host {
+            background: transparent;
+            border: 0;
+            height: auto;
+            padding: 0;
+        }
+        .inline-specs-grid {
+            border-collapse: separate;
+            border-spacing: 5px 4px;
+            table-layout: fixed;
+        }
+        .inline-specs-grid td {
+            background: #f5f9fd;
+            border: 1px solid #cedeec;
+            border-radius: 8px;
+            height: 56px;
+            padding: 7px 8px;
+            vertical-align: top;
+        }
+        .mini-datum-label {
+            color: #708196;
+            display: block;
+            font-size: 8.5px;
+            line-height: 1.1;
+            margin-bottom: 3px;
+        }
+        .mini-datum-value {
+            color: #17263b;
+            direction: ltr;
+            display: block;
+            font-size: 11.8px;
+            font-weight: 700;
+            line-height: 1.25;
+            unicode-bidi: embed;
+            word-wrap: break-word;
+        }
+        .document.ar .mini-datum-value { text-align: right; }
+
+        .acknowledgement {
+            background: #edf6ff;
+            border: 1px solid #b9d8f2;
+            border-radius: 10px;
+            color: #24364a;
+            font-size: 12.5px;
+            line-height: 1.62;
+            padding: 12px 14px;
+            text-align: justify;
+        }
+        .acknowledgement strong { color: #0b5ea8; }
+        .handover-notes {
+            background: #ffffff;
+            border-right: 3px solid #2c86c7;
+            border-radius: 6px;
+            margin-top: 7px;
+            padding: 6px 9px;
+        }
+        .en .handover-notes {
+            border-left: 3px solid #2c86c7;
+            border-right: 0;
+        }
+
+        .signature-grid {
+            border-collapse: separate;
+            border-spacing: 12px 0;
+            table-layout: fixed;
+        }
+        .signature-grid td {
+            border: 0;
+            padding: 0;
+            vertical-align: top;
+            width: 50%;
+        }
+        .signature-card {
+            border: 1px solid #b9c9da;
+            border-top: 3px solid #0b63a9;
+            border-radius: 9px;
+            height: 84px;
+            padding: 12px 13px;
+            position: relative;
+        }
+        .signature-role {
+            color: #0b5ea8;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+        .signature-name {
+            color: #5f7288;
+            font-size: 10.5px;
+            line-height: 1.35;
+            margin-top: 5px;
+        }
+        .signature-line {
+            border-top: 1px solid #9fb1c5;
+            bottom: 14px;
+            color: #728399;
+            font-size: 9px;
+            left: 13px;
+            padding-top: 4px;
+            position: absolute;
+            right: 13px;
+            text-align: center;
+        }
+
+        .footer {
+            border-top: 1px solid #d4dfeb;
+            margin-top: 8px;
+            padding-top: 6px;
+        }
+        .footer td {
+            border: 0;
+            color: #687b91;
+            font-size: 9px;
+            padding: 0;
+        }
+        .ar .footer-reference { text-align: left; }
+        .en .footer-reference { text-align: right; }
+        .simple-asset .section,
+        .monitor-specs .section { margin-top: 18px; }
+        .simple-asset .data-grid td.datum,
+        .monitor-specs .data-grid td.datum { height: 64px; }
+        .simple-asset .acknowledgement,
+        .monitor-specs .acknowledgement { min-height: 150px; }
+        .simple-asset .page-bottom,
+        .monitor-specs .page-bottom { margin-top: 18px; }
+        .simple-asset .signature-card,
+        .monitor-specs .signature-card { height: 112px; }
+        .computer-specs .section { margin-top: 16px; }
+        .computer-specs .acknowledgement { min-height: 120px; }
+        .computer-specs .page-bottom { margin-top: 14px; }
+        .computer-specs .signature-card { height: 96px; }
+        .ltr-value {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: embed;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <main class="document {{ 'ar' if is_ar else 'en' }} {{ 'computer-specs' if show_computer_specs else ('monitor-specs' if show_monitor_size else 'simple-asset') }}">
+        <div class="page-layout">
+            <div class="page-content">
+                    <div class="top-rule"></div>
+
+                    <header class="header">
+                        <table class="header-table"><tr>
+                            <td class="department-copy">
+                                <div class="department-title">{% if is_ar %}إدارة تقنية المعلومات{% else %}Information Technology Department{% endif %}</div>
+                                <div class="department-subtitle">{% if is_ar %}نظام إدارة الأصول التقنية{% else %}IT Asset Management System{% endif %}</div>
+                            </td>
+                            <td class="logo-cell"><img class="logo" src="{{ logo_data_uri }}" alt="ITAMFloss"></td>
+                        </tr></table>
+                    </header>
+
+                    <section class="title-panel">
+                        <div class="title-kicker">{% if is_ar %}وثيقة استلام عهدة تقنية{% else %}TECHNOLOGY ASSET CUSTODY RECORD{% endif %}</div>
+                        <div class="document-title">{% if is_ar %}نموذج استلام وتسليم أصل تقني{% else %}IT Asset Receipt and Handover{% endif %}</div>
+                        <div class="document-subtitle">{% if is_ar %}توثيق حالة الأصل وبيانات الموظف المستلم عند التسليم{% else %}Asset condition and receiving employee details at the time of handover{% endif %}</div>
+                    </section>
+
+                    <table class="metadata"><tr>
+                        <td>
+                            <span class="meta-label">{% if is_ar %}الرقم المرجعي{% else %}REFERENCE NUMBER{% endif %}</span>
+                            <span class="meta-value ltr-value">{{ reference }}</span>
+                        </td>
+                        <td>
+                            <span class="meta-label">{% if is_ar %}تاريخ التسليم{% else %}HANDOVER DATE{% endif %}</span>
+                            <span class="meta-value ltr-value">{{ handover_date }}</span>
+                        </td>
+                        <td>
+                            <span class="meta-label">{% if is_ar %}مصدر الأصل{% else %}ASSET SOURCE{% endif %}</span>
+                            <span class="meta-value ltr-value">{{ source_location }}</span>
+                        </td>
+                    </tr></table>
+
+                    <section class="section">
+                        <table class="section-heading"><tr>
+                            <td class="section-index">01</td>
+                            <td class="section-copy">
+                                <div class="section-title">{% if is_ar %}بيانات الموظف المستلم{% else %}Receiving Employee Details{% endif %}</div>
+                                <div class="section-caption">{% if is_ar %}بيانات صاحب العهدة وقت التسليم{% else %}Custodian details at handover{% endif %}</div>
+                            </td>
+                            <td class="section-line"></td>
+                        </tr></table>
+                        <table class="data-grid">
+                            <tr>
+                                <td class="datum" colspan="2">
+                                    <span class="datum-label">{% if is_ar %}اسم الموظف{% else %}EMPLOYEE NAME{% endif %}</span>
+                                    <span class="datum-value datum-value-primary">{{ employee.name }}</span>
+                                </td>
+                                <td class="datum">
+                                    <span class="datum-label">{% if is_ar %}الرقم الوظيفي{% else %}EMPLOYEE NUMBER{% endif %}</span>
+                                    <span class="datum-value ltr-value">{{ employee.number }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="datum">
+                                    <span class="datum-label">{% if is_ar %}القسم{% else %}DEPARTMENT{% endif %}</span>
+                                    <span class="datum-value">{{ employee.department }}</span>
+                                </td>
+                                <td class="datum">
+                                    <span class="datum-label">{% if is_ar %}البريد الإلكتروني{% else %}EMAIL{% endif %}</span>
+                                    <span class="datum-value ltr-value">{{ employee.email }}</span>
+                                </td>
+                                <td class="datum">
+                                    <span class="datum-label">{% if is_ar %}رقم الجوال{% else %}MOBILE NUMBER{% endif %}</span>
+                                    <span class="datum-value ltr-value">{{ employee.phone }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </section>
+
+                    <section class="section">
+                        <table class="section-heading"><tr>
+                            <td class="section-index">02</td>
+                            <td class="section-copy">
+                                <div class="section-title">{% if is_ar %}بيانات الأصل التقني{% else %}Technology Asset Details{% endif %}</div>
+                                <div class="section-caption">{% if is_ar %}بيانات الأصل المسجلة وقت التسليم{% else %}Asset details recorded at handover{% endif %}</div>
+                            </td>
+                            <td class="section-line"></td>
+                        </tr></table>
+                        <table class="data-grid">
+                            <tr>
+                                <td class="datum" colspan="2">
+                                    <span class="datum-label">{% if is_ar %}اسم الأصل{% else %}ASSET NAME{% endif %}</span>
+                                    <span class="datum-value datum-value-primary">{{ asset.name }}</span>
+                                </td>
+                                <td class="datum">
+                                    <span class="datum-label">{% if is_ar %}رقم الأصل{% else %}ASSET ID{% endif %}</span>
+                                    <span class="datum-value ltr-value">{{ asset.id }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="datum">
+                                    <span class="datum-label">{% if is_ar %}نوع الجهاز{% else %}DEVICE TYPE{% endif %}</span>
+                                    <span class="datum-value">{{ asset.type }}</span>
+                                </td>
+                                <td class="datum" colspan="2">
+                                    <span class="datum-label">{% if is_ar %}الشركة المصنّعة والموديل{% else %}MANUFACTURER AND MODEL{% endif %}</span>
+                                    <span class="datum-value">{{ asset.manufacturer_model }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="datum"{% if not show_computer_specs and not show_monitor_size %} colspan="3"{% endif %}>
+                                    <span class="datum-label">{% if is_ar %}الرقم التسلسلي{% else %}SERIAL NUMBER{% endif %}</span>
+                                    <span class="datum-value ltr-value">{{ asset.serial_number }}</span>
+                                </td>
+                                {% if show_computer_specs %}
+                                <td class="inline-specs-host" colspan="2">
+                                    <table class="inline-specs-grid">
+                                        <tr>
+                                            <td colspan="2">
+                                                <span class="mini-datum-label">{% if is_ar %}المعالج{% else %}PROCESSOR{% endif %}</span>
+                                                <span class="mini-datum-value">{{ specifications.processor }}</span>
+                                            </td>
+                                            <td colspan="2">
+                                                <span class="mini-datum-label">{% if is_ar %}الرام{% else %}RAM{% endif %}</span>
+                                                <span class="mini-datum-value">{{ specifications.memory }}</span>
+                                            </td>
+                                            <td colspan="2">
+                                                <span class="mini-datum-label">{% if is_ar %}التخزين{% else %}STORAGE{% endif %}</span>
+                                                <span class="mini-datum-value">{{ specifications.storage }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <span class="mini-datum-label">{% if is_ar %}نظام التشغيل{% else %}OPERATING SYSTEM{% endif %}</span>
+                                                <span class="mini-datum-value">{{ specifications.operating_system }}</span>
+                                            </td>
+                                            <td colspan="3">
+                                                <span class="mini-datum-label">{% if is_ar %}كرت الشاشة{% else %}GRAPHICS CARD{% endif %}</span>
+                                                <span class="mini-datum-value">{{ specifications.graphics_card }}</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                {% elif show_monitor_size %}
+                                <td class="datum datum-soft" colspan="2">
+                                    <span class="datum-label">{% if is_ar %}حجم الشاشة{% else %}SCREEN SIZE{% endif %}</span>
+                                    <span class="datum-value{% if not is_ar %} ltr-value{% endif %}">{{ specifications.screen_size }}</span>
+                                </td>
+                                {% endif %}
+                            </tr>
+                        </table>
+                    </section>
+
+                    <section class="section">
+                        <table class="section-heading"><tr>
+                            <td class="section-index">03</td>
+                            <td class="section-copy">
+                                <div class="section-title">{% if is_ar %}إقرار الاستلام والمحافظة على العهدة{% else %}Receipt and Custody Acknowledgement{% endif %}</div>
+                                <div class="section-caption">{% if is_ar %}مسؤولية الموظف عن الأصل المستلم{% else %}Employee responsibility for the received asset{% endif %}</div>
+                            </td>
+                            <td class="section-line"></td>
+                        </tr></table>
+                        <div class="acknowledgement">
+                            {% if is_ar %}أقر أنا <strong>{{ employee.name }}</strong> باستلام الأصل الموضح في هذا النموذج بحالة صالحة للاستخدام، وأتعهد بالمحافظة عليه واستخدامه لأغراض العمل فقط، وعدم تسليمه للغير، وإعادته إلى إدارة تقنية المعلومات عند الطلب أو عند انتهاء الحاجة إليه.{% else %}I, <strong>{{ employee.name }}</strong>, acknowledge receipt of the asset described in this form in usable condition. I agree to safeguard it, use it only for work purposes, not transfer it to others, and return it to Information Technology when requested or when it is no longer needed.{% endif %}
+                            {% if handover_notes %}<div class="handover-notes"><strong>{% if is_ar %}ملاحظات التسليم:{% else %}Handover Notes:{% endif %}</strong> {{ handover_notes }}</div>{% endif %}
+                        </div>
+                    </section>
+            </div>
+
+            <div class="page-bottom">
+                    <table class="signature-grid"><tr>
+                        <td>
+                            <div class="signature-card">
+                                <div class="signature-role">{% if is_ar %}الموظف المستلم{% else %}Receiving Employee{% endif %}</div>
+                                <div class="signature-name">{% if is_ar %}الاسم:{% else %}Name:{% endif %} <strong>{{ employee.name }}</strong></div>
+                                <div class="signature-line">{% if is_ar %}التوقيع والتاريخ{% else %}Signature and Date{% endif %}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="signature-card">
+                                <div class="signature-role">{% if is_ar %}إدارة تقنية المعلومات{% else %}Information Technology Department{% endif %}</div>
+                                <div class="signature-name">{% if is_ar %}الاسم:{% else %}Name:{% endif %} <strong>{{ representative_name }}</strong></div>
+                                <div class="signature-line">{% if is_ar %}التوقيع والتاريخ{% else %}Signature and Date{% endif %}</div>
+                            </div>
+                        </td>
+                    </tr></table>
+
+                    <table class="footer"><tr>
+                        <td>{% if is_ar %}مصدر الأصل:{% else %}Asset Source:{% endif %} <strong class="ltr-value">{{ source_location }}</strong></td>
+                        <td class="footer-reference"><span class="ltr-value">{{ reference }}</span></td>
+                    </tr></table>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

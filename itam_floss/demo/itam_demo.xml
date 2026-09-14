@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="demo_department_it" model="hr.department">
+        <field name="name">تقنية المعلومات</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="color">1</field>
+        <field name="note">الدعم الفني والبنية التحتية وإدارة الأصول التقنية</field>
+    </record>
+    <record id="demo_department_hr" model="hr.department">
+        <field name="name">الموارد البشرية</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="color">2</field>
+        <field name="note">إدارة شؤون الموظفين والتوظيف</field>
+    </record>
+    <record id="demo_department_finance" model="hr.department">
+        <field name="name">المالية</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="color">3</field>
+        <field name="note">الحسابات والميزانيات والمشتريات</field>
+    </record>
+
+    <record id="demo_employee_ahmed" model="hr.employee">
+        <field name="name">أحمد العتيبي</field>
+        <field name="identification_id">EMP-001</field>
+        <field name="work_email">ahmed.alotaibi@example.com</field>
+        <field name="work_phone">+966 11 555 0101</field>
+        <field name="job_title">مسؤول دعم فني</field>
+        <field name="department_id" ref="demo_department_it"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+    <record id="demo_employee_noura" model="hr.employee">
+        <field name="name">نورة القحطاني</field>
+        <field name="identification_id">EMP-002</field>
+        <field name="work_email">noura.alqahtani@example.com</field>
+        <field name="work_phone">+966 11 555 0102</field>
+        <field name="job_title">مهندسة أنظمة</field>
+        <field name="department_id" ref="demo_department_it"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+    <record id="demo_employee_sara" model="hr.employee">
+        <field name="name">سارة الحربي</field>
+        <field name="identification_id">EMP-003</field>
+        <field name="work_email">sara.alharbi@example.com</field>
+        <field name="work_phone">+966 11 555 0103</field>
+        <field name="job_title">أخصائية موارد بشرية</field>
+        <field name="department_id" ref="demo_department_hr"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+    <record id="demo_employee_fahad" model="hr.employee">
+        <field name="name">فهد الدوسري</field>
+        <field name="identification_id">EMP-004</field>
+        <field name="work_email">fahad.aldosari@example.com</field>
+        <field name="work_phone">+966 11 555 0104</field>
+        <field name="job_title">محاسب</field>
+        <field name="department_id" ref="demo_department_finance"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+    <record id="demo_employee_reem" model="hr.employee">
+        <field name="name">ريم الشهري</field>
+        <field name="identification_id">EMP-005</field>
+        <field name="work_email">reem.alshehri@example.com</field>
+        <field name="work_phone">+966 11 555 0105</field>
+        <field name="job_title">محللة مالية</field>
+        <field name="department_id" ref="demo_department_finance"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+</odoo>

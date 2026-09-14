@@ -1,5 +1,37 @@
 import { createFileRoute, Outlet, Link } from "@tanstack/react-router";
-import { LayoutDashboard, Monitor, Wrench, Package, KeyRound, Users, Settings } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  ChevronUp,
+  LayoutDashboard,
+  Monitor,
+  Wrench,
+  Package,
+  KeyRound,
+  Users,
+  Settings,
+  FileBarChart,
+  Grid2X2,
+  LogOut,
+  UserCircle2,
+} from "lucide-react";
+import { GlobalSearch } from "@/components/GlobalSearch";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  loginPath,
+  odooRuntime,
+  runtimeHeaders,
+  runtimePath,
+  staticAsset,
+  languageDirection,
+} from "@/lib/odoo-runtime";
+import { uiText } from "@/lib/ui-localization";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -12,7 +44,13 @@ const NAV = [
   { to: "/maintenance", label: "الصيانة", icon: Wrench, exact: false },
   { to: "/inventory", label: "المخزون", icon: Package, exact: false },
   { to: "/licenses", label: "التراخيص", icon: KeyRound, exact: false },
-  { to: "/people-departments", label: "الأشخاص والأقسام", icon: Users, exact: false },
+  {
+    to: "/people-departments",
+    label: "الموظفون والأقسام",
+    icon: Users,
+    exact: false,
+  },
+  { to: "/reports", label: "التقارير", icon: FileBarChart, exact: true },
 ] as const;
 
 const SECONDARY_NAV = [
@@ -20,28 +58,141 @@ const SECONDARY_NAV = [
 ] as const;
 
 function AppLayout() {
+  const [username, setUsername] = useState("Basheer");
+  const inOdoo = Boolean(odooRuntime());
+
+  useEffect(() => {
+    fetch(runtimePath("/api/auth/status"), { cache: "no-store" })
+      .then((response) => response.json())
+      .then((state) => {
+        if (state.username) setUsername(state.username);
+      })
+      .catch(() => undefined);
+  }, []);
+
+  const logout = async () => {
+    await fetch(runtimePath("/api/auth/logout"), {
+      method: "POST",
+      headers: runtimeHeaders({
+        "x-itam-request": "1",
+        "content-type": "application/json",
+      }),
+      body: "{}",
+    });
+    window.location.replace(loginPath());
+  };
+
+  const returnToOdoo = () => {
+    window.location.assign("/odoo");
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
-      <aside className="no-print sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-l border-sidebar-border/70 bg-sidebar text-sidebar-foreground lg:flex">
+      <aside className="no-print sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-e border-sidebar-border/70 bg-sidebar text-sidebar-foreground lg:flex">
         <div className="flex items-center gap-3 px-6 py-7">
-          <img src="/printersfloss-logo.png" alt="ITAMFloss" className="size-11 shrink-0 object-contain" />
-          <div><p className="text-base font-bold leading-tight">ITAMFloss</p></div>
+          <img
+            src={staticAsset("/printersfloss-logo.png")}
+            alt="ITAMFloss"
+            className="size-11 shrink-0 object-contain"
+          />
+          <div>
+            <p className="text-base font-bold leading-tight">ITAMFloss</p>
+          </div>
         </div>
         <nav className="flex-1 space-y-1 px-4">
-          {NAV.map((item) => <Link key={item.to} to={item.to} activeOptions={{ exact: item.exact }} className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[status=active]:bg-sidebar-primary data-[status=active]:text-sidebar-primary-foreground data-[status=active]:shadow-sm"><item.icon className="size-[18px]" />{item.label}</Link>)}
+          {NAV.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              activeOptions={{ exact: item.exact }}
+              className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[status=active]:bg-sidebar-primary data-[status=active]:text-sidebar-primary-foreground data-[status=active]:shadow-sm"
+            >
+              <item.icon className="size-[18px]" />
+              {item.label}
+            </Link>
+          ))}
         </nav>
         <nav className="border-t border-sidebar-border/70 px-4 py-4">
-          {SECONDARY_NAV.map((item) => <Link key={item.to} to={item.to} activeOptions={{ exact: item.exact }} className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[status=active]:bg-sidebar-primary data-[status=active]:text-sidebar-primary-foreground data-[status=active]:shadow-sm"><item.icon className="size-[18px]" />{item.label}</Link>)}
+          {SECONDARY_NAV.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              activeOptions={{ exact: item.exact }}
+              className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/70 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[status=active]:bg-sidebar-primary data-[status=active]:text-sidebar-primary-foreground data-[status=active]:shadow-sm"
+            >
+              <item.icon className="size-[18px]" />
+              {item.label}
+            </Link>
+          ))}
+          <DropdownMenu dir={languageDirection()}>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="mt-1 flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-medium text-sidebar-foreground/80 transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+              >
+                <span className="flex size-[18px] items-center justify-center rounded-full bg-sidebar-primary/15 text-sidebar-primary">
+                  <UserCircle2 className="size-[18px]" />
+                </span>
+                <span className="min-w-0 flex-1 truncate text-start">
+                  {username}
+                </span>
+                <ChevronUp className="size-4 shrink-0 opacity-60" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="top"
+              align="start"
+              className="w-52"
+            >
+              <DropdownMenuLabel className="text-start">
+                الحساب
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {inOdoo && (
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onSelect={returnToOdoo}
+                >
+                  <Grid2X2 className="size-4" />
+                  {uiText("العودة إلى تطبيقات Odoo", "Back to Odoo Apps")}
+                </DropdownMenuItem>
+              )}
+              {inOdoo && <DropdownMenuSeparator />}
+              <DropdownMenuItem
+                className="cursor-pointer text-destructive focus:text-destructive"
+                onSelect={() => void logout()}
+              >
+                <LogOut className="size-4" />
+                تسجيل الخروج
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="no-print flex items-center justify-between gap-4 border-b bg-card px-4 py-2">
           <nav className="flex min-w-0 items-center gap-2 overflow-x-auto lg:hidden">
-            {NAV.map((item) => <Link key={item.to} to={item.to} activeOptions={{ exact: item.exact }} className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground data-[status=active]:bg-primary data-[status=active]:text-primary-foreground">{item.label}</Link>)}
+            {NAV.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                activeOptions={{ exact: item.exact }}
+                className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground data-[status=active]:bg-primary data-[status=active]:text-primary-foreground"
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
-          <img src="/printersfloss-header-logo.png" alt="ITAMFloss" className="size-10 shrink-0 object-contain" />
+          <GlobalSearch />
+          <img
+            src={staticAsset("/printersfloss-header-logo.png")}
+            alt="ITAMFloss"
+            className="size-10 shrink-0 object-contain"
+          />
         </header>
-        <main className="flex-1 px-5 py-7 lg:px-10 lg:py-10"><Outlet /></main>
+        <main className="flex-1 px-5 py-7 lg:px-10 lg:py-10">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

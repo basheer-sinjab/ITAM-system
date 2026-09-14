@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_itam_asset_printer" model="ir.sequence">
+        <field name="name">ITAM Printer Asset</field>
+        <field name="code">itam.asset.printer</field>
+        <field name="prefix">PR-</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_itam_asset_desktop" model="ir.sequence">
+        <field name="name">ITAM Desktop Asset</field>
+        <field name="code">itam.asset.desktop</field>
+        <field name="prefix">PC-</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_itam_asset_laptop" model="ir.sequence">
+        <field name="name">ITAM Laptop Asset</field>
+        <field name="code">itam.asset.laptop</field>
+        <field name="prefix">LT-</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_itam_asset_monitor" model="ir.sequence">
+        <field name="name">ITAM Monitor Asset</field>
+        <field name="code">itam.asset.monitor</field>
+        <field name="prefix">MT-</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_itam_asset_phone" model="ir.sequence">
+        <field name="name">ITAM Phone Asset</field>
+        <field name="code">itam.asset.phone</field>
+        <field name="prefix">PH-</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_itam_asset_network" model="ir.sequence">
+        <field name="name">ITAM Network Asset</field>
+        <field name="code">itam.asset.network</field>
+        <field name="prefix">NW-</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_itam_asset_other" model="ir.sequence">
+        <field name="name">ITAM Other Asset</field>
+        <field name="code">itam.asset.other</field>
+        <field name="prefix">OT-</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_itam_maintenance" model="ir.sequence">
+        <field name="name">ITAM Maintenance</field>
+        <field name="code">itam.maintenance</field>
+        <field name="prefix">MNT-</field>
+        <field name="padding">6</field>
+    </record>
+</odoo>

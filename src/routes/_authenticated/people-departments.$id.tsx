@@ -1,29 +1,15 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowRight,
+  ExternalLink,
   Mail,
   Monitor,
-  Pencil,
   Phone,
-  Trash2,
   Users,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/people-departments/$id")({
   component: DepartmentDetails,
@@ -31,9 +17,6 @@ export const Route = createFileRoute("/_authenticated/people-departments/$id")({
 
 function DepartmentDetails() {
   const { id } = Route.useParams();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const [editOpen, setEditOpen] = useState(false);
   const { data: department, isLoading } = useQuery({
     queryKey: ["department", id],
     queryFn: async () =>
@@ -60,32 +43,18 @@ function DepartmentDetails() {
     queryKey: ["assets"],
     queryFn: async () => (await supabase.from("assets").select("*")).data ?? [],
   });
-  const { data: branches = [] } = useQuery({
-    queryKey: ["branches"],
-    queryFn: async () => (await supabase.from("branches").select("*").order("name")).data ?? [],
-  });
+
   if (isLoading) return <p className="text-muted-foreground">جارٍ التحميل…</p>;
   if (!department)
     return <p className="text-muted-foreground">القسم غير موجود.</p>;
-  const departmentAssets = assets.filter((asset: any) =>
-    employees.some(
-      (employee: any) => employee.id === asset.assigned_employee_id,
-    ),
+
+  const departmentAssets = assets.filter(
+    (asset: any) =>
+      asset.department_id === id ||
+      employees.some(
+        (employee: any) => employee.id === asset.assigned_employee_id,
+      ),
   );
-  const remove = async () => {
-    if (!confirm(`حذف القسم "${department.name}"؟ سيبقى الموظفون بدون قسم.`))
-      return;
-    const detach = await supabase
-      .from("employees")
-      .update({ department_id: null })
-      .eq("department_id", id);
-    if (detach.error) return toast.error(detach.error.message);
-    const result = await supabase.from("departments").delete().eq("id", id);
-    if (result.error) return toast.error(result.error.message);
-    queryClient.invalidateQueries();
-    toast.success("تم حذف القسم");
-    navigate({ to: "/people-departments", search: { tab: "departments" } });
-  };
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
@@ -96,31 +65,21 @@ function DepartmentDetails() {
             </Button>
           </Link>
           <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold">{department.name}</h1>
-              <span className="rounded-md bg-sky-500/10 px-2 py-1 text-xs font-medium text-sky-700">
-                {department.branch || "فرع غير محدد"}
-              </span>
-            </div>
+            <h1 className="text-2xl font-bold">{department.name}</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               {department.notes || "لا يوجد وصف للقسم."}
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setEditOpen(true)}>
-            <Pencil className="ml-2 size-4" />
-            تعديل
-          </Button>
-          <Button
-            variant="outline"
-            className="text-destructive"
-            onClick={remove}
-          >
-            <Trash2 className="ml-2 size-4" />
-            حذف
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          onClick={() =>
+            window.location.assign(`/odoo/employees/departments/${id}`)
+          }
+        >
+          <ExternalLink className="ml-2 size-4" />
+          إدارة القسم في Odoo
+        </Button>
       </header>
       <section className="grid gap-4 sm:grid-cols-2">
         <Summary icon={Users} value={employees.length} label="موظف في القسم" />
@@ -152,13 +111,6 @@ function DepartmentDetails() {
           </div>
         )}
       </section>
-      <DepartmentEdit
-        open={editOpen}
-        onOpenChange={setEditOpen}
-        department={department}
-        branches={branches}
-        saved={() => queryClient.invalidateQueries()}
-      />
     </div>
   );
 }
@@ -205,65 +157,7 @@ function EmployeeRow({ employee, assets }: { employee: any; assets: any[] }) {
     </div>
   );
 }
-function DepartmentEdit({ open, onOpenChange, department, branches = [], saved }: any) {
-  const [name, setName] = useState("");
-  const [branch, setBranch] = useState("");
-  const [notes, setNotes] = useState("");
-  useEffect(() => {
-    if (open) {
-      setName(department.name);
-      setBranch(department.branch || "");
-      setNotes(department.notes || "");
-    }
-  }, [open, department]);
-  const save = async () => {
-    if (!name.trim()) return toast.error("اسم القسم مطلوب");
-    const result = await supabase
-      .from("departments")
-      .update({ name: name.trim(), branch: branch.trim(), notes: notes || null })
-      .eq("id", department.id);
-    if (result.error) return toast.error(result.error.message);
-    saved();
-    onOpenChange(false);
-    toast.success("تم تعديل القسم");
-  };
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>تعديل القسم</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <Field label="اسم القسم">
-            <Input
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </Field>
-          <Field label="الفرع">
-            <Input
-              value={branch}
-              onChange={(event) => setBranch(event.target.value)}
-              placeholder="مثال: فرع الرياض"
-            />
-          </Field>
-          <Field label="الوصف">
-            <Textarea
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-            />
-          </Field>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            إلغاء
-          </Button>
-          <Button onClick={save}>حفظ</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
+
 function Summary({
   icon: Icon,
   value,
@@ -280,20 +174,6 @@ function Summary({
         <p className="text-2xl font-bold">{value}</p>
         <p className="text-sm text-muted-foreground">{label}</p>
       </div>
-    </div>
-  );
-}
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="space-y-2">
-      <Label>{label}</Label>
-      {children}
     </div>
   );
 }

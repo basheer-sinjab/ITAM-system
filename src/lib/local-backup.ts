@@ -1,4 +1,8 @@
-import { exportLocalData, restoreLocalData } from "@/integrations/supabase/client";
+import {
+  exportLocalData,
+  restoreLocalData,
+} from "@/integrations/supabase/client";
+import { runtimeHeaders, runtimePath } from "./odoo-runtime";
 
 type BackupImage = {
   path: string;
@@ -24,25 +28,42 @@ function blobToDataUrl(blob: Blob) {
 
 export async function createLocalBackup() {
   const data = await exportLocalData();
-  const imagePaths = [...new Set(
-    (data.printers ?? [])
-      .map((printer) => printer.image_url)
-      .filter((path): path is string => typeof path === "string" && path.startsWith("/uploads/printers/")),
-  )];
+  const imagePaths = [
+    ...new Set(
+      (data.assets ?? [])
+        .map((asset) => asset.image_url)
+        .concat((data.licenses ?? []).map((license) => license.image_url))
+        .concat((data.inventory_items ?? []).map((item) => item.image_url))
+        .filter(
+          (path): path is string =>
+            typeof path === "string" &&
+            (path.startsWith("/uploads/printers/") ||
+              path.startsWith("/itam_floss/image/")),
+        ),
+    ),
+  ];
 
   const images = await Promise.all(
     imagePaths.map(async (path) => {
       const response = await fetch(path);
-      if (!response.ok) throw new Error(`تعذر تضمين الصورة ${path} في النسخة الاحتياطية`);
+      if (!response.ok)
+        throw new Error(`تعذر تضمين الصورة ${path} في النسخة الاحتياطية`);
       const blob = await response.blob();
       return { path, type: blob.type, dataUrl: await blobToDataUrl(blob) };
     }),
   );
 
-  return JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), data, images } satisfies LocalBackup);
+  return JSON.stringify({
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    data,
+    images,
+  } satisfies LocalBackup);
 }
 
 export async function restoreLocalBackup(file: File) {
+  if (file.size > 200 * 1024 * 1024)
+    throw new Error("حجم ملف النسخة الاحتياطية أكبر من 200 ميغابايت");
   let backup: LocalBackup;
   try {
     backup = JSON.parse(await file.text()) as LocalBackup;
@@ -54,16 +75,40 @@ export async function restoreLocalBackup(file: File) {
     throw new Error("تنسيق النسخة الاحتياطية غير مدعوم");
   }
 
+  const restoredImagePaths = new Map<string, string>();
   for (const image of backup.images) {
     if (typeof image.path !== "string" || typeof image.dataUrl !== "string") {
       throw new Error("تحتوي النسخة الاحتياطية على صورة غير صالحة");
     }
     const formData = new FormData();
-    formData.append("image", await (await fetch(image.dataUrl)).blob(), "backup-image");
+    formData.append(
+      "image",
+      await (await fetch(image.dataUrl)).blob(),
+      "backup-image",
+    );
     formData.append("path", image.path);
-    const response = await fetch("/api/printer-images/restore", { method: "POST", body: formData });
-    if (!response.ok) throw new Error((await response.json()).message ?? "تعذر استعادة الصور");
+    const response = await fetch(runtimePath("/api/printer-images/restore"), {
+      method: "POST",
+      headers: runtimeHeaders({ "x-itam-request": "1" }),
+      body: formData,
+    });
+    if (!response.ok)
+      throw new Error((await response.json()).message ?? "تعذر استعادة الصور");
+    const restored = (await response.json()) as { path?: string };
+    if (restored.path) restoredImagePaths.set(image.path, restored.path);
   }
 
-  await restoreLocalData(backup.data);
+  const restoredData = Object.fromEntries(
+    Object.entries(backup.data).map(([table, rows]) => [
+      table,
+      rows.map((row) => ({
+        ...row,
+        ...(typeof row.image_url === "string" &&
+        restoredImagePaths.has(row.image_url)
+          ? { image_url: restoredImagePaths.get(row.image_url) }
+          : {}),
+      })),
+    ]),
+  );
+  await restoreLocalData(restoredData);
 }

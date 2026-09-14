@@ -11,7 +11,9 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
-  --font-sans: "IBM Plex Sans Arabic", "Noto Sans Arabic", "Alexandria", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    "IBM Plex Sans Arabic", "Noto Sans Arabic", "Alexandria", ui-sans-serif,
+    system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -56,7 +58,8 @@
   --color-toner-magenta: var(--toner-magenta);
   --color-toner-yellow: var(--toner-yellow);
   --color-toner-other: var(--toner-other);
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.06), 0 12px 28px -18px rgb(0 0 0 / 0.22);
+  --shadow-card:
+    0 1px 2px rgb(0 0 0 / 0.06), 0 12px 28px -18px rgb(0 0 0 / 0.22);
   --shadow-float: 0 22px 45px -22px rgb(0 0 0 / 0.34);
 }
 
@@ -121,14 +124,43 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  ::selection { background: color-mix(in oklch, var(--primary) 18%, transparent); }
-  button, a, input, textarea, [role="button"] { transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease, color 160ms ease; }
-  button:not(:disabled):active { transform: scale(0.98); }
-  table { border-collapse: separate; border-spacing: 0; }
-  thead { background: color-mix(in oklch, var(--muted) 65%, transparent); }
-  th { font-size: 0.75rem; font-weight: 600; color: var(--muted-foreground); letter-spacing: 0; }
-  tr { transition: background-color 160ms ease; }
-  tbody tr:hover { background: color-mix(in oklch, var(--accent) 42%, transparent); }
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 18%, transparent);
+  }
+  button,
+  a,
+  input,
+  textarea,
+  [role="button"] {
+    transition:
+      transform 160ms ease,
+      box-shadow 160ms ease,
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+  button:not(:disabled):active {
+    transform: scale(0.98);
+  }
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  thead {
+    background: color-mix(in oklch, var(--muted) 65%, transparent);
+  }
+  th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    letter-spacing: 0;
+  }
+  tr {
+    transition: background-color 160ms ease;
+  }
+  tbody tr:hover {
+    background: color-mix(in oklch, var(--accent) 42%, transparent);
+  }
 }
 
 @utility surface-panel {
@@ -152,7 +184,10 @@
 }
 
 @utility interactive-card {
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
 }
 
 @utility interactive-card-hover {
@@ -171,7 +206,16 @@
   background: color-mix(in oklch, var(--card) 75%, var(--muted));
 }
 
-@keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .dashboard-device-scene {
   width: 100%;
@@ -197,71 +241,281 @@
   transform-origin: 310px 157px;
   animation: ambient-orbit 28s linear infinite;
 }
-.device-scene__ambient circle:nth-child(2) { animation-direction: reverse; animation-duration: 22s; }
-.device-scene__ambient circle:nth-child(n+3) { fill: rgb(255 255 255 / 0.45); animation: ambient-twinkle 3s ease-in-out infinite; }
-.device-scene__ambient circle:nth-child(4) { animation-delay: 1s; }
-.device-scene__ambient circle:nth-child(5) { animation-delay: 2s; }
-.device-scene__shadow { fill: rgb(0 24 48 / 0.3); }
-.device-frame { fill: url(#itam-glass); stroke: rgb(255 255 255 / 0.88); stroke-width: 3; }
-.monitor-screen { fill: url(#itam-screen); }
-.monitor-ui rect:first-child { fill: #0c83bd; }
-.monitor-ui__soft { fill: rgb(12 131 189 / 0.25); }
-.monitor-ui__card { fill: rgb(12 131 189 / 0.1); stroke: rgb(12 131 189 / 0.22); }
-.monitor-ui__chart { fill: none; stroke: #0c83bd; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 60; animation: monitor-chart 3.6s ease-in-out infinite; }
-.monitor-ui__chart--two { animation-delay: .25s; }
-.monitor-ui__chart--three { animation-delay: .5s; }
-.monitor-neck { fill: rgb(255 255 255 / 0.14); stroke: rgb(255 255 255 / 0.75); stroke-width: 3; }
-.monitor-base, .printer-lid { fill: rgb(255 255 255 / 0.18); stroke: rgb(255 255 255 / 0.75); stroke-width: 3; }
-.tower-vent { fill: rgb(255 255 255 / 0.5); }
-.tower-vent--short { opacity: .55; }
-.tower-button { fill: rgb(255 255 255 / 0.08); stroke: rgb(255 255 255 / 0.52); stroke-width: 2; }
-.device-led { fill: #fff; filter: url(#itam-glow); animation: led-pulse 1.8s ease-in-out infinite; }
-.printer-frame { fill: rgb(255 255 255 / 0.15); }
-.printer-input-paper { fill: #f8fdff; stroke: rgb(255 255 255 / 0.85); stroke-width: 2; }
-.printer-input-paper path + path { fill: none; stroke: #54add5; stroke-width: 3; stroke-linecap: round; }
-.printer-control { fill: rgb(0 49 79 / 0.25); }
-.printer-slot { fill: rgb(0 35 62 / 0.46); }
-.printer-output-paper { animation: printer-feed 3.8s cubic-bezier(.45, 0, .2, 1) infinite; }
-.printer-output-paper rect { fill: #fff; }
-.printer-output-paper path { fill: none; stroke: #54add5; stroke-width: 3; stroke-linecap: round; }
-.printer-tray { fill: rgb(255 255 255 / 0.12); stroke: rgb(255 255 255 / 0.6); stroke-width: 2; }
-.device-scene__wifi { stroke: #fff; stroke-width: 4; }
-.wifi-wave { opacity: .18; animation: wifi-broadcast 2.4s ease-out infinite; }
-.wifi-wave--middle { animation-delay: .25s; }
-.wifi-wave--outer { animation-delay: .5s; }
-.wifi-core { fill: #fff; stroke: none; filter: url(#itam-glow); animation: led-pulse 1.4s ease-in-out infinite; }
-.connection-line { stroke: rgb(255 255 255 / 0.2); stroke-width: 2; stroke-dasharray: 4 7; }
-.data-packet { color: #fff; filter: url(#itam-glow); }
+.device-scene__ambient circle:nth-child(2) {
+  animation-direction: reverse;
+  animation-duration: 22s;
+}
+.device-scene__ambient circle:nth-child(n + 3) {
+  fill: rgb(255 255 255 / 0.45);
+  animation: ambient-twinkle 3s ease-in-out infinite;
+}
+.device-scene__ambient circle:nth-child(4) {
+  animation-delay: 1s;
+}
+.device-scene__ambient circle:nth-child(5) {
+  animation-delay: 2s;
+}
+.device-scene__shadow {
+  fill: rgb(0 24 48 / 0.3);
+}
+.device-frame {
+  fill: url(#itam-glass);
+  stroke: rgb(255 255 255 / 0.88);
+  stroke-width: 3;
+}
+.monitor-screen {
+  fill: url(#itam-screen);
+}
+.monitor-ui rect:first-child {
+  fill: #0c83bd;
+}
+.monitor-ui__soft {
+  fill: rgb(12 131 189 / 0.25);
+}
+.monitor-ui__card {
+  fill: rgb(12 131 189 / 0.1);
+  stroke: rgb(12 131 189 / 0.22);
+}
+.monitor-ui__chart {
+  fill: none;
+  stroke: #0c83bd;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 60;
+  animation: monitor-chart 3.6s ease-in-out infinite;
+}
+.monitor-ui__chart--two {
+  animation-delay: 0.25s;
+}
+.monitor-ui__chart--three {
+  animation-delay: 0.5s;
+}
+.monitor-neck {
+  fill: rgb(255 255 255 / 0.14);
+  stroke: rgb(255 255 255 / 0.75);
+  stroke-width: 3;
+}
+.monitor-base,
+.printer-lid {
+  fill: rgb(255 255 255 / 0.18);
+  stroke: rgb(255 255 255 / 0.75);
+  stroke-width: 3;
+}
+.tower-vent {
+  fill: rgb(255 255 255 / 0.5);
+}
+.tower-vent--short {
+  opacity: 0.55;
+}
+.tower-button {
+  fill: rgb(255 255 255 / 0.08);
+  stroke: rgb(255 255 255 / 0.52);
+  stroke-width: 2;
+}
+.device-led {
+  fill: #fff;
+  filter: url(#itam-glow);
+  animation: led-pulse 1.8s ease-in-out infinite;
+}
+.printer-frame {
+  fill: rgb(255 255 255 / 0.15);
+}
+.printer-input-paper {
+  fill: #f8fdff;
+  stroke: rgb(255 255 255 / 0.85);
+  stroke-width: 2;
+}
+.printer-input-paper path + path {
+  fill: none;
+  stroke: #54add5;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.printer-control {
+  fill: rgb(0 49 79 / 0.25);
+}
+.printer-slot {
+  fill: rgb(0 35 62 / 0.46);
+}
+.printer-output-paper {
+  animation: printer-feed 3.8s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+}
+.printer-output-paper rect {
+  fill: #fff;
+}
+.printer-output-paper path {
+  fill: none;
+  stroke: #54add5;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.printer-tray {
+  fill: rgb(255 255 255 / 0.12);
+  stroke: rgb(255 255 255 / 0.6);
+  stroke-width: 2;
+}
+.device-scene__wifi {
+  stroke: #fff;
+  stroke-width: 4;
+}
+.wifi-wave {
+  opacity: 0.18;
+  animation: wifi-broadcast 2.4s ease-out infinite;
+}
+.wifi-wave--middle {
+  animation-delay: 0.25s;
+}
+.wifi-wave--outer {
+  animation-delay: 0.5s;
+}
+.wifi-core {
+  fill: #fff;
+  stroke: none;
+  filter: url(#itam-glow);
+  animation: led-pulse 1.4s ease-in-out infinite;
+}
+.connection-line {
+  stroke: rgb(255 255 255 / 0.2);
+  stroke-width: 2;
+  stroke-dasharray: 4 7;
+}
+.data-packet {
+  color: #fff;
+  filter: url(#itam-glow);
+}
 
 @keyframes printer-feed {
-  0%, 15% { transform: translateY(-48px); opacity: 0; }
-  27% { opacity: 1; }
-  65% { transform: translateY(12px); opacity: 1; }
-  86%, 100% { transform: translateY(39px); opacity: 0; }
+  0%,
+  15% {
+    transform: translateY(-48px);
+    opacity: 0;
+  }
+  27% {
+    opacity: 1;
+  }
+  65% {
+    transform: translateY(12px);
+    opacity: 1;
+  }
+  86%,
+  100% {
+    transform: translateY(39px);
+    opacity: 0;
+  }
 }
-@keyframes monitor-chart { 0%, 18% { stroke-dashoffset: 60; opacity: .35; } 56%, 100% { stroke-dashoffset: 0; opacity: 1; } }
-@keyframes wifi-broadcast { 0%, 100% { opacity: .12; } 35%, 58% { opacity: 1; } 80% { opacity: .25; } }
-@keyframes led-pulse { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
-@keyframes ambient-orbit { to { transform: rotate(360deg); } }
-@keyframes ambient-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: .85; } }
+@keyframes monitor-chart {
+  0%,
+  18% {
+    stroke-dashoffset: 60;
+    opacity: 0.35;
+  }
+  56%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+@keyframes wifi-broadcast {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+  35%,
+  58% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.25;
+  }
+}
+@keyframes led-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes ambient-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ambient-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
 
 @media (min-width: 640px) {
-  .dashboard-device-scene { height: 17rem; }
+  .dashboard-device-scene {
+    height: 17rem;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  main > * { animation: rise-in 320ms ease-out both; }
+  main > * {
+    animation: rise-in 320ms ease-out both;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dashboard-device-scene * { animation: none !important; }
+  .dashboard-device-scene * {
+    animation: none !important;
+  }
 }
 
 @media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
   .no-print {
     display: none !important;
   }
   body {
     background: white;
+  }
+  main {
+    padding: 0 !important;
+  }
+  .report-print-root {
+    max-width: none !important;
+  }
+  .report-summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .report-summary-grid > * {
+    box-shadow: none !important;
+    padding: 10px !important;
+  }
+  .report-table-panel {
+    box-shadow: none !important;
+    border: 1px solid #d7dee8 !important;
+  }
+  .report-table-container {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .report-table {
+    min-width: 100% !important;
+    font-size: 9px !important;
+  }
+  .report-table thead {
+    display: table-header-group;
+  }
+  .report-table tr {
+    break-inside: avoid;
+  }
+  .report-table th,
+  .report-table td {
+    padding: 5px 7px !important;
   }
 }

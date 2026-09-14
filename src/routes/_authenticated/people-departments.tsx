@@ -4,31 +4,23 @@ import {
   Outlet,
   useMatchRoute,
 } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Building2, Plus, Search, UsersRound } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  ExternalLink,
+  KeyRound,
+  Monitor,
+  Search,
+  UsersRound,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ManagementHeader, MetricCard } from "@/components/ManagementVisuals";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
+import { COLOR_PALETTE } from "@/components/ColorField";
 
 export const Route = createFileRoute("/_authenticated/people-departments")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -56,31 +48,36 @@ function PeopleDepartmentsRoute() {
 
 function PeopleDepartments() {
   const { tab } = Route.useSearch();
-  const queryClient = useQueryClient();
-  const [employeeOpen, setEmployeeOpen] = useState(false);
-  const [departmentOpen, setDepartmentOpen] = useState(false);
   const [employeeSearch, setEmployeeSearch] = useState("");
   const [departmentSearch, setDepartmentSearch] = useState("");
-  const [newBranch, setNewBranch] = useState("");
-  const [newTechnician, setNewTechnician] = useState("");
   const { data: employees = [] } = useQuery({
     queryKey: ["employees"],
-    queryFn: async () =>
-      (await supabase.from("employees").select("*").order("full_name")).data ??
-      [],
+    queryFn: async () => {
+      const result = await supabase
+        .from("employees")
+        .select("*")
+        .order("full_name");
+      if (result.error) throw result.error;
+      return result.data ?? [];
+    },
+    throwOnError: true,
   });
   const { data: departments = [] } = useQuery({
     queryKey: ["departments"],
-    queryFn: async () =>
-      (await supabase.from("departments").select("*").order("branch")).data ?? [],
-  });
-  const { data: branches = [] } = useQuery({
-    queryKey: ["branches"],
-    queryFn: async () => (await supabase.from("branches").select("*").order("name")).data ?? [],
+    queryFn: async () => {
+      const result = await supabase
+        .from("departments")
+        .select("*")
+        .order("name");
+      if (result.error) throw result.error;
+      return result.data ?? [];
+    },
+    throwOnError: true,
   });
   const { data: technicians = [] } = useQuery({
     queryKey: ["technicians"],
-    queryFn: async () => (await supabase.from("technicians").select("*").order("name")).data ?? [],
+    queryFn: async () =>
+      (await supabase.from("technicians").select("*").order("name")).data ?? [],
   });
   const { data: assets = [] } = useQuery({
     queryKey: ["assets"],
@@ -95,7 +92,12 @@ function PeopleDepartments() {
     const search = employeeSearch.trim().toLowerCase();
     return (
       !search ||
-      [employee.full_name, employee.email, employee.phone].some((value) =>
+      [
+        employee.employee_number,
+        employee.full_name,
+        employee.email,
+        employee.phone,
+      ].some((value) =>
         String(value ?? "")
           .toLowerCase()
           .includes(search),
@@ -104,63 +106,180 @@ function PeopleDepartments() {
   });
   const filteredDepartments = departments.filter((department: any) => {
     const search = departmentSearch.trim().toLowerCase();
-    return !search || [department.name, department.branch, department.notes].some((value) => String(value ?? "").toLowerCase().includes(search));
+    return (
+      !search ||
+      [department.name, department.notes].some((value) =>
+        String(value ?? "")
+          .toLowerCase()
+          .includes(search),
+      )
+    );
   });
-  const employeeDepartment = (employee: any) => departments.find((department: any) => department.id === employee.department_id);
+  const employeeDepartment = (employee: any) =>
+    departments.find(
+      (department: any) => department.id === employee.department_id,
+    );
   const employeeDepartmentLabel = (employee: any) => {
     const department = employeeDepartment(employee);
-    return department ? `${department.name} - ${department.branch || "فرع غير محدد"}` : "قسم غير محدد";
+    return department?.name || "قسم غير محدد";
   };
-  const groupedEmployees = [...filteredEmployees].sort((a: any, b: any) => String(employeeDepartment(a)?.name ?? "").localeCompare(String(employeeDepartment(b)?.name ?? "")));
+  const groupedEmployees = [...filteredEmployees].sort((a: any, b: any) =>
+    String(employeeDepartment(a)?.name ?? "").localeCompare(
+      String(employeeDepartment(b)?.name ?? ""),
+    ),
+  );
   return (
     <div className="mx-auto max-w-7xl space-y-6">
-      <ManagementHeader icon={UsersRound} title="الأشخاص والأقسام" description="إدارة الموظفين والأقسام والتراخيص المعيّنة" />
+      <ManagementHeader
+        icon={UsersRound}
+        title="الأشخاص والأقسام"
+        description="بيانات مباشرة من تطبيق الموظفين والأقسام في Odoo"
+      />
+      <section className="surface-panel flex flex-wrap items-center justify-between gap-3 border-s-4 border-s-primary p-4">
+        <div>
+          <p className="font-semibold">
+            الموظفون والأقسام مُدارة مركزيًا في Odoo
+          </p>
+          <p className="text-sm text-muted-foreground">
+            اضغط على أي موظف لعرض أصوله وتراخيصه. الإضافة والتعديل تتم من تطبيق
+            الموظفين في Odoo وتظهر هنا تلقائيًا.
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() => window.location.assign("/odoo/employees")}
+        >
+          <ExternalLink className="ml-2 size-4" />
+          فتح تطبيق الموظفين
+        </Button>
+      </section>
       <section className="grid gap-3 sm:grid-cols-2">
-        <MetricCard icon={UsersRound} label="الموظفون" value={employees.length} />
-        <MetricCard icon={Building2} label="الأقسام" value={departments.length} tone="emerald" />
+        <MetricCard
+          icon={UsersRound}
+          label="الموظفون"
+          value={employees.length}
+        />
+        <MetricCard
+          icon={Building2}
+          label="الأقسام"
+          value={departments.length}
+          tone="emerald"
+        />
       </section>
       <Tabs defaultValue={tab}>
         <TabsList>
           <TabsTrigger value="employees">الموظفون</TabsTrigger>
           <TabsTrigger value="departments">الأقسام</TabsTrigger>
-          <TabsTrigger value="branches">الفروع</TabsTrigger>
           <TabsTrigger value="technicians">الفنيون</TabsTrigger>
         </TabsList>
         <TabsContent value="employees" className="space-y-4">
           <div className="surface-panel flex flex-col gap-3 p-3 sm:flex-row-reverse sm:items-center sm:justify-between">
-            <div className="relative w-full sm:max-w-sm"><UsersRound className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input value={employeeSearch} onChange={(event) => setEmployeeSearch(event.target.value)} placeholder="ابحث بالاسم أو البريد أو رقم الهاتف" className="pr-9" /></div>
-            <Button onClick={() => setEmployeeOpen(true)}>
-              <Plus className="ml-2 size-4" />
-              إضافة موظف
+            <div className="relative w-full sm:max-w-sm">
+              <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={employeeSearch}
+                onChange={(event) => setEmployeeSearch(event.target.value)}
+                placeholder="ابحث بالاسم أو الرقم أو بيانات التواصل"
+                className="pr-9"
+              />
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => window.location.assign("/odoo/employees")}
+            >
+              <ExternalLink className="ml-2 size-4" />
+              إدارة الموظفين في Odoo
             </Button>
           </div>
           <div className="space-y-3">
             {departments.map((department: any) => {
-              const departmentEmployees = groupedEmployees.filter((employee: any) => employee.department_id === department.id);
-              return <details key={department.id} open className="surface-panel overflow-hidden group">
+              const departmentEmployees = groupedEmployees.filter(
+                (employee: any) => employee.department_id === department.id,
+              );
+              return (
+                <details
+                  key={department.id}
+                  open
+                  className="surface-panel overflow-hidden group"
+                >
+                  <summary className="flex cursor-pointer list-none items-center justify-between border-b p-4 font-semibold marker:hidden">
+                    <span className="flex items-center gap-2">
+                      <span
+                        className="size-3 rounded-full"
+                        style={{
+                          backgroundColor: department.color || COLOR_PALETTE[0],
+                        }}
+                      />
+                      {department.name}
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
+                        {departmentEmployees.length}
+                      </span>
+                    </span>
+                    <span className="text-xs text-muted-foreground transition-transform group-open:rotate-180">
+                      ⌄
+                    </span>
+                  </summary>
+                  <div className="grid gap-4 p-4 md:grid-cols-2">
+                    {departmentEmployees.map((employee: any) => (
+                      <EmployeeCard
+                        key={employee.id}
+                        employee={employee}
+                        departmentLabel={employeeDepartmentLabel(employee)}
+                        assetCount={
+                          assets.filter(
+                            (asset: any) =>
+                              asset.assigned_employee_id === employee.id,
+                          ).length
+                        }
+                        licenseCount={
+                          licenseAssignments.filter(
+                            (assignment: any) =>
+                              assignment.employee_id === employee.id,
+                          ).length
+                        }
+                      />
+                    ))}
+                    {!departmentEmployees.length && (
+                      <p className="p-2 text-sm text-muted-foreground">
+                        لا يوجد موظفون في هذا القسم.
+                      </p>
+                    )}
+                  </div>
+                </details>
+              );
+            })}
+            {groupedEmployees.filter((employee: any) => !employee.department_id)
+              .length > 0 && (
+              <details open className="surface-panel overflow-hidden group">
                 <summary className="flex cursor-pointer list-none items-center justify-between border-b p-4 font-semibold marker:hidden">
-                  <span className="flex items-center gap-2"><Building2 className="size-4 text-primary" />{department.name} - {department.branch || "فرع غير محدد"}<span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{departmentEmployees.length}</span></span>
-                  <span className="text-xs text-muted-foreground transition-transform group-open:rotate-180">⌄</span>
+                  موظفون بدون قسم
+                  <span className="text-xs text-muted-foreground">⌄</span>
                 </summary>
                 <div className="grid gap-4 p-4 md:grid-cols-2">
-                  {departmentEmployees.map((employee: any) => (
-              <Link
-                key={employee.id}
-                to="/people-departments/employee/$id"
-                params={{ id: employee.id }}
-                className="surface-panel interactive-card p-5 hover:interactive-card-hover"
-              >
-                <div className="flex items-start justify-between gap-3"><span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary"><UsersRound className="size-5" /></span><span className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs ${employee.status === "active" ? "bg-emerald-500/10 text-emerald-700" : "bg-muted text-muted-foreground"}`}><span className={`size-2 rounded-full ${employee.status === "active" ? "bg-emerald-500" : "bg-muted-foreground"}`} />{employee.status === "active" ? "نشط" : "غير نشط"}</span></div><h2 className="mt-4 font-semibold">{employee.full_name}</h2>
-                <p className="text-sm text-muted-foreground">
-                  {employee.email || "—"} · {employee.phone || "—"}
-                </p>
-                <p className="mt-2 text-xs font-medium text-primary">{employeeDepartmentLabel(employee)}</p><p className="mt-3 text-sm">التراخيص: {licenseAssignments.filter((assignment: any) => assignment.employee_id === employee.id).length}</p>
-              </Link>))}
-                  {!departmentEmployees.length && <p className="p-2 text-sm text-muted-foreground">لا يوجد موظفون في هذا القسم.</p>}
+                  {groupedEmployees
+                    .filter((employee: any) => !employee.department_id)
+                    .map((employee: any) => (
+                      <EmployeeCard
+                        key={employee.id}
+                        employee={employee}
+                        departmentLabel="قسم غير محدد"
+                        assetCount={
+                          assets.filter(
+                            (asset: any) =>
+                              asset.assigned_employee_id === employee.id,
+                          ).length
+                        }
+                        licenseCount={
+                          licenseAssignments.filter(
+                            (assignment: any) =>
+                              assignment.employee_id === employee.id,
+                          ).length
+                        }
+                      />
+                    ))}
                 </div>
-              </details>;
-            })}
-            {groupedEmployees.filter((employee: any) => !employee.department_id).length > 0 && <details open className="surface-panel overflow-hidden group"><summary className="flex cursor-pointer list-none items-center justify-between border-b p-4 font-semibold marker:hidden">موظفون بدون قسم<span className="text-xs text-muted-foreground">⌄</span></summary><div className="grid gap-4 p-4 md:grid-cols-2">{groupedEmployees.filter((employee: any) => !employee.department_id).map((employee: any) => <Link key={employee.id} to="/people-departments/employee/$id" params={{ id: employee.id }} className="surface-panel interactive-card p-5 hover:interactive-card-hover"><h2 className="font-semibold">{employee.full_name}</h2><p className="text-sm text-muted-foreground">{employee.email || "—"} · {employee.phone || "—"}</p></Link>)}</div></details>}
+              </details>
+            )}
           </div>
           {filteredEmployees.length === 0 && (
             <p className="text-sm text-muted-foreground">
@@ -170,15 +289,27 @@ function PeopleDepartments() {
         </TabsContent>
         <TabsContent value="departments" className="space-y-4">
           <div className="surface-panel flex flex-col gap-3 p-3 sm:flex-row-reverse sm:items-center sm:justify-between">
-            <div className="relative w-full sm:max-w-sm"><Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input value={departmentSearch} onChange={(event) => setDepartmentSearch(event.target.value)} placeholder="ابحث باسم القسم أو الفرع" className="pr-9" /></div>
-            <Button onClick={() => setDepartmentOpen(true)}>
-              <Plus className="ml-2 size-4" />
-              إضافة قسم
+            <div className="relative w-full sm:max-w-sm">
+              <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={departmentSearch}
+                onChange={(event) => setDepartmentSearch(event.target.value)}
+                placeholder="ابحث باسم القسم"
+                className="pr-9"
+              />
+            </div>
+            <Button
+              variant="outline"
+              onClick={() =>
+                window.location.assign("/odoo/employees/departments")
+              }
+            >
+              <ExternalLink className="ml-2 size-4" />
+              إدارة الأقسام في Odoo
             </Button>
           </div>
-          <div className="space-y-4">
-            {branches.map((branch: any) => <details key={branch.id} open className="surface-panel overflow-hidden group"><summary className="flex cursor-pointer list-none items-center justify-between border-b p-5 marker:hidden"><span className="flex items-center gap-3 text-lg font-semibold"><Building2 className="size-5 text-primary" />{branch.name}<span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{filteredDepartments.filter((department: any) => department.branch === branch.name).length} أقسام</span></span><span className="text-muted-foreground transition-transform group-open:rotate-180">⌄</span></summary><div className="grid gap-4 p-4 md:grid-cols-2">
-            {filteredDepartments.filter((department: any) => department.branch === branch.name).map((department: any) => {
+          <div className="grid gap-4 md:grid-cols-2">
+            {filteredDepartments.map((department: any) => {
               const people = employees.filter(
                 (employee: any) => employee.department_id === department.id,
               );
@@ -192,9 +323,16 @@ function PeopleDepartments() {
                   key={department.id}
                   to="/people-departments/$id"
                   params={{ id: department.id }}
-                  className="surface-panel interactive-card p-5 hover:interactive-card-hover"
+                  search={{ tab: "departments" }}
+                  className="surface-panel interactive-card border-t-4 p-5 hover:interactive-card-hover"
+                  style={{
+                    borderTopColor: department.color || COLOR_PALETTE[0],
+                  }}
                 >
-                  <div className="flex items-start justify-between gap-3"><div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-700"><Building2 className="size-5" /></div><span className="rounded-md bg-sky-500/10 px-2 py-1 text-xs font-medium text-sky-700">{department.branch || "فرع غير محدد"}</span></div><h2 className="mt-4 font-semibold">{department.name}</h2>
+                  <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-700">
+                    <Building2 className="size-5" />
+                  </div>
+                  <h2 className="mt-4 font-semibold">{department.name}</h2>
                   <p className="text-sm text-muted-foreground">
                     {department.notes || "—"}
                   </p>
@@ -203,171 +341,87 @@ function PeopleDepartments() {
                   </p>
                 </Link>
               );
-            })}</div></details>)}
-            {filteredDepartments.filter((department: any) => !department.branch || !branches.some((branch: any) => branch.name === department.branch)).length > 0 && <details open className="surface-panel overflow-hidden group"><summary className="flex cursor-pointer list-none items-center justify-between border-b p-5 marker:hidden"><span className="font-semibold">أقسام بدون فرع</span><span className="text-muted-foreground">⌄</span></summary><div className="grid gap-4 p-4 md:grid-cols-2">{filteredDepartments.filter((department: any) => !department.branch || !branches.some((branch: any) => branch.name === department.branch)).map((department: any) => { const people = employees.filter((employee: any) => employee.department_id === department.id); return <Link key={department.id} to="/people-departments/$id" params={{ id: department.id }} className="surface-panel interactive-card p-5 hover:interactive-card-hover"><h2 className="font-semibold">{department.name}</h2><p className="mt-3 text-sm">الموظفون: {people.length}</p></Link>; })}</div></details>}
+            })}
           </div>
         </TabsContent>
-        <TabsContent value="branches" className="space-y-4">
-          <div className="surface-panel flex flex-col gap-2 p-3 sm:flex-row"><Input value={newBranch} onChange={(event) => setNewBranch(event.target.value)} placeholder="اسم الفرع الجديد" /><Button onClick={async () => { if (!newBranch.trim()) return toast.error("اسم الفرع مطلوب"); const result = await supabase.from("branches").insert({ name: newBranch.trim() }); if (result.error) return toast.error(result.error.message); setNewBranch(""); queryClient.invalidateQueries({ queryKey: ["branches"] }); toast.success("تمت إضافة الفرع"); }}><Plus className="ml-2 size-4" />إضافة فرع</Button></div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{branches.map((branch: any) => <div key={branch.id} className="surface-panel p-5"><h2 className="font-semibold">{branch.name}</h2><p className="mt-2 text-sm text-muted-foreground">الأقسام: {departments.filter((department: any) => department.branch === branch.name).length}</p></div>)}</div>
-        </TabsContent>
         <TabsContent value="technicians" className="space-y-4">
-          <div className="surface-panel flex flex-col gap-2 p-3 sm:flex-row"><Input value={newTechnician} onChange={(event) => setNewTechnician(event.target.value)} placeholder="اسم الفني الجديد" /><Button onClick={async () => { if (!newTechnician.trim()) return toast.error("اسم الفني مطلوب"); const result = await supabase.from("technicians").insert({ name: newTechnician.trim() }); if (result.error) return toast.error(result.error.message); setNewTechnician(""); queryClient.invalidateQueries({ queryKey: ["technicians"] }); toast.success("تمت إضافة الفني"); }}><Plus className="ml-2 size-4" />إضافة فني</Button></div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{technicians.map((technician: any) => <div key={technician.id} className="surface-panel flex items-center gap-3 p-4"><UsersRound className="size-5 text-primary" /><span className="font-medium">{technician.name}</span></div>)}</div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {technicians.map((technician: any) => (
+              <div
+                key={technician.id}
+                className="surface-panel flex items-center gap-3 p-4"
+              >
+                <UsersRound className="size-5 text-primary" />
+                <span className="font-medium">{technician.name}</span>
+              </div>
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
-      {employeeOpen && (
-        <EmployeeForm
-          departments={departments}
-          close={() => setEmployeeOpen(false)}
-          saved={() => queryClient.invalidateQueries()}
-        />
-      )}
-      {departmentOpen && (
-        <DepartmentForm
-          branches={branches}
-          close={() => setDepartmentOpen(false)}
-          saved={() => queryClient.invalidateQueries()}
-        />
-      )}
     </div>
   );
 }
 
-function EmployeeForm({ departments, close, saved }: any) {
-  const [form, setForm] = useState<any>({ status: "active" });
-  const set = (key: string, value: any) => setForm({ ...form, [key]: value });
-  return (
-    <Dialog open onOpenChange={close}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>إضافة موظف</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4">
-          <Field label="الاسم الكامل">
-            <Input
-              value={form.full_name || ""}
-              onChange={(event) => set("full_name", event.target.value)}
-            />
-          </Field>
-          <Field label="البريد الإلكتروني">
-            <Input
-              value={form.email || ""}
-              onChange={(event) => set("email", event.target.value)}
-            />
-          </Field>
-          <Field label="الهاتف">
-            <Input
-              value={form.phone || ""}
-              onChange={(event) => set("phone", event.target.value)}
-            />
-          </Field>
-          <Field label="القسم">
-            <Select
-              value={form.department_id || "__none__"}
-              onValueChange={(value) =>
-                set("department_id", value === "__none__" ? null : value)
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__none__">غير محدد</SelectItem>
-                {departments.map((department: any) => (
-                  <SelectItem key={department.id} value={department.id}>
-                    {department.name} — {department.branch || "غير محدد"}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Field>
-          <Field label="ملاحظات">
-            <Textarea
-              value={form.notes || ""}
-              onChange={(event) => set("notes", event.target.value)}
-            />
-          </Field>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={close}>
-            إلغاء
-          </Button>
-          <Button
-            onClick={async () => {
-              await supabase.from("employees").insert(form);
-              saved();
-              close();
-            }}
-          >
-            حفظ
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-function DepartmentForm({ close, saved, branches = [] }: any) {
-  const [name, setName] = useState("");
-  const [branch, setBranch] = useState("");
-  const [notes, setNotes] = useState("");
-  return (
-    <Dialog open onOpenChange={close}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>إضافة قسم</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          <Field label="اسم القسم">
-            <Input
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </Field>
-          <Field label="الفرع">
-            <Select value={branch || "__none__"} onValueChange={(value) => setBranch(value === "__none__" ? "" : value)}>
-              <SelectTrigger><SelectValue placeholder="اختر الفرع" /></SelectTrigger>
-              <SelectContent><SelectItem value="__none__">فرع غير محدد</SelectItem>{branches.map((item: any) => <SelectItem key={item.id} value={item.name}>{item.name}</SelectItem>)}</SelectContent>
-            </Select>
-          </Field>
-          <Field label="الوصف">
-            <Textarea
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-            />
-          </Field>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={close}>
-            إلغاء
-          </Button>
-          <Button
-            onClick={async () => {
-              await supabase
-                .from("departments")
-                .insert({ name: name.trim(), branch: branch.trim(), notes });
-              saved();
-              close();
-            }}
-          >
-            حفظ
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-function Field({
-  label,
-  children,
+function EmployeeCard({
+  employee,
+  departmentLabel,
+  assetCount,
+  licenseCount,
 }: {
-  label: string;
-  children: React.ReactNode;
+  employee: any;
+  departmentLabel: string;
+  assetCount: number;
+  licenseCount: number;
 }) {
+  const active = employee.status !== "inactive";
   return (
-    <div className="space-y-2">
-      <Label>{label}</Label>
-      {children}
-    </div>
+    <Link
+      to="/people-departments/employee/$id"
+      params={{ id: employee.id }}
+      search={{ tab: "employees" }}
+      className="surface-panel interactive-card group/card p-5 hover:interactive-card-hover"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <UsersRound className="size-5" />
+        </span>
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs ${active ? "bg-emerald-500/10 text-emerald-700" : "bg-muted text-muted-foreground"}`}
+        >
+          <span
+            className={`size-2 rounded-full ${active ? "bg-emerald-500" : "bg-muted-foreground"}`}
+          />
+          {active ? "نشط" : "غير نشط"}
+        </span>
+      </div>
+      <h2 className="mt-4 font-semibold">{employee.full_name}</h2>
+      <p className="mt-1 font-mono text-xs text-muted-foreground">
+        {employee.employee_number || "بدون رقم وظيفي"}
+      </p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        {employee.email || "—"} · {employee.phone || "—"}
+      </p>
+      <p className="mt-2 text-xs font-medium text-primary">{departmentLabel}</p>
+      <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+        <span className="flex items-center justify-between rounded-lg bg-muted/60 px-3 py-2">
+          <span className="flex items-center gap-1.5 text-muted-foreground">
+            <Monitor className="size-4" />
+            الأصول
+          </span>
+          <strong>{assetCount}</strong>
+        </span>
+        <span className="flex items-center justify-between rounded-lg bg-muted/60 px-3 py-2">
+          <span className="flex items-center gap-1.5 text-muted-foreground">
+            <KeyRound className="size-4" />
+            التراخيص
+          </span>
+          <strong>{licenseCount}</strong>
+        </span>
+      </div>
+      <span className="mt-4 flex items-center justify-between border-t pt-3 text-sm font-medium text-primary">
+        عرض ملف الموظف
+        <ArrowLeft className="size-4 transition-transform group-hover/card:-translate-x-1" />
+      </span>
+    </Link>
   );
 }

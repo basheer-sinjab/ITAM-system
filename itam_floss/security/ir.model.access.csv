@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_itam_technician_system,ITAM technician system,model_itam_technician,base.group_system,1,1,1,1
+access_itam_asset_system,ITAM asset system,model_itam_asset,base.group_system,1,1,1,1
+access_itam_asset_template_system,ITAM asset template system,model_itam_asset_template,base.group_system,1,1,1,1
+access_itam_assignment_system,ITAM assignment system,model_itam_assignment,base.group_system,1,1,1,1
+access_itam_inventory_item_system,ITAM inventory item system,model_itam_inventory_item,base.group_system,1,1,1,1
+access_itam_maintenance_system,ITAM maintenance system,model_itam_maintenance,base.group_system,1,1,1,1
+access_itam_inventory_movement_system,ITAM inventory movement system,model_itam_inventory_movement,base.group_system,1,1,1,1
+access_itam_pc_spec_system,ITAM PC spec system,model_itam_pc_spec,base.group_system,1,1,1,1
+access_itam_pc_part_installation_system,ITAM PC part installation system,model_itam_pc_part_installation,base.group_system,1,1,1,1
+access_itam_toner_installation_system,ITAM toner installation system,model_itam_toner_installation,base.group_system,1,1,1,1
+access_itam_license_system,ITAM license system,model_itam_license,base.group_system,1,1,1,1
+access_itam_license_assignment_system,ITAM license assignment system,model_itam_license_assignment,base.group_system,1,1,1,1
+access_itam_activity_log_system,ITAM activity log system,model_itam_activity_log,base.group_system,1,1,1,1
+access_itam_settings_system,ITAM settings system,model_itam_settings,base.group_system,1,1,1,1
+access_itam_image_system,ITAM image system,model_itam_image,base.group_system,1,1,1,1

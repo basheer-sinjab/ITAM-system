@@ -28,6 +28,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { PrinterImage } from "@/components/PrinterImage";
+import { uploadLicenseImage } from "@/lib/pms";
 
 export const Route = createFileRoute("/_authenticated/licenses")({
   component: Licenses,
@@ -135,7 +137,9 @@ function Licenses() {
           ).length;
           const seatCount = Number(license.seat_count || 0);
           const available = Math.max(0, seatCount - used);
-          const usagePercent = seatCount ? Math.min(100, (used / seatCount) * 100) : 0;
+          const usagePercent = seatCount
+            ? Math.min(100, (used / seatCount) * 100)
+            : 0;
           const expiration = getExpirationStatus(license.expiration_date);
           return (
             <div
@@ -153,9 +157,7 @@ function Licenses() {
             >
               <div className="border-b bg-muted/30 p-5">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <KeyRound className="size-5" />
-                  </span>
+                  <PrinterImage path={license.image_url} alt={license.license_name} className="size-16 shrink-0 rounded-lg" fallback={<KeyRound className="size-7 opacity-60" />} />
                   <ArrowLeft className="mt-1 size-5 text-muted-foreground transition-transform group-hover:-translate-x-1" />
                 </div>
                 <div className="mt-4">
@@ -165,22 +167,40 @@ function Licenses() {
                   </p>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {license.license_type && <span className="rounded-md border bg-background px-2 py-1 text-xs text-muted-foreground">{license.license_type}</span>}
-                  <span className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs ${expiration.className}`}>
-                    {expiration.icon === "warning" ? <AlertTriangle className="size-3.5" /> : <CalendarClock className="size-3.5" />}
+                  {license.license_type && (
+                    <span className="rounded-md border bg-background px-2 py-1 text-xs text-muted-foreground">
+                      {license.license_type}
+                    </span>
+                  )}
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs ${expiration.className}`}
+                  >
+                    {expiration.icon === "warning" ? (
+                      <AlertTriangle className="size-3.5" />
+                    ) : (
+                      <CalendarClock className="size-3.5" />
+                    )}
                     {expiration.label}
                   </span>
                 </div>
               </div>
               <div className="p-5">
                 <div className="grid grid-cols-3 gap-2 text-center text-sm">
-                <Seat value={seatCount} label="إجمالي" />
-                <Seat value={used} label="مستخدم" />
-                <Seat value={available} label="متاح" />
+                  <Seat value={seatCount} label="إجمالي" />
+                  <Seat value={used} label="مستخدم" />
+                  <Seat value={available} label="متاح" />
                 </div>
                 <div className="mt-5">
-                  <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground"><span>استخدام المقاعد</span><span>{Math.round(usagePercent)}%</span></div>
-                  <div className="h-2 overflow-hidden rounded-full bg-muted"><div className="h-full bg-primary" style={{ width: `${usagePercent}%` }} /></div>
+                  <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>استخدام المقاعد</span>
+                    <span>{Math.round(usagePercent)}%</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className="h-full bg-primary"
+                      style={{ width: `${usagePercent}%` }}
+                    />
+                  </div>
                 </div>
                 <p className="mt-4 text-xs text-muted-foreground">
                   ينتهي: {license.expiration_date || "غير محدد"}
@@ -190,7 +210,23 @@ function Licenses() {
           );
         })}
       </div>
-      {licenses.length === 0 && <div className="surface-panel flex flex-col items-center justify-center gap-3 py-16 text-center"><span className="flex size-14 items-center justify-center rounded-lg bg-primary/10 text-primary"><KeyRound className="size-7" /></span><div><h2 className="font-semibold">لا توجد تراخيص بعد</h2><p className="mt-1 text-sm text-muted-foreground">أضف أول ترخيص لتبدأ متابعة المقاعد والتعيينات.</p></div><Button onClick={() => setFormOpen(true)}><Plus className="ml-2 size-4" />إضافة ترخيص</Button></div>}
+      {licenses.length === 0 && (
+        <div className="surface-panel flex flex-col items-center justify-center gap-3 py-16 text-center">
+          <span className="flex size-14 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <KeyRound className="size-7" />
+          </span>
+          <div>
+            <h2 className="font-semibold">لا توجد تراخيص بعد</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              أضف أول ترخيص لتبدأ متابعة المقاعد والتعيينات.
+            </p>
+          </div>
+          <Button onClick={() => setFormOpen(true)}>
+            <Plus className="ml-2 size-4" />
+            إضافة ترخيص
+          </Button>
+        </div>
+      )}
       {formOpen && (
         <LicenseForm
           license={editingLicense}
@@ -214,33 +250,89 @@ function Seat({ value, label }: { value: number; label: string }) {
   );
 }
 
-function OverviewMetric({ icon: Icon, label, value, tone }: { icon: typeof KeyRound; label: string; value: number; tone: "blue" | "emerald" | "amber" | "rose" }) {
-  const tones = { blue: "bg-primary/10 text-primary", emerald: "bg-emerald-500/10 text-emerald-700", amber: "bg-amber-500/10 text-amber-700", rose: "bg-rose-500/10 text-rose-700" };
-  return <div className="surface-panel flex items-center gap-3 p-4"><span className={`flex size-10 items-center justify-center rounded-lg ${tones[tone]}`}><Icon className="size-5" /></span><div><p className="text-xs text-muted-foreground">{label}</p><p className="mt-1 text-xl font-semibold">{value}</p></div></div>;
+function OverviewMetric({
+  icon: Icon,
+  label,
+  value,
+  tone,
+}: {
+  icon: typeof KeyRound;
+  label: string;
+  value: number;
+  tone: "blue" | "emerald" | "amber" | "rose";
+}) {
+  const tones = {
+    blue: "bg-primary/10 text-primary",
+    emerald: "bg-emerald-500/10 text-emerald-700",
+    amber: "bg-amber-500/10 text-amber-700",
+    rose: "bg-rose-500/10 text-rose-700",
+  };
+  return (
+    <div className="surface-panel flex items-center gap-3 p-4">
+      <span
+        className={`flex size-10 items-center justify-center rounded-lg ${tones[tone]}`}
+      >
+        <Icon className="size-5" />
+      </span>
+      <div>
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="mt-1 text-xl font-semibold">{value}</p>
+      </div>
+    </div>
+  );
 }
 
 function getExpirationStatus(expirationDate?: string | null) {
-  if (!expirationDate) return { label: "بدون انتهاء محدد", className: "bg-muted text-muted-foreground", icon: "calendar" };
-  const daysRemaining = Math.ceil((new Date(`${expirationDate}T00:00:00`).getTime() - new Date().setHours(0, 0, 0, 0)) / 86400000);
-  if (daysRemaining < 0) return { label: "منتهي", className: "bg-destructive/10 text-destructive", icon: "warning" };
-  if (daysRemaining <= 30) return { label: `ينتهي خلال ${daysRemaining} يوم`, className: "bg-amber-500/10 text-amber-700", icon: "warning" };
-  return { label: "ساري", className: "bg-emerald-500/10 text-emerald-700", icon: "calendar" };
+  if (!expirationDate)
+    return {
+      label: "بدون انتهاء محدد",
+      className: "bg-muted text-muted-foreground",
+      icon: "calendar",
+    };
+  const daysRemaining = Math.ceil(
+    (new Date(`${expirationDate}T00:00:00`).getTime() -
+      new Date().setHours(0, 0, 0, 0)) /
+      86400000,
+  );
+  if (daysRemaining < 0)
+    return {
+      label: "منتهي",
+      className: "bg-destructive/10 text-destructive",
+      icon: "warning",
+    };
+  if (daysRemaining <= 30)
+    return {
+      label: `ينتهي خلال ${daysRemaining} يوم`,
+      className: "bg-amber-500/10 text-amber-700",
+      icon: "warning",
+    };
+  return {
+    label: "ساري",
+    className: "bg-emerald-500/10 text-emerald-700",
+    icon: "calendar",
+  };
 }
 
 function LicenseForm({ license, close, saved }: any) {
+  const [file, setFile] = useState<File | null>(null);
   const [form, setForm] = useState<any>({
     license_name: license?.license_name ?? "",
     product_name: license?.product_name ?? "",
     license_type: license?.license_type ?? "",
+    license_key: license?.license_key ?? "",
+    contract_number: license?.contract_number ?? "",
     seat_count: license?.seat_count ?? 1,
     expiration_date: license?.expiration_date ?? "",
     notes: license?.notes ?? "",
+    image_url: license?.image_url ?? null,
   });
   const set = (key: string, value: any) => setForm({ ...form, [key]: value });
   const save = async () => {
     if (!form.license_name.trim()) return toast.error("اسم الترخيص مطلوب");
+    const image_url = file ? await uploadLicenseImage(file) : form.image_url;
     const payload = {
       ...form,
+      image_url,
       license_name: form.license_name.trim(),
       seat_count: Number(form.seat_count || 0),
       expiration_date: form.expiration_date || null,
@@ -286,6 +378,18 @@ function LicenseForm({ license, close, saved }: any) {
               onChange={(event) => set("seat_count", event.target.value)}
             />
           </Field>
+          <Field label="مفتاح الترخيص">
+            <Input
+              value={form.license_key}
+              onChange={(event) => set("license_key", event.target.value)}
+            />
+          </Field>
+          <Field label="رقم العقد">
+            <Input
+              value={form.contract_number}
+              onChange={(event) => set("contract_number", event.target.value)}
+            />
+          </Field>
           <Field label="تاريخ الانتهاء">
             <Input
               type="date"
@@ -298,6 +402,21 @@ function LicenseForm({ license, close, saved }: any) {
               value={form.notes}
               onChange={(event) => set("notes", event.target.value)}
             />
+          </Field>
+          <Field label="صورة الترخيص" className="sm:col-span-2">
+            <div className="flex items-center gap-4 rounded-lg border border-dashed p-3">
+              <PrinterImage
+                path={file ? URL.createObjectURL(file) : form.image_url}
+                alt="صورة الترخيص"
+                className="size-24 rounded-md"
+                fallback={<KeyRound className="size-10 opacity-60" />}
+              />
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+              />
+            </div>
           </Field>
         </div>
         <DialogFooter>
@@ -320,13 +439,11 @@ function AssignmentForm({ licenses, employees, assets, close, saved }: any) {
   });
   const save = async () => {
     if (!form.license_id) return toast.error("اختر ترخيصاً");
-    const result = await supabase
-      .from("license_assignments")
-      .insert({
-        ...form,
-        employee_id: form.employee_id === "__none__" ? null : form.employee_id,
-        asset_id: form.asset_id === "__none__" ? null : form.asset_id,
-      });
+    const result = await supabase.from("license_assignments").insert({
+      ...form,
+      employee_id: form.employee_id === "__none__" ? null : form.employee_id,
+      asset_id: form.asset_id === "__none__" ? null : form.asset_id,
+    });
     if (result.error) return toast.error(result.error.message);
     saved();
     close();
@@ -342,7 +459,9 @@ function AssignmentForm({ licenses, employees, assets, close, saved }: any) {
           <Picker
             label="الترخيص"
             value={form.license_id}
-            onChange={(value) => setForm({ ...form, license_id: value })}
+            onChange={(value: string) =>
+              setForm({ ...form, license_id: value })
+            }
             options={licenses}
             name="license_name"
             required
@@ -350,14 +469,16 @@ function AssignmentForm({ licenses, employees, assets, close, saved }: any) {
           <Picker
             label="الموظف"
             value={form.employee_id}
-            onChange={(value) => setForm({ ...form, employee_id: value })}
+            onChange={(value: string) =>
+              setForm({ ...form, employee_id: value })
+            }
             options={employees}
             name="full_name"
           />
           <Picker
             label="الأصل"
             value={form.asset_id}
-            onChange={(value) => setForm({ ...form, asset_id: value })}
+            onChange={(value: string) => setForm({ ...form, asset_id: value })}
             options={assets}
             name="name"
           />

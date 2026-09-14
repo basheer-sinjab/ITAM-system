@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Printer as PrinterIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { resolveImage } from "@/lib/pms";
 import { cn } from "@/lib/utils";
 
@@ -7,10 +8,12 @@ export function PrinterImage({
   path,
   alt,
   className,
+  fallback,
 }: {
   path?: string | null;
   alt: string;
   className?: string;
+  fallback?: ReactNode;
 }) {
   const { data } = useQuery({
     queryKey: ["img", path],
@@ -27,7 +30,7 @@ export function PrinterImage({
           className,
         )}
       >
-        <PrinterIcon className="size-10 opacity-40" />
+        {fallback ?? <PrinterIcon className="size-10 opacity-40" />}
       </div>
     );
   }
