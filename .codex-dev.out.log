@@ -1,0 +1,367 @@
+
+> dev
+> vite dev --host 0.0.0.0
+
+Port 8080 is in use, trying another one...
+
+  [32m[1mVITE[22m v8.2.0[39m  [2mready in [0m[1m42444[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m8081[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://172.21.64.1:[1m8081[22m/[39m    [2mvEthernet (WSL (Hyp…[22m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.68.75:[1m8081[22m/[39m  [2m‏‏شبكة Wi-Fi[22m
+[2m٣:٠٦:٠٦ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m connected.
+[2m٥:١٥:٢٠ م[22m [36m[1m[vite][22m[39m changed tsconfig file detected: E:/ITAM System/odoo-local/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+[2m٥:١٥:٢٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٥:٥٠:٢٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2modoo-index.html[22m
+[2m٥:٥٠:٣٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/router.tsx[22m
+[2m٥:٥٠:٣٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/router.tsx[22m
+[2m٥:٥٠:٣٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٥:٥٠:٣١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/licenses.tsx, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/maintenance.tsx, /src/routes/_authenticated/inventory.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component, /src/components/GlobalSearch.tsx, /src/routes/_authenticated/assets.index.tsx?tsr-split=component, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component, /src/components/asset/AssetHardwareTabs.tsx and 2 more[22m
+[2m٥:٥٠:٣١ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/integrations/supabase/client.ts[22m
+[2m٥:٥٠:٣٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/inventory.tsx, /src/components/PrinterImage.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component, /src/routes/_authenticated/assets.index.tsx?tsr-split=component, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component, /src/components/asset/AssetHardwareTabs.tsx[22m
+[2m٥:٥٠:٣٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/pms.ts[22m
+[2m٥:٥٠:٣٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٥:٥٠:٣٤ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/route.tsx, /src/routes/_authenticated/route.tsx?tsr-split=component[22m
+[2m٥:٥٠:٣٥ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/route.tsx[22m
+[2m٥:٥٠:٣٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/login.tsx[22m
+[2m٥:٥٠:٣٥ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/login.tsx[22m
+[2m٥:٥٠:٣٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/__root.tsx[22m
+[2m٥:٥٠:٣٧ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/__root.tsx[22m
+[2m٥:٥٠:٣٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٥:٥٠:٣٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/assets.$id.tsx[22m
+[2m٦:٠٠:٤٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2modoo_addons/itam_floss/static/description/index.html[22m
+[2m٦:٠١:٢٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2modoo_addons/itam_floss/static/app/odoo-index.html[22m
+[2m٦:٠٤:٥٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٦:٠٦:٤٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/__root.tsx[22m
+[2m٦:٠٦:٤٥ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/__root.tsx[22m
+[2m٦:٠٦:٤٥ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٦:٠٩:٥٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2modoo_addons/itam_floss/static/app/odoo-index.html[22m
+[2m٦:٠٩:٥٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2modoo_addons/itam_floss/static/description/index.html[22m
+[2m٦:٠٩:٥٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٦:٠٩:٥٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/description/index.html[22m
+[2m٦:٣٠:١٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/lib/odoo-runtime.ts[22m
+[2m٦:٣٠:١٦ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/odoo-runtime.ts[22m
+[2m٦:٣٠:١٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/__root.tsx[22m
+[2m٦:٣٠:١٧ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/__root.tsx[22m
+[2m٦:٣٠:١٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2modoo-index.html[22m
+[2m٦:٣١:١٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/licenses.tsx, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/maintenance.tsx, /src/routes/_authenticated/inventory.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component, /src/components/GlobalSearch.tsx, /src/routes/_authenticated/assets.index.tsx?tsr-split=component, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component, /src/components/asset/AssetHardwareTabs.tsx and 2 more[22m
+[2m٦:٣١:١٧ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/integrations/supabase/client.ts[22m
+[2m٦:٣١:١٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/inventory.tsx, /src/components/PrinterImage.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component, /src/routes/_authenticated/assets.index.tsx?tsr-split=component, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component, /src/components/asset/AssetHardwareTabs.tsx[22m
+[2m٦:٣١:١٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/pms.ts[22m
+[2m٦:٣١:٣١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٦:٣١:٣٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٦:٣٥:٣٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/route.tsx, /src/routes/_authenticated/route.tsx?tsr-split=component[22m
+[2m٦:٣٥:٣٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/route.tsx[22m
+[2m٦:٣٥:٣٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/components/ConfirmButton.tsx[22m
+[2m٦:٣٥:٣٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/components/ConfirmButton.tsx[22m
+[2m٦:٣٥:٤٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/components/asset/AssetHardwareTabs.tsx[22m
+[2m٦:٣٥:٤٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/settings.tsx[22m
+[2m٦:٣٥:٤٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/settings.tsx[22m
+[2m٦:٤٠:١٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/__root.tsx[22m
+[2m٦:٤٠:١٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/__root.tsx[22m
+[2m٦:٤٠:٣٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/licenses.tsx, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/maintenance.tsx, /src/routes/_authenticated/inventory.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component, /src/components/GlobalSearch.tsx, /src/routes/_authenticated/assets.index.tsx?tsr-split=component, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component, /src/components/asset/AssetHardwareTabs.tsx and 2 more[22m
+[2m٦:٤٠:٣٣ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/locations.ts[22m
+[2m٦:٤٠:٣٣ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٦:٤٢:٠٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٦:٤٢:٠٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٦:٤٢:٠٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/assets.$id.tsx[22m
+[2m٦:٤٢:٢٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٦:٤٢:٢٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٦:٤٣:٢٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/inventory.$id.tsx[22m
+[2m٦:٤٣:٢٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/inventory.$id.tsx[22m
+[2m٦:٤٣:٢١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/inventory.tsx[22m
+[2m٦:٤٣:٢١ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/inventory.tsx[22m
+[2m٦:٥٦:٠٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/description/index.html[22m
+[2m٦:٥٦:٣٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٦:٥٦:٣٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٦:٥٩:٠٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٦:٥٩:٠٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٠٠:١٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٠٠:٢٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٠٠:٢٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٧:٠٠:٢١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٧:٠٠:٢٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٧:٠٠:٢٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٧:٠٦:٠٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٠٦:٠٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:١٥:٣٠ م[22m [36m[1m[vite][22m[39m changed tsconfig file detected: E:/ITAM System/odoo-local/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+[2m٧:١٥:٣١ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٧:٣٠:٣٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2modoo-index.html[22m
+[2m٧:٣٠:٣٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٧:٣٠:٤١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٣٠:٤٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٣١:٠٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٣١:٠٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٣٤:٣٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٣٤:٣٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٣٨:٤٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/route.tsx, /src/routes/_authenticated/route.tsx?tsr-split=component[22m
+[2m٧:٣٨:٤٣ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/route.tsx[22m
+[2m٧:٣٨:٤٣ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٧:٣٨:٤٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٣٨:٥٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٤٨:١٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/route.tsx, /src/routes/_authenticated/route.tsx?tsr-split=component[22m
+[2m٧:٤٨:١٧ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/route.tsx[22m
+[2m٧:٤٨:١٧ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٧:٤٨:٢٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٤٨:٢٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٧:٤٨:٢٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٧:٤٨:٢٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٨:٠٧:٥١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٠٧:٥١ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٠٩:١٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.employee.$id.tsx[22m
+[2m٨:٠٩:١٧ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.employee.$id.tsx[22m
+[2m٨:٠٩:١٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٨:٠٩:١٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٨:٠٩:١٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.employee.$id.tsx[22m
+[2m٨:٠٩:١٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.employee.$id.tsx[22m
+[2m٨:٠٩:٢٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٨:٠٩:٢٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٨:٠٩:٢٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.$id.tsx[22m
+[2m٨:٠٩:٢٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.$id.tsx[22m
+[2m٨:٠٩:٢١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٨:٠٩:٢١ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٨:٠٩:٢٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.$id.tsx[22m
+[2m٨:٠٩:٢٣ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.$id.tsx[22m
+[2m٨:٠٩:٢٤ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٨:٠٩:٢٤ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٨:١١:٠٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/settings.tsx, /src/routes/_authenticated/settings.tsx?tsr-split=component[22m
+[2m٨:١١:٠٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/settings.tsx[22m
+[2m٨:١٢:٤٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/lib/ui-localization.tsx, /src/styles.css?direct[22m
+[2m٨:١٢:٤٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/ui-localization.tsx[22m
+[2m٨:١٣:٠١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/lib/ui-localization.tsx, /src/styles.css?direct[22m
+[2m٨:١٣:٠١ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/ui-localization.tsx[22m
+[2m٨:١٥:٠٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/settings.tsx, /src/routes/_authenticated/settings.tsx?tsr-split=component[22m
+[2m٨:١٥:٠٥ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/settings.tsx[22m
+[2m٨:١٨:٣٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٨:١٨:٣٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٨:٢٠:٢٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/description/index.html[22m
+[2m٨:٢٣:٣٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٨:٢٣:٣١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٨:٢٤:٤١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/zip-verify-0b603379410c42719319646dd8ce414f/itam_floss/static/app/odoo-index.html[22m
+[2m٨:٢٤:٤٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/zip-verify-0b603379410c42719319646dd8ce414f/itam_floss/static/description/index.html[22m
+[2m٨:٢٥:١٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/zip-verify-0b603379410c42719319646dd8ce414f/itam_floss/static/app/odoo-index.html[22m
+[2m٨:٢٥:١٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/zip-verify-0b603379410c42719319646dd8ce414f/itam_floss/static/description/index.html[22m
+[2m٨:٣٥:٢٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٣٥:٢٦ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٣٦:٠٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.employee.$id.tsx[22m
+[2m٨:٣٦:٠٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.employee.$id.tsx[22m
+[2m٨:٣٦:٣١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/lib/ui-localization.tsx, /src/styles.css?direct[22m
+[2m٨:٣٦:٣١ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/ui-localization.tsx[22m
+[2m٨:٣٦:٤٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٣٦:٤٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٣٦:٤٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/lib/ui-localization.tsx, /src/styles.css?direct[22m
+[2m٨:٣٦:٤٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/ui-localization.tsx[22m
+[2m٨:٣٦:٤٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.employee.$id.tsx[22m
+[2m٨:٣٦:٤٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.employee.$id.tsx[22m
+[2m٨:٣٧:٢٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٨:٣٧:٢١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٨:٣٩:١٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٨:٣٩:١٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٨:٣٩:١٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٨:٣٩:١٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٨:٤٠:٣٤ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٤٠:٣٤ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٤٠:٤٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٤٠:٤٧ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٤١:٢٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٨:٤١:٣٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٨:٤١:٣١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٨:٤١:٣١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٨:٤١:٣١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٨:٤١:٣١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٨:٥٥:٠٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/licenses.tsx, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/maintenance.tsx, /src/routes/_authenticated/inventory.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component, /src/components/GlobalSearch.tsx, /src/routes/_authenticated/assets.index.tsx?tsr-split=component, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component, /src/components/asset/AssetHardwareTabs.tsx and 8 more[22m
+[2m٨:٥٥:٠٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/integrations/supabase/client.ts[22m
+[2m٨:٥٥:٠٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٨:٥٥:٠٤ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/components/ScopeColorBadges.tsx[22m
+[2m٨:٥٥:٣٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/settings.tsx, /src/routes/_authenticated/settings.tsx?tsr-split=component[22m
+[2m٨:٥٥:٣٣ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/settings.tsx[22m
+[2m٨:٥٦:٤٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.tsx, /src/routes/_authenticated/people-departments.tsx?tsr-split=component[22m
+[2m٨:٥٦:٤٥ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.tsx[22m
+[2m٨:٥٧:٢٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.employee.$id.tsx[22m
+[2m٨:٥٧:٢٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.employee.$id.tsx[22m
+[2m٨:٥٧:٣٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.$id.tsx[22m
+[2m٨:٥٧:٣٠ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.$id.tsx[22m
+[2m٨:٥٧:٣٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/assets.index.tsx?tsr-split=component[22m
+[2m٨:٥٧:٣٨ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/assets.index.tsx[22m
+[2m٨:٥٨:٥٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٨:٥٨:٥٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/assets.$id.tsx[22m
+[2m٨:٥٩:٠٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٨:٥٩:٣٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/lib/ui-localization.tsx, /src/styles.css?direct[22m
+[2m٨:٥٩:٣٦ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/ui-localization.tsx[22m
+[2m٩:٠٠:١٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/licenses.tsx, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/maintenance.tsx, /src/routes/_authenticated/inventory.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component, /src/components/GlobalSearch.tsx, /src/routes/_authenticated/assets.index.tsx?tsr-split=component, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component, /src/components/asset/AssetHardwareTabs.tsx and 8 more[22m
+[2m٩:٠٠:١٥ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/integrations/supabase/client.ts[22m
+[2m٩:٠٠:١٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٩:٠٠:١٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.tsx, /src/routes/_authenticated/people-departments.tsx?tsr-split=component[22m
+[2m٩:٠٠:١٦ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.tsx[22m
+[2m٩:٠٠:١٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/settings.tsx, /src/routes/_authenticated/settings.tsx?tsr-split=component[22m
+[2m٩:٠٠:١٦ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/settings.tsx[22m
+[2m٩:٠٠:١٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/people-departments.$id.tsx[22m
+[2m٩:٠٠:١٦ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/people-departments.$id.tsx[22m
+[2m٩:٠٢:٥٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٩:٠٢:٥٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٩:٠٣:٠٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٩:٠٣:٠٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٩:٠٣:٠٥ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٩:١٤:٢٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٩:١٥:٠٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٩:١٦:١٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٩:١٦:١١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٩:٢١:٤٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٩:٢٢:٢٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/maintenance.tsx, /src/routes/_authenticated/maintenance.tsx?tsr-split=component[22m
+[2m٩:٢٢:٢٢ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/maintenance.tsx[22m
+[2m٩:٢٢:٢٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/maintenance.$id.tsx, /src/routes/_authenticated/maintenance.$id.tsx?tsr-split=component[22m
+[2m٩:٢٢:٢٣ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/maintenance.$id.tsx[22m
+[2m٩:٢٣:١٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٩:٢٣:٢٠ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٩:٢٣:٢١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٩:٣٩:٤٤ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٩:٤٠:١٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٩:٤٠:١٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٩:٤٢:٣٢ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٩:٤٣:١٤ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٩:٤٣:١٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٩:٤٣:١٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٩:٤٣:١٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m١٠:٠٢:٥٩ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m١٠:٠٢:٥٩ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/assets.$id.tsx[22m
+[2m١٠:٠٣:٢١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/licenses.tsx, /src/routes/_authenticated/assets.index.tsx, /src/routes/_authenticated/maintenance.tsx, /src/routes/_authenticated/inventory.tsx, /src/routes/_authenticated/index.tsx?tsr-split=component, /src/components/GlobalSearch.tsx, /src/routes/_authenticated/assets.index.tsx?tsr-split=component, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component, /src/components/asset/AssetHardwareTabs.tsx and 8 more[22m
+[2m١٠:٠٣:٢١ م[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/integrations/supabase/client.ts[22m
+[2m١٠:٠٣:٤١ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١٠:٠٣:٤٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١٠:٥٧:٤٦ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١٠:٥٧:٤٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١١:١١:٥٧ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١١:١١:٥٨ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١١:٤٤:٣٣ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١١:٤٤:٣٤ م[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١:٠٢:٠٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٠٧:٠٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:١٠:٠٦ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:١٢:٥٩ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١:١٣:٠٠ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١:١٧:٣٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:١٧:٤١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:١٨:٠١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٢٢:٣٩ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٢٩:٢٧ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١:٢٩:٢٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١:٣٧:٥٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٣٩:٤٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٤٣:٥٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٤٥:٢٦ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٤٦:٤١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٤٧:٥٩ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٥٠:٠١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٥١:٠٠ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٥٢:٠٩ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٥٦:٠٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m١:٥٩:٠٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١:٥٩:٠٣ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m١:٥٩:٠٣ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/report/itam_assignment_report.html[22m
+[2m١:٥٩:٠٣ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m١:٥٩:٠٣ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٢:١٤:٢٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٢:١٤:٢٢ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/local-data-server.ts[22m
+[2m٢:١٤:٢٢ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٢:١٥:٠٧ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/components/asset/AssetHardwareTabs.tsx[22m
+[2m٢:١٦:٣٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m٢:١٧:١٩ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/components/asset/AssetHardwareTabs.tsx[22m
+[2m٢:١٧:٣٠ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:١٧:٣١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٢٣:٣٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m٢:٢٤:٤٦ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/report/itam_assignment_report.html[22m
+[2m٢:٢٨:٢٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٢٨:٢٦ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٢٨:٢٧ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/report/itam_assignment_report.html[22m
+[2m٢:٢٨:٢٧ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٢:٢٨:٢٧ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٢:٢٨:٢٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/report/itam_assignment_report.html[22m
+[2m٢:٢٨:٢٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٢:٢٨:٢٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٢:٣٣:١٦ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/components/asset/AssetHardwareTabs.tsx[22m
+[2m٢:٣٣:١٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٢:٣٣:١٨ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/local-data-server.ts[22m
+[2m٢:٣٣:١٨ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٢:٣٣:٤٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٣٣:٤٩ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٣٦:٢٠ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٣٦:٢٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٣٦:٢٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٢:٣٦:٢٣ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٢:٣٦:٢٤ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/report/itam_assignment_report.html[22m
+[2m٢:٣٦:٢٤ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٢:٣٦:٢٤ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٢:٤٦:٣٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/reports.tsx[22m
+[2m٢:٤٦:٣٥ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/reports.tsx[22m
+[2m٢:٤٦:٣٦ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٢:٤٦:٣٦ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٢:٤٦:٣٧ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/reports.tsx[22m
+[2m٢:٤٦:٣٧ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/reports.tsx[22m
+[2m٢:٤٦:٣٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/__root.tsx[22m
+[2m٢:٤٦:٣٨ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/styles.css[22m
+[2m٢:٤٦:٣٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٢:٤٦:٣٨ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routeTree.gen.ts[22m
+[2m٢:٤٦:٤٩ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/reports.tsx[22m
+[2m٢:٤٦:٤٩ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/reports.tsx[22m
+[2m٢:٤٦:٤٩ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/__root.tsx[22m
+[2m٢:٤٦:٤٩ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/styles.css[22m
+[2m٢:٤٦:٥١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٤٦:٥٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٤٩:٠٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/reports.tsx[22m
+[2m٢:٤٩:٠٥ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/reports.tsx[22m
+[2m٢:٤٩:١٣ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/reports.tsx[22m
+[2m٢:٤٩:١٣ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/reports.tsx[22m
+[2m٢:٥١:٠٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٥١:٠٩ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٢:٥١:١٠ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/report/itam_assignment_report.html[22m
+[2m٢:٥١:١٠ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٢:٥١:١٠ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٢:٥١:١١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/report/itam_assignment_report.html[22m
+[2m٢:٥١:١١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٢:٥١:١١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٣:١٠:٢٠ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٣:١٠:٢٠ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/local-data-server.ts[22m
+[2m٣:١٠:٢٠ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٣:١٠:٢٢ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٣:١٠:٢٢ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/assets.$id.tsx[22m
+[2m٣:١١:٤٦ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:١١:٤٧ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:١٣:٥٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:١٣:٥٦ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:١٨:١٩ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٣:١٨:١٩ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/local-data-server.ts[22m
+[2m٣:١٨:١٩ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٣:١٨:٢١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/assets.$id.tsx, /src/routes/_authenticated/assets.$id.tsx?tsr-split=component[22m
+[2m٣:١٨:٢١ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/assets.$id.tsx[22m
+[2m٣:١٨:٥٨ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٣:١٨:٥٨ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/local-data-server.ts[22m
+[2m٣:١٨:٥٨ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٣:١٩:٢٤ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:١٩:٢٦ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:٢٠:٢٤ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:٢٠:٢٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:٢٠:٢٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/report/itam_assignment_report.html[22m
+[2m٣:٢٠:٢٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٣:٢٠:٢٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٣:٢٧:٣٦ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٣:٢٧:٣٦ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/local-data-server.ts[22m
+[2m٣:٢٧:٣٦ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٣:٢٨:١١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/components/asset/AssetHardwareTabs.tsx[22m
+[2m٣:٢٨:٤٤ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct[22m
+[2m٣:٢٨:٤٤ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/local-data-server.ts[22m
+[2m٣:٢٨:٤٤ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload
+[2m٣:٢٩:٢٤ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:٢٩:٢٥ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:٣٠:٣٠ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:٣٠:٣١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mitam_floss/static/app/odoo-index.html[22m
+[2m٣:٣٠:٣١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/report/itam_assignment_report.html[22m
+[2m٣:٣٠:٣١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٣:٣٠:٣١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٣:٣٠:٣١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/report/itam_assignment_report.html[22m
+[2m٣:٣٠:٣١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/app/odoo-index.html[22m
+[2m٣:٣٠:٣١ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2martifacts/itam_floss-package-stage/itam_floss/static/description/index.html[22m
+[2m٣:٤٩:٣٤ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles.css?direct, /src/routes/_authenticated/reports.tsx[22m
+[2m٣:٤٩:٣٤ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/routes/_authenticated/reports.tsx[22m
+[2m٥:٣٧:٢٣ ص[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/lib/odoo-runtime.ts[22m
+[2m٥:٣٧:٢٣ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m [32mpage reload [39m[2msrc/lib/odoo-runtime.ts[22m
+[2m٥:٣٧:٢٣ ص[22m [36m[1m[vite][22m[39m [34m[2m(ssr)[22m[39m program reload

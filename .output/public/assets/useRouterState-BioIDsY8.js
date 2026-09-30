@@ -1,0 +1,1 @@
+import{n as e,t}from"./useStore-DEQr5G4Q.js";import{U as n}from"./index-COxy-lb0.js";function r(r){let i=e({warn:r?.router===void 0}),a=r?.router||i;return t(a.stores.__store,n(r,a))}export{r as t};

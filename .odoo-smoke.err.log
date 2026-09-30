@@ -1,0 +1,11 @@
+<anonymous_script>:1
+{table:assets,operation:select}
+ ^
+
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at body (file:///E:/ITAM%20System/tests/odoo-ui-smoke-server.mjs:35:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Server.<anonymous> (file:///E:/ITAM%20System/tests/odoo-ui-smoke-server.mjs:90:19)
+
+Node.js v24.18.0

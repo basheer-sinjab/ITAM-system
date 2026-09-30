@@ -1,0 +1,1636 @@
+[33mThe plugin "vite-tsconfig-paths" is detected. Vite now supports tsconfig paths resolution natively via the [1mresolve.tsconfigPaths[22m option. You can remove the plugin and set [1mresolve.tsconfigPaths: true[22m in your Vite config instead.[39m
+[2m٦:٤٠:٣١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786117231538} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٦:٤٠:٤٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={0} matchState={{routeId:"_...", ...}}>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٦:٤٠:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786117245892} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:٠٧:٣٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٤١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786119101566} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١١:٥١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mError[22m: ResizeObserver loop completed with undelivered notifications.
+[39m > ../@vite/client:535:50
+
+[2m٧:١٣:٢١ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: A notFoundError was encountered on the route with ID "/_authenticated", but a notFoundComponent option was not configured, nor was a router level defaultNotFoundComponent configured. Consider configuring at least one of these to avoid TanStack Router's overly generic defaultNotFoundComponent (<p>Not Found</p>)
+[2m٧:١٣:٢١ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: A notFoundError was encountered on the route with ID "/_authenticated", but a notFoundComponent option was not configured, nor was a router level defaultNotFoundComponent configured. Consider configuring at least one of these to avoid TanStack Router's overly generic defaultNotFoundComponent (<p>Not Found</p>)
+[2m٧:١٣:٣١ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: A notFoundError was encountered on the route with ID "/_authenticated", but a notFoundComponent option was not configured, nor was a router level defaultNotFoundComponent configured. Consider configuring at least one of these to avoid TanStack Router's overly generic defaultNotFoundComponent (<p>Not Found</p>)
+[2m٧:١٣:٣١ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: A notFoundError was encountered on the route with ID "/_authenticated", but a notFoundComponent option was not configured, nor was a router level defaultNotFoundComponent configured. Consider configuring at least one of these to avoid TanStack Router's overly generic defaultNotFoundComponent (<p>Not Found</p>)
+[2m٧:١٣:٥٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786119236112} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٧:١٦:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Link is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:303:47
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:296:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٦:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Link is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:303:47
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:296:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٦:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Link is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:303:47
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:296:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٦:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Link is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:303:47
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:296:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٦:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Link is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:303:47
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:296:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+
+The above error occurred in the <Inventory> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:١٦:٤٩ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:١٧:١٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Link is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:303:47
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:296:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:١٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Link is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:303:47
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:296:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:١٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Link is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:303:47
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:296:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:١٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Link is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:303:47
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:296:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:١٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Link is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:303:47
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119407997&tsr-split=component:296:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+
+The above error occurred in the <Inventory> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:١٧:١٣ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:١٧:١٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Pencil is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:458:49
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:297:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:١٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Pencil is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:458:49
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:297:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:١٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Pencil is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:458:49
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:297:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:١٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Pencil is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:458:49
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:297:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:١٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Pencil is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:458:49
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:297:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+
+The above error occurred in the <Inventory> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:١٧:١٤ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:١٧:٣٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Pencil is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:458:49
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:297:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:٣٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Pencil is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:458:49
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:297:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:٣٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Pencil is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:458:49
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:297:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:٣٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Pencil is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:458:49
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:297:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:١٧:٣٨ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: Pencil is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:458:49
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786119432992&tsr-split=component:297:28)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+
+The above error occurred in the <Inventory> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:١٧:٣٨ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:١٧:٥٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[vite] SyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٧:٥٧ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[vite] Failed to reload /src/routes/_authenticated/inventory.$id.tsx?tsr-split=component. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[2m٧:١٧:٥٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786119479222} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٧:١٨:٠١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+
+The above error occurred in the <Lazy> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:١٨:٠١ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:١٨:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+
+The above error occurred in the <Lazy> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:١٨:٠٣ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:١٨:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+
+The above error occurred in the <Lazy> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:١٨:٠٣ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:١٨:٠٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786119485209} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٧:١٨:٠٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٠٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+
+The above error occurred in the <Lazy> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:١٨:٠٩ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:١٨:١١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786119491101} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٧:١٨:٢٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٢٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٢٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٢٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+[2m٧:١٨:٢٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mSyntaxError: The requested module '/src/routes/_authenticated/inventory.tsx?t=1786119458239' does not provide an export named 'ItemDialog'
+
+The above error occurred in the <Lazy> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:١٨:٢٩ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:١٨:٤٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786119525376} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٧:٢٧:٠٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: InventoryCard is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:63
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:25)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:٢٧:٠٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: InventoryCard is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:63
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:25)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:٢٧:٠٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: InventoryCard is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:63
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:25)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:٢٧:٠٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: InventoryCard is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:63
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:25)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:٢٧:٠٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: InventoryCard is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:63
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:25)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+
+The above error occurred in the <Inventory> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:٢٧:٠٠ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:٢٧:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: InventoryCard is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:63
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:25)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:٢٧:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: InventoryCard is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:63
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:25)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:٢٧:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: InventoryCard is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:63
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:25)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:٢٧:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: InventoryCard is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:63
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:25)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٧:٢٧:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: InventoryCard is not defined
+    at http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:63
+    at Array.map (<anonymous>)
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786120019379&tsr-split=component:238:25)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+
+The above error occurred in the <Inventory> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:٢٧:٢٤ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:٢٨:٠٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786120083540} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٧:٤٥:٤٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٧:٤٥:٤٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٧:٤٥:٤٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٧:٤٥:٤٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٧:٤٥:٤٠ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+
+The above error occurred in the <Inventory> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:٤٥:٤٠ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:٤٥:٤١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٧:٤٥:٤١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٧:٤٥:٤١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٧:٤٥:٤١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٧:٤٥:٤١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+
+The above error occurred in the <Inventory> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:٤٥:٤١ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:٤٥:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٧:٤٥:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٧:٤٥:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٧:٤٥:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٧:٤٥:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+
+The above error occurred in the <Inventory> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:٤٥:٤٩ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:٤٥:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٧:٤٥:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٧:٤٥:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٧:٤٥:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٧:٤٥:٤٩ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: CategoryFilterButton is not defined
+    at Inventory (http://localhost:8080/src/routes/_authenticated/inventory.tsx?t=1786121139388&tsr-split=component:217:33)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+
+The above error occurred in the <Inventory> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٧:٤٥:٤٩ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٧:٥٢:٤٥ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786121565310} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٨:٠٦:١٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:١٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:١٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:١٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:١٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+
+The above error occurred in the <Maintenance> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٨:٠٦:١٤ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٨:٠٦:٢١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:٢١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:٢١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:٢١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:٢١ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+
+The above error occurred in the <Maintenance> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٨:٠٦:٢١ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٨:٠٦:٢٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:٢٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:٢٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:٢٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+[2m٨:٠٦:٢٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: MaintenanceMeta is not defined
+    at http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:352:45
+    at Array.map (<anonymous>)
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122373445&tsr-split=component:244:30)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+
+The above error occurred in the <Maintenance> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٨:٠٦:٢٢ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٨:٠٦:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786122384309} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٨:٠٧:٢٤ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mA tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <Await promise={Promise}>
+      <AwaitInner promise={Promise}>
+        <RouterProvider router={{...}}>
+          <RouterContextProvider router={{...}}>
+            <Matches>
+              <SafeFragment fallback={null}>
+                <Transitioner>
+                <MatchesInner>
+                  <CatchBoundary getResetKey={function getResetKey} errorComponent={function ErrorComponent} ...>
+                    <CatchBoundaryImpl getResetKey={function getResetKey} onCatch={function}>
+                      <MatchImpl matchId="__root__/">
+                        <MatchView router={{...}} matchId="__root__/" resetKey={1786122444273} ...>
+                          <RootShell>
+                            <html lang="ar" dir="rtl" data-tsd-source="/src/route...">
+                              <head>
+                              <body
+                                data-tsd-source="/src/routes/__root.tsx:110:7"
+-                               className="clickup-chrome-ext_installed"
+                              >
+
+[2m٨:١١:٤٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٨:١١:٤٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٨:١١:٤٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٨:١١:٤٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٨:١١:٤٣ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+
+The above error occurred in the <Maintenance> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٨:١١:٤٣ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٨:١١:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٨:١١:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٨:١١:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٨:١١:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٨:١١:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+
+The above error occurred in the <Maintenance> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٨:١١:٤٦ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٨:١١:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٨:١١:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٨:١١:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٨:١١:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٨:١١:٤٦ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+
+The above error occurred in the <Maintenance> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٨:١١:٤٦ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
+[2m٨:١١:٥٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٨:١١:٥٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7955:181)
+[2m٨:١١:٥٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٨:١١:٥٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+[2m٨:١١:٥٢ م[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22mReferenceError: totalCost is not defined
+    at Maintenance (http://localhost:8080/src/routes/_authenticated/maintenance.tsx?t=1786122702593&tsr-split=component:159:14)
+    at Object.react_stack_bottom_frame (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:12864:12)
+    at renderWithHooks (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:4211:19)
+    at updateFunctionComponent (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:5567:16)
+    at beginWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:6138:20)
+    at runWithFiberInDEV (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:850:66)
+    at performUnitOfWork (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8427:92)
+    at workLoopSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8323:37)
+    at renderRootSync (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:8307:6)
+    at performWorkOnRoot (http://localhost:8080/node_modules/.vite/deps/react-dom_client.js?v=6ae3ba05:7992:27)
+
+The above error occurred in the <Maintenance> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, CatchBoundaryImpl.
+
+[2m٨:١١:٥٢ م[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mWarning: Error in route match: __root__/
