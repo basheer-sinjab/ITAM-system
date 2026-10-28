@@ -1,7 +1,7 @@
 {
     "name": "ITAMFloss",
     "summary": "IT asset, inventory, maintenance, and license management",
-    "version": "18.0.1.16.0",
+    "version": "19.0.1.16.0",
     "category": "Operations/Inventory",
     "author": "Basheer",
     "maintainer": "Basheer",
