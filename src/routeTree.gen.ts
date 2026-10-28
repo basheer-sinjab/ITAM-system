@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedInventoryRouteImport } from './routes/_authenticated/inventory'
 import { Route as AuthenticatedLicensesRouteImport } from './routes/_authenticated/licenses'
@@ -17,18 +18,21 @@ import { Route as AuthenticatedMaintenanceRouteImport } from './routes/_authenti
 import { Route as AuthenticatedPeopleDepartmentsRouteImport } from './routes/_authenticated/people-departments'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
-import { Route as AuthenticatedSuppliersRouteImport } from './routes/_authenticated/suppliers'
-import { Route as AuthenticatedTonersRouteImport } from './routes/_authenticated/toners'
 import { Route as AuthenticatedAssetsIndexRouteImport } from './routes/_authenticated/assets.index'
 import { Route as AuthenticatedAssetsIdRouteImport } from './routes/_authenticated/assets.$id'
+import { Route as AuthenticatedInventoryIdRouteImport } from './routes/_authenticated/inventory.$id'
 import { Route as AuthenticatedLicensesIdRouteImport } from './routes/_authenticated/licenses.$id'
+import { Route as AuthenticatedMaintenanceIdRouteImport } from './routes/_authenticated/maintenance.$id'
 import { Route as AuthenticatedPeopleDepartmentsIdRouteImport } from './routes/_authenticated/people-departments.$id'
-import { Route as AuthenticatedPrintersIndexRouteImport } from './routes/_authenticated/printers.index'
-import { Route as AuthenticatedPrintersIdRouteImport } from './routes/_authenticated/printers.$id'
 import { Route as AuthenticatedPeopleDepartmentsEmployeeIdRouteImport } from './routes/_authenticated/people-departments.employee.$id'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
@@ -68,16 +72,6 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedSuppliersRoute = AuthenticatedSuppliersRouteImport.update({
-  id: '/suppliers',
-  path: '/suppliers',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedTonersRoute = AuthenticatedTonersRouteImport.update({
-  id: '/toners',
-  path: '/toners',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedAssetsIndexRoute =
   AuthenticatedAssetsIndexRouteImport.update({
     id: '/assets/',
@@ -89,28 +83,29 @@ const AuthenticatedAssetsIdRoute = AuthenticatedAssetsIdRouteImport.update({
   path: '/assets/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedInventoryIdRoute =
+  AuthenticatedInventoryIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedInventoryRoute,
+  } as any)
 const AuthenticatedLicensesIdRoute = AuthenticatedLicensesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AuthenticatedLicensesRoute,
 } as any)
+const AuthenticatedMaintenanceIdRoute =
+  AuthenticatedMaintenanceIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedMaintenanceRoute,
+  } as any)
 const AuthenticatedPeopleDepartmentsIdRoute =
   AuthenticatedPeopleDepartmentsIdRouteImport.update({
     id: '/$id',
     path: '/$id',
     getParentRoute: () => AuthenticatedPeopleDepartmentsRoute,
   } as any)
-const AuthenticatedPrintersIndexRoute =
-  AuthenticatedPrintersIndexRouteImport.update({
-    id: '/printers/',
-    path: '/printers/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedPrintersIdRoute = AuthenticatedPrintersIdRouteImport.update({
-  id: '/printers/$id',
-  path: '/printers/$id',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedPeopleDepartmentsEmployeeIdRoute =
   AuthenticatedPeopleDepartmentsEmployeeIdRouteImport.update({
     id: '/employee/$id',
@@ -120,120 +115,115 @@ const AuthenticatedPeopleDepartmentsEmployeeIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
-  '/inventory': typeof AuthenticatedInventoryRoute
+  '/login': typeof LoginRoute
+  '/inventory': typeof AuthenticatedInventoryRouteWithChildren
   '/licenses': typeof AuthenticatedLicensesRouteWithChildren
-  '/maintenance': typeof AuthenticatedMaintenanceRoute
+  '/maintenance': typeof AuthenticatedMaintenanceRouteWithChildren
   '/people-departments': typeof AuthenticatedPeopleDepartmentsRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
-  '/suppliers': typeof AuthenticatedSuppliersRoute
-  '/toners': typeof AuthenticatedTonersRoute
   '/assets/$id': typeof AuthenticatedAssetsIdRoute
+  '/inventory/$id': typeof AuthenticatedInventoryIdRoute
   '/licenses/$id': typeof AuthenticatedLicensesIdRoute
+  '/maintenance/$id': typeof AuthenticatedMaintenanceIdRoute
   '/people-departments/$id': typeof AuthenticatedPeopleDepartmentsIdRoute
-  '/printers/$id': typeof AuthenticatedPrintersIdRoute
   '/assets/': typeof AuthenticatedAssetsIndexRoute
-  '/printers/': typeof AuthenticatedPrintersIndexRoute
   '/people-departments/employee/$id': typeof AuthenticatedPeopleDepartmentsEmployeeIdRoute
 }
 export interface FileRoutesByTo {
-  '/inventory': typeof AuthenticatedInventoryRoute
+  '/login': typeof LoginRoute
+  '/inventory': typeof AuthenticatedInventoryRouteWithChildren
   '/licenses': typeof AuthenticatedLicensesRouteWithChildren
-  '/maintenance': typeof AuthenticatedMaintenanceRoute
+  '/maintenance': typeof AuthenticatedMaintenanceRouteWithChildren
   '/people-departments': typeof AuthenticatedPeopleDepartmentsRouteWithChildren
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
-  '/suppliers': typeof AuthenticatedSuppliersRoute
-  '/toners': typeof AuthenticatedTonersRoute
   '/': typeof AuthenticatedIndexRoute
   '/assets/$id': typeof AuthenticatedAssetsIdRoute
+  '/inventory/$id': typeof AuthenticatedInventoryIdRoute
   '/licenses/$id': typeof AuthenticatedLicensesIdRoute
+  '/maintenance/$id': typeof AuthenticatedMaintenanceIdRoute
   '/people-departments/$id': typeof AuthenticatedPeopleDepartmentsIdRoute
-  '/printers/$id': typeof AuthenticatedPrintersIdRoute
   '/assets': typeof AuthenticatedAssetsIndexRoute
-  '/printers': typeof AuthenticatedPrintersIndexRoute
   '/people-departments/employee/$id': typeof AuthenticatedPeopleDepartmentsEmployeeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/_authenticated/inventory': typeof AuthenticatedInventoryRoute
+  '/login': typeof LoginRoute
+  '/_authenticated/inventory': typeof AuthenticatedInventoryRouteWithChildren
   '/_authenticated/licenses': typeof AuthenticatedLicensesRouteWithChildren
-  '/_authenticated/maintenance': typeof AuthenticatedMaintenanceRoute
+  '/_authenticated/maintenance': typeof AuthenticatedMaintenanceRouteWithChildren
   '/_authenticated/people-departments': typeof AuthenticatedPeopleDepartmentsRouteWithChildren
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
-  '/_authenticated/suppliers': typeof AuthenticatedSuppliersRoute
-  '/_authenticated/toners': typeof AuthenticatedTonersRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/assets/$id': typeof AuthenticatedAssetsIdRoute
+  '/_authenticated/inventory/$id': typeof AuthenticatedInventoryIdRoute
   '/_authenticated/licenses/$id': typeof AuthenticatedLicensesIdRoute
+  '/_authenticated/maintenance/$id': typeof AuthenticatedMaintenanceIdRoute
   '/_authenticated/people-departments/$id': typeof AuthenticatedPeopleDepartmentsIdRoute
-  '/_authenticated/printers/$id': typeof AuthenticatedPrintersIdRoute
   '/_authenticated/assets/': typeof AuthenticatedAssetsIndexRoute
-  '/_authenticated/printers/': typeof AuthenticatedPrintersIndexRoute
   '/_authenticated/people-departments/employee/$id': typeof AuthenticatedPeopleDepartmentsEmployeeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/inventory'
     | '/licenses'
     | '/maintenance'
     | '/people-departments'
     | '/reports'
     | '/settings'
-    | '/suppliers'
-    | '/toners'
     | '/assets/$id'
+    | '/inventory/$id'
     | '/licenses/$id'
+    | '/maintenance/$id'
     | '/people-departments/$id'
-    | '/printers/$id'
     | '/assets/'
-    | '/printers/'
     | '/people-departments/employee/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/login'
     | '/inventory'
     | '/licenses'
     | '/maintenance'
     | '/people-departments'
     | '/reports'
     | '/settings'
-    | '/suppliers'
-    | '/toners'
     | '/'
     | '/assets/$id'
+    | '/inventory/$id'
     | '/licenses/$id'
+    | '/maintenance/$id'
     | '/people-departments/$id'
-    | '/printers/$id'
     | '/assets'
-    | '/printers'
     | '/people-departments/employee/$id'
   id:
     | '__root__'
     | '/_authenticated'
+    | '/login'
     | '/_authenticated/inventory'
     | '/_authenticated/licenses'
     | '/_authenticated/maintenance'
     | '/_authenticated/people-departments'
     | '/_authenticated/reports'
     | '/_authenticated/settings'
-    | '/_authenticated/suppliers'
-    | '/_authenticated/toners'
     | '/_authenticated/'
     | '/_authenticated/assets/$id'
+    | '/_authenticated/inventory/$id'
     | '/_authenticated/licenses/$id'
+    | '/_authenticated/maintenance/$id'
     | '/_authenticated/people-departments/$id'
-    | '/_authenticated/printers/$id'
     | '/_authenticated/assets/'
-    | '/_authenticated/printers/'
     | '/_authenticated/people-departments/employee/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -243,6 +233,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/': {
@@ -294,20 +291,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/suppliers': {
-      id: '/_authenticated/suppliers'
-      path: '/suppliers'
-      fullPath: '/suppliers'
-      preLoaderRoute: typeof AuthenticatedSuppliersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/toners': {
-      id: '/_authenticated/toners'
-      path: '/toners'
-      fullPath: '/toners'
-      preLoaderRoute: typeof AuthenticatedTonersRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/assets/': {
       id: '/_authenticated/assets/'
       path: '/assets'
@@ -322,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAssetsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/inventory/$id': {
+      id: '/_authenticated/inventory/$id'
+      path: '/$id'
+      fullPath: '/inventory/$id'
+      preLoaderRoute: typeof AuthenticatedInventoryIdRouteImport
+      parentRoute: typeof AuthenticatedInventoryRoute
+    }
     '/_authenticated/licenses/$id': {
       id: '/_authenticated/licenses/$id'
       path: '/$id'
@@ -329,26 +319,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLicensesIdRouteImport
       parentRoute: typeof AuthenticatedLicensesRoute
     }
+    '/_authenticated/maintenance/$id': {
+      id: '/_authenticated/maintenance/$id'
+      path: '/$id'
+      fullPath: '/maintenance/$id'
+      preLoaderRoute: typeof AuthenticatedMaintenanceIdRouteImport
+      parentRoute: typeof AuthenticatedMaintenanceRoute
+    }
     '/_authenticated/people-departments/$id': {
       id: '/_authenticated/people-departments/$id'
       path: '/$id'
       fullPath: '/people-departments/$id'
       preLoaderRoute: typeof AuthenticatedPeopleDepartmentsIdRouteImport
       parentRoute: typeof AuthenticatedPeopleDepartmentsRoute
-    }
-    '/_authenticated/printers/': {
-      id: '/_authenticated/printers/'
-      path: '/printers'
-      fullPath: '/printers/'
-      preLoaderRoute: typeof AuthenticatedPrintersIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/printers/$id': {
-      id: '/_authenticated/printers/$id'
-      path: '/printers/$id'
-      fullPath: '/printers/$id'
-      preLoaderRoute: typeof AuthenticatedPrintersIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/people-departments/employee/$id': {
       id: '/_authenticated/people-departments/employee/$id'
@@ -359,6 +342,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedInventoryRouteChildren {
+  AuthenticatedInventoryIdRoute: typeof AuthenticatedInventoryIdRoute
+}
+
+const AuthenticatedInventoryRouteChildren: AuthenticatedInventoryRouteChildren =
+  {
+    AuthenticatedInventoryIdRoute: AuthenticatedInventoryIdRoute,
+  }
+
+const AuthenticatedInventoryRouteWithChildren =
+  AuthenticatedInventoryRoute._addFileChildren(
+    AuthenticatedInventoryRouteChildren,
+  )
 
 interface AuthenticatedLicensesRouteChildren {
   AuthenticatedLicensesIdRoute: typeof AuthenticatedLicensesIdRoute
@@ -371,6 +368,20 @@ const AuthenticatedLicensesRouteChildren: AuthenticatedLicensesRouteChildren = {
 const AuthenticatedLicensesRouteWithChildren =
   AuthenticatedLicensesRoute._addFileChildren(
     AuthenticatedLicensesRouteChildren,
+  )
+
+interface AuthenticatedMaintenanceRouteChildren {
+  AuthenticatedMaintenanceIdRoute: typeof AuthenticatedMaintenanceIdRoute
+}
+
+const AuthenticatedMaintenanceRouteChildren: AuthenticatedMaintenanceRouteChildren =
+  {
+    AuthenticatedMaintenanceIdRoute: AuthenticatedMaintenanceIdRoute,
+  }
+
+const AuthenticatedMaintenanceRouteWithChildren =
+  AuthenticatedMaintenanceRoute._addFileChildren(
+    AuthenticatedMaintenanceRouteChildren,
   )
 
 interface AuthenticatedPeopleDepartmentsRouteChildren {
@@ -392,36 +403,28 @@ const AuthenticatedPeopleDepartmentsRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedInventoryRoute: typeof AuthenticatedInventoryRoute
+  AuthenticatedInventoryRoute: typeof AuthenticatedInventoryRouteWithChildren
   AuthenticatedLicensesRoute: typeof AuthenticatedLicensesRouteWithChildren
-  AuthenticatedMaintenanceRoute: typeof AuthenticatedMaintenanceRoute
+  AuthenticatedMaintenanceRoute: typeof AuthenticatedMaintenanceRouteWithChildren
   AuthenticatedPeopleDepartmentsRoute: typeof AuthenticatedPeopleDepartmentsRouteWithChildren
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
-  AuthenticatedSuppliersRoute: typeof AuthenticatedSuppliersRoute
-  AuthenticatedTonersRoute: typeof AuthenticatedTonersRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedAssetsIdRoute: typeof AuthenticatedAssetsIdRoute
-  AuthenticatedPrintersIdRoute: typeof AuthenticatedPrintersIdRoute
   AuthenticatedAssetsIndexRoute: typeof AuthenticatedAssetsIndexRoute
-  AuthenticatedPrintersIndexRoute: typeof AuthenticatedPrintersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedInventoryRoute: AuthenticatedInventoryRoute,
+  AuthenticatedInventoryRoute: AuthenticatedInventoryRouteWithChildren,
   AuthenticatedLicensesRoute: AuthenticatedLicensesRouteWithChildren,
-  AuthenticatedMaintenanceRoute: AuthenticatedMaintenanceRoute,
+  AuthenticatedMaintenanceRoute: AuthenticatedMaintenanceRouteWithChildren,
   AuthenticatedPeopleDepartmentsRoute:
     AuthenticatedPeopleDepartmentsRouteWithChildren,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
-  AuthenticatedSuppliersRoute: AuthenticatedSuppliersRoute,
-  AuthenticatedTonersRoute: AuthenticatedTonersRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedAssetsIdRoute: AuthenticatedAssetsIdRoute,
-  AuthenticatedPrintersIdRoute: AuthenticatedPrintersIdRoute,
   AuthenticatedAssetsIndexRoute: AuthenticatedAssetsIndexRoute,
-  AuthenticatedPrintersIndexRoute: AuthenticatedPrintersIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -429,6 +432,7 @@ const AuthenticatedRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

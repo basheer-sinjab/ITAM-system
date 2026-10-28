@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - itam_odoo_postgres:/var/lib/postgresql/data
+
+  odoo:
+    image: odoo:18.0
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8069:8069"
+    environment:
+      HOST: postgres
+      USER: odoo
+      PASSWORD: odoo
+    volumes:
+      - ./itam_floss:/mnt/extra-addons/itam_floss:ro
+      - itam_odoo_data:/var/lib/odoo
+
+volumes:
+  itam_odoo_postgres:
+  itam_odoo_data:

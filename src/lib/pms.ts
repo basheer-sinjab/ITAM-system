@@ -1,3 +1,5 @@
+import { runtimeHeaders, runtimePath } from "./odoo-runtime";
+
 export const PRINTER_STATUS = {
   active: "نشطة",
   maintenance: "تحت الصيانة",
@@ -6,7 +8,15 @@ export const PRINTER_STATUS = {
 } as const;
 export type PrinterStatus = keyof typeof PRINTER_STATUS;
 
-export const ASSET_TYPES = ["Printer", "Desktop PC", "Laptop", "Monitor", "Mobile Phone", "Network Device", "Other"] as const;
+export const ASSET_TYPES = [
+  "Printer",
+  "Desktop PC",
+  "Laptop",
+  "Monitor",
+  "Mobile Phone",
+  "Network Device",
+  "Other",
+] as const;
 export const MAINTENANCE_STATUSES = ["Open", "Closed"] as const;
 
 export const STATUS_CLASS: Record<PrinterStatus, string> = {
@@ -61,7 +71,11 @@ export function daysUntil(date?: string | null) {
   if (!date) return null;
   const datePart = /^(\d{4})-(\d{2})-(\d{2})/.exec(date);
   const target = datePart
-    ? new Date(Number(datePart[1]), Number(datePart[2]) - 1, Number(datePart[3]))
+    ? new Date(
+        Number(datePart[1]),
+        Number(datePart[2]) - 1,
+        Number(datePart[3]),
+      )
     : new Date(date);
   if (Number.isNaN(target.getTime())) return null;
   const diff = target.getTime() - new Date().setHours(0, 0, 0, 0);
@@ -75,19 +89,44 @@ export async function resolveImage(path?: string | null) {
 export async function uploadPrinterImage(file: File) {
   const formData = new FormData();
   formData.append("image", file);
-  const response = await fetch("/api/printer-images", { method: "POST", body: formData });
+  const response = await fetch(runtimePath("/api/printer-images"), {
+    method: "POST",
+    headers: runtimeHeaders({ "x-itam-request": "1" }),
+    body: formData,
+  });
   const body = await response.json();
   if (!response.ok) throw new Error(body.message ?? "تعذر رفع الصورة");
   return body.path as string;
 }
 
+export async function uploadLicenseImage(file: File) {
+  return uploadPrinterImage(file);
+}
+
+export async function uploadInventoryImage(file: File) {
+  return uploadPrinterImage(file);
+}
+
 export async function deletePrinterImage(path?: string | null) {
-  if (!path?.startsWith("/uploads/printers/")) return;
-  const response = await fetch(`/api/printer-images?path=${encodeURIComponent(path)}`, { method: "DELETE" });
+  if (
+    !path?.startsWith("/uploads/printers/") &&
+    !path?.startsWith("/itam_floss/image/")
+  )
+    return;
+  const response = await fetch(
+    `${runtimePath("/api/printer-images")}?path=${encodeURIComponent(path)}`,
+    {
+      method: "DELETE",
+      headers: runtimeHeaders({ "x-itam-request": "1" }),
+    },
+  );
   if (!response.ok) throw new Error("تعذر حذف الصورة القديمة");
 }
 
-export function must<T>(res: { data: T; error: { message: string } | null }): T {
+export function must<T>(res: {
+  data: T;
+  error: { message: string } | null;
+}): T {
   if (res.error) throw new Error(res.error.message);
   return res.data;
 }

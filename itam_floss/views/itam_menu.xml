@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_itam_floss_app" model="ir.actions.act_url">
+        <field name="name">ITAMFloss</field>
+        <field name="url">/itam_floss/app</field>
+        <field name="target">self</field>
+    </record>
+
+    <menuitem
+        id="menu_itam_floss_root"
+        name="ITAMFloss"
+        action="action_itam_floss_app"
+        sequence="75"
+        groups="base.group_system"
+        web_icon="itam_floss,static/description/icon.png"
+    />
+</odoo>

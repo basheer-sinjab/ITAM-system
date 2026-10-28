@@ -1,0 +1,572 @@
+﻿# Translation of ITAMFloss for Odoo 18.
+# Copyright (C) 2026 Basheer
+# This file is distributed under the same license as the ITAMFloss package.
+msgid ""
+msgstr ""
+"Project-Id-Version: ITAMFloss 18.0.1.2.0\n"
+"Report-Msgid-Bugs-To: basheersinjab@gmail.com\n"
+"POT-Creation-Date: 2026-08-09 00:00+0000\n"
+"PO-Revision-Date: 2026-08-09 00:00+0000\n"
+"Last-Translator: Basheer <basheersinjab@gmail.com>\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: itam_floss
+msgid "IT asset, inventory, maintenance, and license management"
+msgstr "إدارة أصول تقنية المعلومات والمخزون والصيانة والتراخيص"
+
+#. module: itam_floss
+msgid "Assigned IT Assets"
+msgstr "الأصول التقنية المعيّنة"
+
+#. module: itam_floss
+msgid "Employees and departments are managed from the Odoo Employees app."
+msgstr "تتم إدارة الموظفين والأقسام من تطبيق الموظفين في أودو."
+
+#. module: itam_floss
+msgid "ITAM department notes..."
+msgstr "ملاحظات قسم إدارة الأصول التقنية..."
+
+#. module: itam_floss
+msgid "ITAM Technician"
+msgstr "فني تقنية المعلومات"
+
+#. module: itam_floss
+msgid "ITAM Department"
+msgstr "قسم تقنية المعلومات"
+
+#. module: itam_floss
+msgid "ITAM Employee"
+msgstr "موظف"
+
+#. module: itam_floss
+msgid "IT Asset"
+msgstr "أصل تقني"
+
+#. module: itam_floss
+msgid "IT Asset Template"
+msgstr "قالب أصل تقني"
+
+#. module: itam_floss
+msgid "IT Asset Assignment History"
+msgstr "سجل تسليم الأصل التقني"
+
+#. module: itam_floss
+msgid "ITAM Inventory Item"
+msgstr "عنصر مخزون تقني"
+
+#. module: itam_floss
+msgid "ITAM Maintenance"
+msgstr "صيانة أصل تقني"
+
+#. module: itam_floss
+msgid "ITAM Inventory Movement"
+msgstr "حركة مخزون تقني"
+
+#. module: itam_floss
+msgid "ITAM PC Specifications"
+msgstr "مواصفات الكمبيوتر"
+
+#. module: itam_floss
+msgid "ITAM PC Part Installation"
+msgstr "تركيب قطعة كمبيوتر"
+
+#. module: itam_floss
+msgid "ITAM Toner Installation"
+msgstr "تركيب حبر"
+
+#. module: itam_floss
+msgid "ITAM Software License"
+msgstr "ترخيص برنامج"
+
+#. module: itam_floss
+msgid "ITAM License Assignment"
+msgstr "تعيين ترخيص"
+
+#. module: itam_floss
+msgid "ITAM Activity Log"
+msgstr "سجل نشاط الأصول التقنية"
+
+#. module: itam_floss
+msgid "ITAM Settings"
+msgstr "إعدادات الأصول التقنية"
+
+#. module: itam_floss
+msgid "ITAM Image"
+msgstr "صورة أصل تقني"
+
+#. module: itam_floss
+msgid "Active"
+msgstr "نشط"
+
+#. module: itam_floss
+msgid "Inactive"
+msgstr "غير نشط"
+
+#. module: itam_floss
+msgid "Under Maintenance"
+msgstr "تحت الصيانة"
+
+#. module: itam_floss
+msgid "Out of Service"
+msgstr "خارج الخدمة"
+
+#. module: itam_floss
+msgid "Retired"
+msgstr "متقاعد"
+
+#. module: itam_floss
+msgid "Printer"
+msgstr "طابعة"
+
+#. module: itam_floss
+msgid "Desktop PC"
+msgstr "كمبيوتر مكتبي"
+
+#. module: itam_floss
+msgid "Laptop"
+msgstr "لابتوب"
+
+#. module: itam_floss
+msgid "Monitor"
+msgstr "شاشة"
+
+#. module: itam_floss
+msgid "Mobile Phone"
+msgstr "هاتف محمول"
+
+#. module: itam_floss
+msgid "Network Device"
+msgstr "جهاز شبكة"
+
+#. module: itam_floss
+msgid "Other"
+msgstr "أخرى"
+
+#. module: itam_floss
+msgid "Toner"
+msgstr "حبر"
+
+#. module: itam_floss
+msgid "Spare Part"
+msgstr "قطعة غيار"
+
+#. module: itam_floss
+msgid "Consumable"
+msgstr "مستهلكات"
+
+#. module: itam_floss
+msgid "Black"
+msgstr "أسود"
+
+#. module: itam_floss
+msgid "Yellow"
+msgstr "أصفر"
+
+#. module: itam_floss
+msgid "Magenta"
+msgstr "أرجواني"
+
+#. module: itam_floss
+msgid "Cyan"
+msgstr "سماوي"
+
+#. module: itam_floss
+msgid "Open"
+msgstr "مفتوحة"
+
+#. module: itam_floss
+msgid "Closed"
+msgstr "مغلقة"
+
+#. module: itam_floss
+msgid "Good"
+msgstr "سليم"
+
+#. module: itam_floss
+msgid "Maintenance"
+msgstr "يحتاج صيانة"
+
+#. module: itam_floss
+msgid "Damaged"
+msgstr "متضرر"
+
+#. module: itam_floss
+msgid "Add"
+msgstr "إضافة"
+
+#. module: itam_floss
+msgid "Use"
+msgstr "استخدام"
+
+#. module: itam_floss
+msgid "Return"
+msgstr "إرجاع"
+
+#. module: itam_floss
+msgid "Adjust"
+msgstr "تسوية"
+
+#. module: itam_floss
+msgid "Returned to Stock"
+msgstr "أعيدت إلى المخزون"
+
+#. module: itam_floss
+msgid "Disposed"
+msgstr "تم التخلص منها"
+
+#. module: itam_floss
+msgid "New"
+msgstr "جديد"
+
+#. module: itam_floss
+msgid "With %s"
+msgstr "لدى %s"
+
+#. module: itam_floss
+msgid "The requested record does not exist."
+msgstr "السجل المطلوب غير موجود."
+
+#. module: itam_floss
+msgid "Quantity must be greater than zero."
+msgstr "يجب أن تكون الكمية أكبر من صفر."
+
+#. module: itam_floss
+msgid "The available quantity of %s is not sufficient."
+msgstr "الكمية المتاحة من %s غير كافية."
+
+#. module: itam_floss
+msgid "Toner replacement: %s"
+msgstr "استبدال حبر: %s"
+
+#. module: itam_floss
+msgid "Part replacement: %s"
+msgstr "استبدال قطعة: %s"
+
+#. module: itam_floss
+msgid "Part installation: %s"
+msgstr "تركيب قطعة: %s"
+
+#. module: itam_floss
+msgid "Completed: %s"
+msgstr "مكتمل: %s"
+
+#. module: itam_floss
+msgid "Toner can only be installed on printer assets."
+msgstr "يمكن تركيب الحبر على أصول الطابعات فقط."
+
+#. module: itam_floss
+msgid "Select a toner inventory item."
+msgstr "اختر عنصر حبر من المخزون."
+
+#. module: itam_floss
+msgid "Toner installed on %s"
+msgstr "تم تركيب الحبر على %s"
+
+#. module: itam_floss
+msgid "This toner installation was already undone."
+msgstr "تم التراجع عن تركيب الحبر هذا مسبقًا."
+
+#. module: itam_floss
+msgid "The original toner item no longer exists."
+msgstr "عنصر الحبر الأصلي لم يعد موجودًا."
+
+#. module: itam_floss
+msgid "Undo toner installation: %s"
+msgstr "التراجع عن تركيب الحبر: %s"
+
+#. module: itam_floss
+msgid "Toner installation was undone: %s"
+msgstr "تم التراجع عن تركيب الحبر: %s"
+
+#. module: itam_floss
+msgid "Parts can only be installed on desktop or laptop assets."
+msgstr "يمكن تركيب القطع على أصول الكمبيوتر المكتبي أو اللابتوب فقط."
+
+#. module: itam_floss
+msgid "Select a spare part inventory item."
+msgstr "اختر قطعة غيار من المخزون."
+
+#. module: itam_floss
+msgid "The selected old part cannot be replaced."
+msgstr "لا يمكن استبدال القطعة القديمة المحددة."
+
+#. module: itam_floss
+msgid "Select what happened to the old part."
+msgstr "حدد ما تم مع القطعة القديمة."
+
+#. module: itam_floss
+msgid "Part returned after replacement: %s"
+msgstr "أعيدت القطعة بعد الاستبدال: %s"
+
+#. module: itam_floss
+msgid "Part installed on %s"
+msgstr "تم تركيب القطعة على %s"
+
+#. module: itam_floss
+msgid "This part installation cannot be undone."
+msgstr "لا يمكن التراجع عن تركيب هذه القطعة."
+
+#. module: itam_floss
+msgid "The original inventory item no longer exists."
+msgstr "عنصر المخزون الأصلي لم يعد موجودًا."
+
+#. module: itam_floss
+msgid "Undo part installation: %s"
+msgstr "التراجع عن تركيب القطعة: %s"
+
+#. module: itam_floss
+msgid "Old part reinstalled: %s"
+msgstr "أعيد تركيب القطعة القديمة: %s"
+
+#. module: itam_floss
+msgid "Part installation was undone: %s"
+msgstr "تم التراجع عن تركيب القطعة: %s"
+
+#. module: itam_floss
+msgid "Unsupported hardware action."
+msgstr "عملية العتاد غير مدعومة."
+
+#. module: itam_floss
+msgid "Invalid maintenance inventory data."
+msgstr "بيانات مواد الصيانة غير صالحة."
+
+#. module: itam_floss
+msgid "Invalid maintenance inventory quantity."
+msgstr "كمية مواد الصيانة غير صالحة."
+
+#. module: itam_floss
+msgid "Used in maintenance record"
+msgstr "استخدم في سجل صيانة"
+
+#. module: itam_floss
+msgid "Returned after maintenance record update"
+msgstr "أعيد بعد تحديث سجل الصيانة"
+
+#. module: itam_floss
+msgid "Spare-part quantities must be whole numbers: %s"
+msgstr "يجب أن تكون كميات قطع الغيار أرقامًا صحيحة: %s"
+
+#. module: itam_floss
+msgid "Undo replacement parts from the asset page before removing them from maintenance."
+msgstr "تراجع عن القطع البديلة من صفحة الأصل قبل إزالتها من الصيانة."
+
+#. module: itam_floss
+msgid "Archived assets cannot be assigned."
+msgstr "لا يمكن تسليم أصل مؤرشف."
+
+#. module: itam_floss
+msgid "The selected employee is inactive."
+msgstr "الموظف المحدد غير نشط."
+
+#. module: itam_floss
+msgid "Assignment date cannot be earlier than the current assignment."
+msgstr "لا يمكن أن يسبق تاريخ التسليم التعيين الحالي."
+
+#. module: itam_floss
+msgid "Automatically closed before a new assignment"
+msgstr "أغلق تلقائيًا قبل تسليم جديد"
+
+#. module: itam_floss
+msgid "This asset is not currently assigned."
+msgstr "الأصل غير مسلّم حاليًا."
+
+#. module: itam_floss
+msgid "Select a valid return condition."
+msgstr "اختر حالة إرجاع صالحة."
+
+#. module: itam_floss
+msgid "Return date cannot be earlier than assignment date."
+msgstr "لا يمكن أن يسبق تاريخ الإرجاع تاريخ التسليم."
+
+#. module: itam_floss
+msgid "Automatically created when the asset was returned"
+msgstr "أنشئ تلقائيًا عند إرجاع الأصل"
+
+#. module: itam_floss
+msgid "Automatically closed when the asset was archived"
+msgstr "أغلق تلقائيًا عند أرشفة الأصل"
+
+#. module: itam_floss
+msgid "Archive the asset before deleting it permanently."
+msgstr "أرشف الأصل قبل حذفه نهائيًا."
+
+#. module: itam_floss
+msgid "Maintenance cannot be added to an archived asset."
+msgstr "لا يمكن إضافة صيانة إلى أصل مؤرشف."
+
+#. module: itam_floss
+msgid "The asset cannot be changed after hardware is linked to maintenance."
+msgstr "لا يمكن تغيير الأصل بعد ربط العتاد بسجل الصيانة."
+
+#. module: itam_floss
+msgid "Unsupported workflow action."
+msgstr "إجراء سير العمل غير مدعوم."
+
+#. module: itam_floss
+msgid "A toner color is required."
+msgstr "لون الحبر مطلوب."
+
+#. module: itam_floss
+msgid "Select an employee or an asset."
+msgstr "اختر موظفًا أو أصلًا."
+
+#. module: itam_floss
+msgid "No license seats are available."
+msgstr "لا توجد مقاعد ترخيص متاحة."
+
+#. module: itam_floss
+msgid "Seat count cannot be lower than the number of current assignments (%s)."
+msgstr "لا يمكن أن يقل عدد المقاعد عن عدد التعيينات الحالية (%s)."
+
+#. module: itam_floss
+msgid "A JSON object is required."
+msgstr "كائن JSON مطلوب."
+
+#. module: itam_floss
+msgid "The security token is invalid or expired. Reload the page."
+msgstr "رمز الأمان غير صالح أو منتهي. أعد تحميل الصفحة."
+
+#. module: itam_floss
+msgid "The ITAM operation could not be completed: %s"
+msgstr "تعذر إكمال عملية إدارة الأصول التقنية: %s"
+
+#. module: itam_floss
+msgid "Unsupported ITAM table."
+msgstr "جدول إدارة الأصول التقنية غير مدعوم."
+
+#. module: itam_floss
+msgid "Invalid related record identifier."
+msgstr "معرّف السجل المرتبط غير صالح."
+
+#. module: itam_floss
+msgid "Record data must be an object."
+msgstr "يجب أن تكون بيانات السجل كائنًا."
+
+#. module: itam_floss
+msgid "Invalid query filter."
+msgstr "عامل تصفية الاستعلام غير صالح."
+
+#. module: itam_floss
+msgid "Unsupported query field: %s"
+msgstr "حقل الاستعلام غير مدعوم: %s"
+
+#. module: itam_floss
+msgid "Unsupported data operation."
+msgstr "عملية البيانات غير مدعومة."
+
+#. module: itam_floss
+msgid "The activity log is read-only."
+msgstr "سجل النشاط للقراءة فقط."
+
+#. module: itam_floss
+msgid "Use the maintenance workflow to change maintenance records."
+msgstr "استخدم مسار الصيانة لتغيير سجلات الصيانة."
+
+#. module: itam_floss
+msgid "Archive assets before deleting them through the asset workflow."
+msgstr "أرشف الأصول قبل حذفها من خلال مسار الأصل."
+
+#. module: itam_floss
+msgid "Update and delete operations require a filter."
+msgstr "عمليات التحديث والحذف تتطلب عامل تصفية."
+
+#. module: itam_floss
+msgid "Unsupported ordering field."
+msgstr "حقل الترتيب غير مدعوم."
+
+#. module: itam_floss
+msgid "Record data is required."
+msgstr "بيانات السجل مطلوبة."
+
+#. module: itam_floss
+msgid "Invalid backup data."
+msgstr "بيانات النسخة الاحتياطية غير صالحة."
+
+#. module: itam_floss
+msgid "Invalid backup table: %s"
+msgstr "جدول النسخة الاحتياطية غير صالح: %s"
+
+#. module: itam_floss
+msgid "Invalid backup record."
+msgstr "سجل النسخة الاحتياطية غير صالح."
+
+#. module: itam_floss
+msgid "The backup contains a missing relation in %s.%s."
+msgstr "تحتوي النسخة الاحتياطية على علاقة مفقودة في %s.%s."
+
+#. module: itam_floss
+msgid "Invalid maintenance inventory data in the backup."
+msgstr "بيانات مخزون الصيانة في النسخة الاحتياطية غير صالحة."
+
+#. module: itam_floss
+msgid "The backup references a missing inventory item."
+msgstr "تشير النسخة الاحتياطية إلى عنصر مخزون مفقود."
+
+#. module: itam_floss
+msgid "The backup contains a missing relation in %s."
+msgstr "تحتوي النسخة الاحتياطية على علاقة مفقودة في %s."
+
+#. module: itam_floss
+msgid "ITAMFloss web assets are missing. Rebuild the module assets."
+msgstr "ملفات واجهة ITAMFloss مفقودة. أعد بناء ملفات الموديول."
+
+#. module: itam_floss
+msgid "Invalid image path."
+msgstr "مسار الصورة غير صالح."
+
+#. module: itam_floss
+msgid "Select an image to upload."
+msgstr "اختر صورة لرفعها."
+
+#. module: itam_floss
+msgid "The image must not exceed 10 MB."
+msgstr "يجب ألا يتجاوز حجم الصورة 10 ميغابايت."
+
+#. module: itam_floss
+msgid "The uploaded file is not a supported image."
+msgstr "الملف المرفوع ليس صورة مدعومة."
+
+#. module: itam_floss
+msgid "The employee number must be unique."
+msgstr "يجب ألا يتكرر رقم الموظف."
+
+#. module: itam_floss
+msgid "The asset ID must be unique."
+msgstr "يجب ألا يتكرر رقم الأصل."
+
+#. module: itam_floss
+msgid "The serial number is already assigned to another asset."
+msgstr "الرقم التسلسلي مسجل لأصل آخر."
+
+#. module: itam_floss
+msgid "Quantity cannot be negative."
+msgstr "لا يمكن أن تكون الكمية سالبة."
+
+#. module: itam_floss
+msgid "Minimum quantity cannot be negative."
+msgstr "لا يمكن أن يكون الحد الأدنى للكمية سالبًا."
+
+#. module: itam_floss
+msgid "The maintenance reference must be unique."
+msgstr "يجب ألا يتكرر مرجع الصيانة."
+
+#. module: itam_floss
+msgid "Cost cannot be negative."
+msgstr "لا يمكن أن تكون التكلفة سالبة."
+
+#. module: itam_floss
+msgid "Specifications already exist for this asset."
+msgstr "المواصفات موجودة مسبقًا لهذا الأصل."
+
+#. module: itam_floss
+msgid "Seat count cannot be negative."
+msgstr "لا يمكن أن يكون عدد المقاعد سالبًا."
+
+#. module: itam_floss
+msgid "Only one settings record is allowed."
+msgstr "يسمح بسجل إعدادات واحد فقط."
